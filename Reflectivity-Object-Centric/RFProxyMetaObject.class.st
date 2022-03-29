@@ -125,5 +125,6 @@ RFProxyMetaObject >> send: selector withArgs: args to: target [
 	self executeReflectiveOperationsFor: target uponReceptionOf: selector.
 	self class log: 'send: ', selector printString.
 	self instrumenter instrumentSelector:  selector.
-	^ target perform: selector withArguments: args
+	^MirrorPrimitives withReceiver: target perform: selector withArguments: args
+	"^ target perform: selector withArguments: args"
 ]
