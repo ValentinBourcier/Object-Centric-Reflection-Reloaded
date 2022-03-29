@@ -27,8 +27,11 @@ RFProxyInstrumenter class >> for: aRFProxyMetaObject [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : #instrumentation }
 RFProxyInstrumenter >> beForObject: anObject [
+
+	anObject class isAnonymous ifFalse: [ 
+		anObject class newAnonymousSubclass adoptInstance: anObject ].
 	instrumentedObject := anObject.
 	instrumentedClass := anObject class
 ]
@@ -57,7 +60,7 @@ RFProxyInstrumenter >> instrumentReturnSelfIn: ast [
 		               node isReturn and: [ node value isSelfVariable ] ].
 	returnNodes do: [ :node | 
 		node value link:
-			((self newReplacementLinkForSelector: nil)
+			((self newLinkForSelector: nil)
 				 control: #after;
 				 yourself) ]
 ]
@@ -82,7 +85,7 @@ RFProxyInstrumenter >> instrumentSelfSendsIn: ast [
 		:node | 
 		RFProxyMetaObject log: 'overriden node receiver: ', node selector.
 		node link:
-			(self newReplacementLinkForSelector: node selector) ]
+			(self newLinkForSelector: node selector) ]
 ]
 
 { #category : #accessing }
@@ -116,7 +119,7 @@ RFProxyInstrumenter >> metaObject: anObject [
 ]
 
 { #category : #links }
-RFProxyInstrumenter >> newReplacementLinkForSelector: selector [
+RFProxyInstrumenter >> newLinkForSelector: selector [
 
 	| link interceptor |
 	link := MetaLink new.

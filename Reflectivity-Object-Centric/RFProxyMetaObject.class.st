@@ -54,8 +54,6 @@ RFProxyMetaObject >> executeReflectiveOperationsFor: target uponReceptionOf: sel
 { #category : #private }
 RFProxyMetaObject >> forObject: anObject [
 
-	anObject class isAnonymous ifFalse: [ 
-		anObject class newAnonymousSubclass adoptInstance: anObject ].
 	self instrumenter beForObject: anObject
 ]
 
