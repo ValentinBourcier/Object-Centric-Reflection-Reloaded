@@ -35,10 +35,7 @@ RFProxyInstrumenterTest >> testInstantiation [
 RFProxyInstrumenterTest >> testInstrumentedMessages [
 	|im|
 	im := instrumenter instrumentedMessages .
-	self assert: im size equals: 4.
-	self assert: (im includes: #isSymbol). "Is this one necessary?"
-	self assert: (im includes: #perform:).
-	self assert: (im includes: #perform:withArguments:).
+	self assert: im size equals: 1.
 	self assert: (im includes: #class).
 ]
 
