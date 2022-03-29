@@ -48,7 +48,7 @@ RFProxyInstrumenter >> instrumentMethod: method selector: selector [
 	
 	instrumentedClass compile: method sourceCode.
 	newMethod := instrumentedClass >> selector.
-	self instrumentSelfSendsIn: newMethod ast.
+	self instrumentSelfSendsIn: newMethod ast. "instrument with what?"
 	self instrumentReturnSelfIn: newMethod ast
 ]
 
