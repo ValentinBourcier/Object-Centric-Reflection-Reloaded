@@ -30,7 +30,7 @@ RFProxyMetaObject class >> forObject: anObject proxy: aProxy [
 RFProxyMetaObject class >> log: info [
 
 	| stream |
-	stream := str writeStream.
+	stream := (str ifNil: [ str := 'log' asFileReference ]) writeStream.
 	stream position: str size.
 	stream
 		nextPutAll: info;
