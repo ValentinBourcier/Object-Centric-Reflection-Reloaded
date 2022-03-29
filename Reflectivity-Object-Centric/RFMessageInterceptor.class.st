@@ -24,3 +24,15 @@ RFMessageInterceptor >> executeWithArgs: args [
 
 	^ metaObject receive: selector withArgs: args
 ]
+
+{ #category : #accessing }
+RFMessageInterceptor >> metaObject: anObject [
+
+	metaObject := anObject
+]
+
+{ #category : #accessing }
+RFMessageInterceptor >> selector: anObject [
+
+	selector := anObject
+]
