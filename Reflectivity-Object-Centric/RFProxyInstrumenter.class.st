@@ -93,7 +93,7 @@ RFProxyInstrumenter >> instrumentedClass [
 
 { #category : #accessing }
 RFProxyInstrumenter >> instrumentedMessages [
-
+	self flag: 'Temporary hack in waiting a nicer solution'.
 	^ instrumentedMessages ifNil: [ 
 		  instrumentedMessages := OrderedCollection new
 			                          add: #isSymbol;

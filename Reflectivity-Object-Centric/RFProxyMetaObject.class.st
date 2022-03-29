@@ -95,6 +95,7 @@ RFProxyMetaObject >> receive: aSelector [
 
 	self class log: 'receive: ' , aSelector printString.
 	aSelector = #class ifTrue: [ 
+		self flag: 'Temporary hack in waiting a nicer solution'.
 		^ instrumenter instrumentedClass superclass ].
 	aSelector ifNil: [ ^ proxy ].
 	^ self
