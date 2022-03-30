@@ -30,6 +30,7 @@ RFProxy class >> becomeTarget: anObject [
 
 { #category : #'reflective operations' }
 RFProxy >> doesNotUnderstand: aMessage [
-
+	'Proxy receiving: ' crTrace.
+	aMessage trace. 
 	^ metaObject send: aMessage selector withArgs: aMessage arguments to: target
 ]

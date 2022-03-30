@@ -114,17 +114,22 @@ RFProxyMetaObject >> receive: aSelector withArgs: args [
 
 { #category : #'message passing' }
 RFProxyMetaObject >> send: aMessage to: target [
+
 	self executeReflectiveOperationsFor: target uponReceptionOf: aMessage.
-	self class log: 'send: ', aMessage printString.
-	self instrumenter instrumentSelector: aMessage selector.
+	self class log: 'send: ' , aMessage printString.
+	self instrumenter instrumentSelector: aMessage selector withArgs: aMessage arguments.
 	^ aMessage sendTo: target
 ]
 
 { #category : #'message passing' }
 RFProxyMetaObject >> send: selector withArgs: args to: target [
+
 	self executeReflectiveOperationsFor: target uponReceptionOf: selector.
-	self class log: 'send: ', selector printString.
-	self instrumenter instrumentSelector:  selector.
-	^MirrorPrimitives withReceiver: target perform: selector withArguments: args
+	self class log: 'send: ' , selector printString.
+	self instrumenter instrumentSelector: selector withArgs: args.
+	^ MirrorPrimitives
+		  withReceiver: target
+		  perform: selector
+		  withArguments: args
 	"^ target perform: selector withArguments: args"
 ]

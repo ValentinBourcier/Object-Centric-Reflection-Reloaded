@@ -37,10 +37,29 @@ RFProxyInstrumenter >> beForObject: anObject [
 ]
 
 { #category : #instrumentation }
+RFProxyInstrumenter >> findSuperSendsChainFor: aMethod [
+
+	| hasSuperSends nextMethod methodChain selector |
+	hasSuperSends := true.
+	nextMethod := aMethod.
+	methodChain := OrderedCollection with: nextMethod.
+	selector := aMethod selector.
+
+	[ hasSuperSends ] whileTrue: [ 
+		nextMethod := (nextMethod methodClass superclass lookupSelector: selector) 
+			              ifNil: [ ^ methodChain ].
+		hasSuperSends := nextMethod hasSuperSends.
+		nextMethod ifNotNil: [ methodChain add: nextMethod ] ].
+	^ methodChain
+]
+
+{ #category : #instrumentation }
 RFProxyInstrumenter >> instrumentMethod: method selector: selector [
 
 	| newMethod |
-	method isPrimitive ifTrue: [ ^ self ].
+	
+	"method hasSuperSends ifTrue:[^self instrumentMethodWithSuperSends: method]."
+	
 	instrumentedMessages add: selector.
 	RFProxyMetaObject log: 'Instrumenting: ', selector printString.
 	
@@ -66,16 +85,23 @@ RFProxyInstrumenter >> instrumentReturnSelfIn: ast [
 ]
 
 { #category : #instrumentation }
-RFProxyInstrumenter >> instrumentSelector: selector [
+RFProxyInstrumenter >> instrumentSelector: selector withArgs: args [
 
+	| method |
 	(self instrumentedMessages includes: selector) ifTrue: [ 
-		RFProxyMetaObject log: 'selector already instrumented: ', selector printString.
+		RFProxyMetaObject log:
+			'selector already instrumented: ' , selector printString.
 		self flag:
 			'Later we should compose instrumentation: inst var accesses, object-interaction, etc.'.
 		^ self ].
-	self
-		instrumentMethod: (instrumentedClass lookupSelector: selector)
-		selector: selector
+	method := instrumentedClass lookupSelector: selector.
+	method isPrimitive ifTrue: [ 
+		method primitive = 188 ifTrue: [ 
+			method := args second.
+			RFProxyMetaObject log: 'Primitive ' , method printString.
+			self instrumentMethod: args second selector: args second selector ].
+		^ self ].
+	self instrumentMethod: method selector: selector
 ]
 
 { #category : #instrumentation }
