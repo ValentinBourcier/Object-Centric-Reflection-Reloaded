@@ -117,19 +117,22 @@ RFProxyMetaObject >> send: aMessage to: target [
 
 	self executeReflectiveOperationsFor: target uponReceptionOf: aMessage.
 	self class log: 'send: ' , aMessage printString.
+	aMessage arguments: aMessage arguments asOrderedCollection. 
 	self instrumenter instrumentSelector: aMessage selector withArgs: aMessage arguments.
+	aMessage arguments: aMessage arguments asArray.
 	^ aMessage sendTo: target
 ]
 
 { #category : #'message passing' }
 RFProxyMetaObject >> send: selector withArgs: args to: target [
-
+	|arguments|
+	arguments := args asOrderedCollection.
 	self executeReflectiveOperationsFor: target uponReceptionOf: selector.
 	self class log: 'send: ' , selector printString.
-	self instrumenter instrumentSelector: selector withArgs: args.
+	self instrumenter instrumentSelector: selector withArgs: arguments.
 	^ MirrorPrimitives
 		  withReceiver: target
 		  perform: selector
-		  withArguments: args
+		  withArguments: arguments asArray
 	"^ target perform: selector withArguments: args"
 ]

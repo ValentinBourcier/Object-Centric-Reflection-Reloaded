@@ -72,6 +72,20 @@ RFProxyInstrumenter >> instrumentMethod: method selector: selector [
 ]
 
 { #category : #instrumentation }
+RFProxyInstrumenter >> instrumentMethodWithSuperSends: method [
+
+	| hasSuperSends nextMethod newMethods |
+	hasSuperSends := true.
+	nextMethod := method.
+	newMethods add: nextMethod.
+
+	[ hasSuperSends ] whileTrue: [ 
+		nextMethod := nextMethod superclass lookupSelector: method selector.
+		hasSuperSends := nextMethod notNil and: [ nextMethod hasSuperSends ].
+		nextMethod ifNotNil: [ newMethods add: nextMethod ] ]
+]
+
+{ #category : #instrumentation }
 RFProxyInstrumenter >> instrumentReturnSelfIn: ast [
 
 	| returnNodes |
@@ -96,10 +110,12 @@ RFProxyInstrumenter >> instrumentSelector: selector withArgs: args [
 		^ self ].
 	method := instrumentedClass lookupSelector: selector.
 	method isPrimitive ifTrue: [ 
-		method primitive = 188 ifTrue: [ 
+		method primitive = 188 ifTrue: [ 			
 			method := args second.
 			RFProxyMetaObject log: 'Primitive ' , method printString.
-			self instrumentMethod: args second selector: args second selector ].
+			self instrumentMethod: method selector: method selector.
+			args removeLast.
+			args addLast: (instrumentedClass lookupSelector: method selector)  ].
 		^ self ].
 	self instrumentMethod: method selector: selector
 ]
