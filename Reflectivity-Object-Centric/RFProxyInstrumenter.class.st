@@ -37,19 +37,40 @@ RFProxyInstrumenter >> beForObject: anObject [
 ]
 
 { #category : #instrumentation }
+RFProxyInstrumenter >> buildSuperSendsChainFrom: method upTo: targetMethod in: methodChain [
+
+	| selector nextMethod |
+	selector := method selector.
+	nextMethod := method.
+	[ nextMethod ~~ targetMethod and: [ nextMethod hasSuperSends ] ] 
+		whileTrue: [ 
+			| nextClass |
+			methodChain add: nextMethod.
+			nextClass := nextMethod methodClass superclass 
+								ifNil: [^ nextMethod ].
+			nextMethod := nextClass lookupSelector: selector ].
+	^ nextMethod
+]
+
+{ #category : #instrumentation }
 RFProxyInstrumenter >> findSuperSendsChainFor: aMethod [
 
-	| hasSuperSends nextMethod methodChain selector |
-	hasSuperSends := true.
-	nextMethod := aMethod.
-	methodChain := OrderedCollection with: nextMethod.
-	selector := aMethod selector.
+	| selector nextMethod  methodChain |
+	(self isClassReachableInHierarchy: aMethod methodClass) 
+		ifFalse:[^OrderedCollection new.].
+	
+	methodChain := OrderedCollection new.
+	selector := aMethod selector.			
+	nextMethod := self originalClass lookupSelector: selector.	
+	
+	nextMethod := self buildSuperSendsChainFrom: nextMethod upTo: aMethod in: methodChain.
+	nextMethod == aMethod ifFalse: [ ^ OrderedCollection new ].
+	nextMethod hasSuperSends 
+		ifFalse:[methodChain add: nextMethod. 
+			^methodChain].
 
-	[ hasSuperSends ] whileTrue: [ 
-		nextMethod := (nextMethod methodClass superclass lookupSelector: selector) 
-			              ifNil: [ ^ methodChain ].
-		hasSuperSends := nextMethod hasSuperSends.
-		nextMethod ifNotNil: [ methodChain add: nextMethod ] ].
+	nextMethod := self buildSuperSendsChainFrom: nextMethod upTo: nil in: methodChain.
+	nextMethod ifNotNil:[methodChain add: nextMethod].
 	^ methodChain
 ]
 
@@ -154,6 +175,13 @@ RFProxyInstrumenter >> instrumentedObject [
 	^ instrumentedObject
 ]
 
+{ #category : #testing }
+RFProxyInstrumenter >> isClassReachableInHierarchy: aClass [
+
+	^ self originalClass == aClass or: [ 
+		  self originalClass allSuperclasses includes: aClass ]
+]
+
 { #category : #accessing }
 RFProxyInstrumenter >> metaObject: anObject [
 
@@ -180,4 +208,9 @@ RFProxyInstrumenter >> newLinkForSelector: selector [
 
 	link optionCompileOnLinkInstallation: true.
 	^ link
+]
+
+{ #category : #accessing }
+RFProxyInstrumenter >> originalClass [
+	^instrumentedClass superclass
 ]
