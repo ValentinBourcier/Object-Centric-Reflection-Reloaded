@@ -14,7 +14,8 @@ Class {
 		'metaObject',
 		'instrumentedMessages',
 		'instrumentedObject',
-		'instrumentedClass'
+		'instrumentedClass',
+		'compiledSelectorsMap'
 	],
 	#category : #'Reflectivity-Object-Centric'
 }
@@ -180,6 +181,16 @@ RFProxyInstrumenter >> isClassReachableInHierarchy: aClass [
 
 	^ self originalClass == aClass or: [ 
 		  self originalClass allSuperclasses includes: aClass ]
+]
+
+{ #category : #logging }
+RFProxyInstrumenter >> log: array [
+
+	| log |
+	log := WriteStream on: String new.
+	array do: [ :s | log << s ].
+
+	RFProxyMetaObject log: log contents
 ]
 
 { #category : #accessing }
