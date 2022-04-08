@@ -153,24 +153,6 @@ RFProxyInstrumenter >> instrumentMethodWithSuperSends: method [
 ]
 
 { #category : #instrumentation }
-RFProxyInstrumenter >> instrumentMethodold: method selector: selector [
-
-	| newMethod |
-	self deprecated: ''.
-	"method hasSuperSends ifTrue:[^self instrumentMethodWithSuperSends: method]."
-	
-	instrumentedMessages add: selector.
-	RFProxyMetaObject log: 'Instrumenting: ', selector printString.
-	
-	'Instrumenting ' crTrace. selector trace.
-	
-	instrumentedClass compile: method sourceCode.
-	newMethod := instrumentedClass >> selector.
-	self instrumentSelfSendsIn: newMethod ast. "instrument with what?"
-	self instrumentReturnSelfIn: newMethod ast
-]
-
-{ #category : #instrumentation }
 RFProxyInstrumenter >> instrumentReturnSelfIn: ast [
 
 	| returnNodes |
