@@ -25,7 +25,7 @@ RFProxyInstrumenterTest >> testBeForObject [
 	self assert: instrumenter instrumentedClass superclass identicalTo: Object
 ]
 
-{ #category : #'tests - super instrumentation' }
+{ #category : #'tests - method flattening' }
 RFProxyInstrumenterTest >> testBuildSuperSendsChainFromSourceMethodToHighestMethodInClassHierarchy [
 
 	|sourceMethod targetMethod chain lastFoundMethod|
@@ -43,7 +43,7 @@ RFProxyInstrumenterTest >> testBuildSuperSendsChainFromSourceMethodToHighestMeth
 	
 ]
 
-{ #category : #'tests - super instrumentation' }
+{ #category : #'tests - method flattening' }
 RFProxyInstrumenterTest >> testBuildSuperSendsChainFromSourceMethodToTargetMethod [
 
 	|sourceMethod targetMethod chain lastFoundMethod|
@@ -60,7 +60,7 @@ RFProxyInstrumenterTest >> testBuildSuperSendsChainFromSourceMethodToTargetMetho
 	
 ]
 
-{ #category : #'tests - super instrumentation' }
+{ #category : #'tests - method flattening' }
 RFProxyInstrumenterTest >> testBuildSuperSendsChainFromSourceMethodToTargetMethodFailure [
 
 	|sourceMethod targetMethod chain lastFoundMethod|
@@ -74,7 +74,7 @@ RFProxyInstrumenterTest >> testBuildSuperSendsChainFromSourceMethodToTargetMetho
 
 ]
 
-{ #category : #'tests - super instrumentation' }
+{ #category : #'tests - method flattening' }
 RFProxyInstrumenterTest >> testFindEmptySuperSendsChainFor [
 
 	|method chain|	
@@ -92,7 +92,7 @@ RFProxyInstrumenterTest >> testFindEmptySuperSendsChainFor [
 	self assertEmpty: chain
 ]
 
-{ #category : #'tests - super instrumentation' }
+{ #category : #'tests - method flattening' }
 RFProxyInstrumenterTest >> testFindSuperSendsChainFor [
 
 	|method chain|	
@@ -146,7 +146,7 @@ RFProxyInstrumenterTest >> testInstrumentedMessages [
 	self assert: (im includes: #class).
 ]
 
-{ #category : #'tests - super instrumentation' }
+{ #category : #'tests - method flattening' }
 RFProxyInstrumenterTest >> testIsMethodReachableInHierarchy [
 	
 	|method|
