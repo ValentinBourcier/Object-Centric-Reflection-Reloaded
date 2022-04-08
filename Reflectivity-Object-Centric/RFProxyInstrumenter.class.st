@@ -135,7 +135,7 @@ RFProxyInstrumenter >> instrumentMethod: method selector: selector [
 		self redirectSelfReturnsIn: ast.
 		self redirectVariableAccessesIn: ast.
 		compiledSelectorsMap at: cs ifPresent:[:redirectionSelector|
-		self redirectSuperSendsIn: ast toSelector:redirectionSelector]]
+			self redirectSuperSendsIn: ast toSelector:redirectionSelector]]
 ]
 
 { #category : #instrumentation }
