@@ -139,33 +139,6 @@ RFProxyInstrumenter >> instrumentMethod: method selector: selector [
 ]
 
 { #category : #instrumentation }
-RFProxyInstrumenter >> instrumentMethodWithSuperSends: method [
-
-	| hasSuperSends nextMethod newMethods |
-	hasSuperSends := true.
-	nextMethod := method.
-	newMethods add: nextMethod.
-
-	[ hasSuperSends ] whileTrue: [ 
-		nextMethod := nextMethod superclass lookupSelector: method selector.
-		hasSuperSends := nextMethod notNil and: [ nextMethod hasSuperSends ].
-		nextMethod ifNotNil: [ newMethods add: nextMethod ] ]
-]
-
-{ #category : #instrumentation }
-RFProxyInstrumenter >> instrumentReturnSelfIn: ast [
-
-	| returnNodes |
-	returnNodes := ast allChildren select: [ :node | 
-		               node isReturn and: [ node value isSelfVariable ] ].
-	returnNodes do: [ :node | 
-		node value link:
-			((self newLinkForSelector: nil)
-				 control: #after;
-				 yourself) ]
-]
-
-{ #category : #instrumentation }
 RFProxyInstrumenter >> instrumentSelector: selector withArgs: args [
 
 	| method |
@@ -185,16 +158,6 @@ RFProxyInstrumenter >> instrumentSelector: selector withArgs: args [
 			args addLast: (instrumentedClass lookupSelector: method selector)  ].
 		^ self ].
 	self instrumentMethod: method selector: selector
-]
-
-{ #category : #instrumentation }
-RFProxyInstrumenter >> instrumentSelfSendsIn: ast [
-	
-	(ast sendNodes select: [ :node | node receiver isSelfVariable ]) do: [ 
-		:node | 
-		RFProxyMetaObject log: 'overriden node receiver: ', node selector.
-		node link:
-			(self newLinkForSelector: node selector) ]
 ]
 
 { #category : #accessing }
