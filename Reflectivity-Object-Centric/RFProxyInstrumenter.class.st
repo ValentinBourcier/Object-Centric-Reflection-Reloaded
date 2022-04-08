@@ -54,6 +54,45 @@ RFProxyInstrumenter >> buildSuperSendsChainFrom: method upTo: targetMethod in: m
 ]
 
 { #category : #instrumentation }
+RFProxyInstrumenter >> compileSuperSendChain: methodsToInstrument [
+
+	| newSelectors originalSelector lastSelector |
+	newSelectors := OrderedCollection new.
+	methodsToInstrument isEmpty ifTrue: [ ^ newSelectors ].
+
+	instrumentedClass compile: methodsToInstrument first sourceCode.
+	originalSelector := methodsToInstrument first selector.
+	newSelectors add: originalSelector.
+	methodsToInstrument size = 1 ifTrue: [ ^ newSelectors ].
+
+	lastSelector := originalSelector.
+
+	2 to: methodsToInstrument size do: [ :i | 
+		| method newSourceCode newMethod newSelector |
+		method := methodsToInstrument at: i.
+
+		newSourceCode := String streamContents: [ :s | 
+			                 s << '_'.
+			                 s << i printString.
+			                 s << '_'.
+			                 s << method sourceCode ].
+
+		newMethod := instrumentedClass compile: newSourceCode.
+		newSelector := newMethod selector.
+		newSelectors add: newSelector.
+		self compiledSelectorsMap at: lastSelector put: newSelector.
+		lastSelector := newSelector ].
+	
+^newSelectors
+]
+
+{ #category : #accessing }
+RFProxyInstrumenter >> compiledSelectorsMap [
+
+	^ compiledSelectorsMap
+]
+
+{ #category : #instrumentation }
 RFProxyInstrumenter >> findSuperSendsChainFor: aMethod [
 
 	| selector nextMethod  methodChain |
@@ -78,19 +117,25 @@ RFProxyInstrumenter >> findSuperSendsChainFor: aMethod [
 { #category : #instrumentation }
 RFProxyInstrumenter >> instrumentMethod: method selector: selector [
 
-	| newMethod |
-	
-	"method hasSuperSends ifTrue:[^self instrumentMethodWithSuperSends: method]."
+	| newMethod methodsToInstrument compiledSelectors |
+	methodsToInstrument := self findSuperSendsChainFor: method.
+	methodsToInstrument isEmpty ifTrue:[^self].
 	
 	instrumentedMessages add: selector.
-	RFProxyMetaObject log: 'Instrumenting: ', selector printString.
+	"Supposes the object will not change (for now)"
+	compiledSelectors := self compileSuperSendChain: methodsToInstrument.
 	
-	'Instrumenting ' crTrace. selector trace.
-	
-	instrumentedClass compile: method sourceCode.
-	newMethod := instrumentedClass >> selector.
-	self instrumentSelfSendsIn: newMethod ast. "instrument with what?"
-	self instrumentReturnSelfIn: newMethod ast
+	compiledSelectors do: [:cs| 
+		|ast|
+		RFProxyMetaObject log: {'Instrumenting: '. cs printString}.
+
+		newMethod := instrumentedClass >> cs.
+		ast := newMethod ast.
+		"self redirectSelfArgsIn: ast."
+		self redirectSelfReturnsIn: ast.
+		self redirectSelfReturnsIn: ast.
+		self redirectVariableAccessesIn: ast.
+		self redirectSuperSendsIn: ast toSelector: (compiledSelectorsMap at: cs)]
 ]
 
 { #category : #instrumentation }
@@ -105,6 +150,24 @@ RFProxyInstrumenter >> instrumentMethodWithSuperSends: method [
 		nextMethod := nextMethod superclass lookupSelector: method selector.
 		hasSuperSends := nextMethod notNil and: [ nextMethod hasSuperSends ].
 		nextMethod ifNotNil: [ newMethods add: nextMethod ] ]
+]
+
+{ #category : #instrumentation }
+RFProxyInstrumenter >> instrumentMethodold: method selector: selector [
+
+	| newMethod |
+	self deprecated: ''.
+	"method hasSuperSends ifTrue:[^self instrumentMethodWithSuperSends: method]."
+	
+	instrumentedMessages add: selector.
+	RFProxyMetaObject log: 'Instrumenting: ', selector printString.
+	
+	'Instrumenting ' crTrace. selector trace.
+	
+	instrumentedClass compile: method sourceCode.
+	newMethod := instrumentedClass >> selector.
+	self instrumentSelfSendsIn: newMethod ast. "instrument with what?"
+	self instrumentReturnSelfIn: newMethod ast
 ]
 
 { #category : #instrumentation }
@@ -224,4 +287,66 @@ RFProxyInstrumenter >> newLinkForSelector: selector [
 { #category : #accessing }
 RFProxyInstrumenter >> originalClass [
 	^instrumentedClass superclass
+]
+
+{ #category : #instrumentation }
+RFProxyInstrumenter >> redirectSelfArgsIn: ast [
+	
+	| methodName nodes  |
+	methodName := ast methodNode method name .
+	nodes := ast sendNodes select: [ :node | node arguments notEmpty ].
+
+	nodes do: 
+		[ :sendNode | 
+			(sendNode arguments select: [ :node | node isSelfVariable ]) 
+				do: [ :node | 
+					self log: { 'overriden self argument: '. node selector. ' in '. methodName}.
+					node link: ((self newLinkForSelector: nil) control: #instead; yourself) ] ]
+]
+
+{ #category : #instrumentation }
+RFProxyInstrumenter >> redirectSelfReturnsIn: ast [
+
+	| returnNodes |
+	returnNodes := ast allChildren select: [ :node | 
+		               node isReturn and: [ node value isSelfVariable ] ].
+	returnNodes do: [ :node | 
+		node value link:
+			((self newLinkForSelector: nil)
+				 control: #after;
+				 yourself) ]
+]
+
+{ #category : #instrumentation }
+RFProxyInstrumenter >> redirectSelfSendsIn: ast [
+	
+	| methodName nodes  |
+	methodName := ast methodNode method name.
+	nodes := ast sendNodes select: [ :node | node receiver isSelfVariable ].
+	nodes do: [ :node | 
+		self log: { 'overriden node receiver: '. node selector. ' in '. methodName }.
+		node link: (self newLinkForSelector: node selector) ]
+]
+
+{ #category : #instrumentation }
+RFProxyInstrumenter >> redirectSuperSendsIn: ast toSelector: aSelector [
+	
+	| methodName nodes  |
+	methodName := ast methodNode method name.
+	nodes := ast sendNodes select: [ :node | node receiver isSuperVariable ].
+	nodes do: [ :node | 		
+		node link: (self newLinkForSelector: aSelector) ]
+]
+
+{ #category : #instrumentation }
+RFProxyInstrumenter >> redirectVariableAccessesIn: ast [
+
+"	| returnNodes |
+	returnNodes := ast allChildren select: [ :node | 
+		               node isReturn and: [ node value isSelfVariable ] ].
+	returnNodes do: [ :node | 
+		node value link:
+			((self newLinkForSelector: nil)
+				 control: #after;
+				 yourself) ]"
 ]
