@@ -8,6 +8,11 @@ Class {
 	#category : #'Reflectivity-Object-Centric-Tests'
 }
 
+{ #category : #helpers }
+RFProxyInstrumenterTest >> receive: selector [
+	^testObject perform: selector
+]
+
 { #category : #tests }
 RFProxyInstrumenterTest >> setUp [
 	super setUp.
@@ -244,4 +249,23 @@ RFProxyInstrumenterTest >> testOriginalClass [
 
 	instrumenter beForObject: testObject.
 	self assert: instrumenter originalClass identicalTo: Object
+]
+
+{ #category : #'tests - instrumentation' }
+RFProxyInstrumenterTest >> testRedirectSuperSendsInToSelector [
+	|ast superSendNode result|
+	testObject := Bub new.
+	instrumenter beForObject: testObject.
+	testObject class compile: (Bub>>#mWithSuper) sourceCode.
+	testObject class compile: 'testSelector x := 42. ^x'.
+	ast := (testObject class>>#mWithSuper) ast.
+	superSendNode := (ast sendNodes select: [ :node | node receiver isSuperVariable ]) first.
+		
+	instrumenter redirectSuperSendsIn: ast toSelector: #testSelector.
+	
+	self assert: superSendNode links notEmpty.
+	
+	result := testObject mWithSuper.	
+	self assert: result equals: 43.
+	self assert: testObject x equals: 42
 ]
