@@ -68,7 +68,7 @@ RFProxyInstrumenter >> compileSuperSendChain: methodsToInstrument [
 	lastSelector := originalSelector.
 
 	2 to: methodsToInstrument size do: [ :i | 
-		| method newSourceCode newMethod newSelector |
+		| method newSourceCode newSelector |
 		method := methodsToInstrument at: i.
 
 		newSourceCode := String streamContents: [ :s | 
@@ -77,8 +77,7 @@ RFProxyInstrumenter >> compileSuperSendChain: methodsToInstrument [
 			                 s << '_'.
 			                 s << method sourceCode ].
 
-		newMethod := instrumentedClass compile: newSourceCode.
-		newSelector := newMethod selector.
+		newSelector := instrumentedClass compile: newSourceCode.
 		newSelectors add: newSelector.
 		self compiledSelectorsMap at: lastSelector put: newSelector.
 		lastSelector := newSelector ].
@@ -89,7 +88,7 @@ RFProxyInstrumenter >> compileSuperSendChain: methodsToInstrument [
 { #category : #accessing }
 RFProxyInstrumenter >> compiledSelectorsMap [
 
-	^ compiledSelectorsMap
+	^ compiledSelectorsMap ifNil:[compiledSelectorsMap := Dictionary new]
 ]
 
 { #category : #instrumentation }

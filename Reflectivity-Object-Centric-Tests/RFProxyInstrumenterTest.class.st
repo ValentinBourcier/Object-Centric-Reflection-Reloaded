@@ -75,6 +75,54 @@ RFProxyInstrumenterTest >> testBuildSuperSendsChainFromSourceMethodToTargetMetho
 ]
 
 { #category : #'tests - method flattening' }
+RFProxyInstrumenterTest >> testCompileEmptySuperSendChain [
+
+	self assertEmpty: (instrumenter compileSuperSendChain: #(  ))
+]
+
+{ #category : #'tests - method flattening' }
+RFProxyInstrumenterTest >> testCompileSuperSendChain [
+
+	|chain compiledSelectors|
+	testObject := Bub new.
+	instrumenter beForObject: testObject.
+	 
+	chain := {Bub >> #mWithSuper. Bib >> #mWithSuper. Bob >> #mWithSuper  }.
+	compiledSelectors := instrumenter compileSuperSendChain: chain.
+	
+	self assert: compiledSelectors size equals: chain size.
+	self assert: compiledSelectors first equals: #mWithSuper.
+	self assert: compiledSelectors second equals: #_2_mWithSuper.
+	self assert: compiledSelectors third equals: #_3_mWithSuper.
+	
+	self assert: (instrumenter compiledSelectorsMap at: compiledSelectors first) equals: compiledSelectors second.
+	self assert: (instrumenter compiledSelectorsMap at: compiledSelectors second) equals: compiledSelectors third.
+	self should: [(instrumenter compiledSelectorsMap at: compiledSelectors third)] raise: KeyNotFound.
+	
+	self assert: (testObject class >> compiledSelectors first) ast body sourceCode equals: (Bub >> #mWithSuper) ast body sourceCode.
+	self assert: (testObject class >> compiledSelectors second) ast body sourceCode equals: (Bib >> #mWithSuper) ast body sourceCode.
+	self assert: (testObject class >> compiledSelectors third) ast body sourceCode equals: (Bob >> #mWithSuper) ast body sourceCode.
+]
+
+{ #category : #'tests - method flattening' }
+RFProxyInstrumenterTest >> testCompileSuperSendChainWithoutSuper [
+
+	|chain compiledSelectors|
+	testObject := Bub new.
+	instrumenter beForObject: testObject.
+	 
+	chain := {Bub >> #mWithSuper}.
+	compiledSelectors := instrumenter compileSuperSendChain: chain.
+	
+	self assert: compiledSelectors size equals: chain size.
+	self assert: compiledSelectors first equals: #mWithSuper.
+	
+	self assertEmpty: (instrumenter compiledSelectorsMap).
+	
+	self assert: (testObject class >> compiledSelectors first) sourceCode equals: (Bub >> #mWithSuper) sourceCode
+]
+
+{ #category : #'tests - method flattening' }
 RFProxyInstrumenterTest >> testFindEmptySuperSendsChainFor [
 
 	|method chain|	
