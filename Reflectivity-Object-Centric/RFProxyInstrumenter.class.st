@@ -118,6 +118,7 @@ RFProxyInstrumenter >> instrumentMethod: method selector: selector [
 
 	| newMethod methodsToInstrument compiledSelectors |
 	methodsToInstrument := self findSuperSendsChainFor: method.
+	self flag: 'Odd: can it really be empty? what about the method passed as paramter?'.
 	methodsToInstrument isEmpty ifTrue:[^self].
 	
 	instrumentedMessages add: selector.
@@ -126,7 +127,7 @@ RFProxyInstrumenter >> instrumentMethod: method selector: selector [
 	
 	compiledSelectors do: [:cs| 
 		|ast|
-		RFProxyMetaObject log: {'Instrumenting: '. cs printString}.
+		RFProxyMetaObject log: ('Instrumenting: ', cs printString).
 
 		newMethod := instrumentedClass >> cs.
 		ast := newMethod ast.
@@ -134,7 +135,7 @@ RFProxyInstrumenter >> instrumentMethod: method selector: selector [
 		self redirectSelfReturnsIn: ast.
 		self redirectSelfReturnsIn: ast.
 		self redirectVariableAccessesIn: ast.
-		compiledSelectorsMap at: cs ifPresent:[:redirectionSelector|
+		self compiledSelectorsMap at: cs ifPresent:[:redirectionSelector|
 			self redirectSuperSendsIn: ast toSelector:redirectionSelector]]
 ]
 
@@ -226,6 +227,7 @@ RFProxyInstrumenter >> newLinkForSelector: selector [
 		ifFalse: [ link selector: #execute ].
 
 	link optionCompileOnLinkInstallation: true.
+"	link level: 0."
 	^ link
 ]
 
