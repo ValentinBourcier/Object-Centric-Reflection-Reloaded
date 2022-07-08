@@ -288,12 +288,4 @@ RFProxyInstrumenter >> redirectSuperSendsIn: ast toSelector: aSelector [
 { #category : #instrumentation }
 RFProxyInstrumenter >> redirectVariableAccessesIn: ast [
 
-"	| returnNodes |
-	returnNodes := ast allChildren select: [ :node | 
-		               node isReturn and: [ node value isSelfVariable ] ].
-	returnNodes do: [ :node | 
-		node value link:
-			((self newLinkForSelector: nil)
-				 control: #after;
-				 yourself) ]"
 ]
