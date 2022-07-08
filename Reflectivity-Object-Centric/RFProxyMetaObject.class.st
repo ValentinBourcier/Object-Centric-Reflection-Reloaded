@@ -12,7 +12,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'proxy',
-		'instrumenter'
+		'instrumenter',
+		'metaLevel'
 	],
 	#classInstVars : [
 		'str'
@@ -39,9 +40,14 @@ RFProxyMetaObject class >> log: info [
 		close
 ]
 
-{ #category : #'reflective operations' }
+{ #category : #'reflective api' }
 RFProxyMetaObject >> executeReflectiveOperationsFor: target uponReceptionOf: selector [
 
+	<debuggerCompleteToSender>
+		"self haltOnce."
+	self metaLevel ifFalse: [ 
+		metaLevel := true.
+		 RFObjectCentricBreak new metaObject: self; signal ].
 	(String streamContents: [ :stream | 
 		 stream << 'Reflective action for:'.
 		 stream space.
@@ -78,6 +84,18 @@ RFProxyMetaObject >> instrumenter: anObject [
 ]
 
 { #category : #accessing }
+RFProxyMetaObject >> metaLevel [
+
+	^ metaLevel ifNil: [ metaLevel := false ]
+]
+
+{ #category : #accessing }
+RFProxyMetaObject >> metaLevel: anObject [
+
+	^ metaLevel := anObject
+]
+
+{ #category : #accessing }
 RFProxyMetaObject >> proxy [
 
 	^ proxy
@@ -91,7 +109,7 @@ RFProxyMetaObject >> proxy: anObject [
 
 { #category : #'message passing' }
 RFProxyMetaObject >> receive: aSelector [
-
+	<debuggerCompleteToSender>
 	self class log: 'receive: ' , aSelector printString.
 	aSelector = #class ifTrue: [ 
 		self flag: 'Temporary hack in waiting a nicer solution'.
@@ -116,24 +134,31 @@ RFProxyMetaObject >> receive: aSelector withArgs: args [
 { #category : #'message passing' }
 RFProxyMetaObject >> send: aMessage to: target [
 
-	self executeReflectiveOperationsFor: target uponReceptionOf: aMessage.
+	
 	self class log: 'send: ' , aMessage printString.
 	aMessage arguments: aMessage arguments asOrderedCollection. 
 	self instrumenter instrumentSelector: aMessage selector withArgs: aMessage arguments.
 	aMessage arguments: aMessage arguments asArray.
+	self executeReflectiveOperationsFor: target uponReceptionOf: aMessage.
 	^ aMessage sendTo: target
 ]
 
 { #category : #'message passing' }
 RFProxyMetaObject >> send: selector withArgs: args to: target [
+	<debuggerCompleteToSender>
 	|arguments|
 	arguments := args asOrderedCollection.
+	
 	self executeReflectiveOperationsFor: target uponReceptionOf: selector.
+	
 	self class log: 'send: ' , selector printString.
+	
 	self instrumenter instrumentSelector: selector withArgs: arguments.
+	
 	^ MirrorPrimitives
 		  withReceiver: target
 		  perform: selector
 		  withArguments: arguments asArray
-	"^ target perform: selector withArguments: args"
+
+
 ]

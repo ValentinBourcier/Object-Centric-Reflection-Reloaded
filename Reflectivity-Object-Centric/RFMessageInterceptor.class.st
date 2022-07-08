@@ -16,12 +16,14 @@ Class {
 { #category : #execution }
 RFMessageInterceptor >> execute [
 
+	<debuggerCompleteToSender>
 	^ metaObject receive: selector
 ]
 
 { #category : #execution }
 RFMessageInterceptor >> executeWithArgs: args [
 
+	<debuggerCompleteToSender>
 	^ metaObject receive: selector withArgs: args
 ]
 
