@@ -83,6 +83,18 @@ RFProxyMetaObject >> instrumenter: anObject [
 	instrumenter := anObject
 ]
 
+{ #category : #'reflective api' }
+RFProxyMetaObject >> instvarAccess: anInstVarAccess [
+]
+
+{ #category : #'reflective api' }
+RFProxyMetaObject >> messageReceived: aReflectiveMessageReceive [
+]
+
+{ #category : #'reflective api' }
+RFProxyMetaObject >> messageSent: aReflectiveMessageSend [
+]
+
 { #category : #accessing }
 RFProxyMetaObject >> metaLevel [
 
@@ -129,6 +141,11 @@ RFProxyMetaObject >> receive: aSelector withArgs: args [
 		  send: aSelector
 		  withArgs: args
 		  to: instrumenter instrumentedObject
+]
+
+{ #category : #'reflective api' }
+RFProxyMetaObject >> reflectiveEvent: aReflectiveEvent [
+	^aReflectiveEvent reflectOn: self
 ]
 
 { #category : #'message passing' }
