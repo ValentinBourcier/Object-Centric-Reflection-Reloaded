@@ -71,6 +71,10 @@ RFProxyMetaObject >> forObject: anObject proxy: aProxy [
 	proxy := aProxy
 ]
 
+{ #category : #'reflective api' }
+RFProxyMetaObject >> instVarAccess: anInstVarAccess [
+]
+
 { #category : #accessing }
 RFProxyMetaObject >> instrumenter [
 
@@ -81,10 +85,6 @@ RFProxyMetaObject >> instrumenter [
 RFProxyMetaObject >> instrumenter: anObject [
 
 	instrumenter := anObject
-]
-
-{ #category : #'reflective api' }
-RFProxyMetaObject >> instvarAccess: anInstVarAccess [
 ]
 
 { #category : #'reflective api' }
