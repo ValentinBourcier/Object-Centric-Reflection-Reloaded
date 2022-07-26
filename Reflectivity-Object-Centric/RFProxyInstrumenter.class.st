@@ -39,7 +39,7 @@ RFProxyInstrumenter >> beForObject: anObject [
 
 { #category : #instrumentation }
 RFProxyInstrumenter >> buildSuperSendsChainFrom: method upTo: targetMethod in: methodChain [
-
+	
 	| selector nextMethod |
 	selector := method selector.
 	nextMethod := method.
@@ -118,25 +118,28 @@ RFProxyInstrumenter >> instrumentMethod: method selector: selector [
 
 	| newMethod methodsToInstrument compiledSelectors |
 	methodsToInstrument := self findSuperSendsChainFor: method.
-	self flag: 'Odd: can it really be empty? what about the method passed as paramter?'.
-	methodsToInstrument isEmpty ifTrue:[^self].
-	
+	self flag:
+		'Odd: can it really be empty? what about the method passed as paramter?'.
+	methodsToInstrument isEmpty ifTrue: [ ^ self ].
+
 	instrumentedMessages add: selector.
 	"Supposes the object will not change (for now)"
 	compiledSelectors := self compileSuperSendChain: methodsToInstrument.
-	
-	compiledSelectors do: [:cs| 
-		|ast|
-		RFProxyMetaObject log: ('Instrumenting: ', cs printString).
+
+	compiledSelectors do: [ :cs | 
+		| ast |
+		RFProxyMetaObject log: 'Instrumenting: ' , cs printString.
 
 		newMethod := instrumentedClass >> cs.
 		ast := newMethod ast.
 		"self redirectSelfArgsIn: ast."
 		self redirectSelfReturnsIn: ast.
-		self redirectSelfReturnsIn: ast.
 		self redirectVariableAccessesIn: ast.
-		self compiledSelectorsMap at: cs ifPresent:[:redirectionSelector|
-			self redirectSuperSendsIn: ast toSelector:redirectionSelector]]
+		self compiledSelectorsMap
+			at: cs
+			ifPresent: [ :redirectionSelector | 
+				self redirectSuperSendsIn: ast toSelector: redirectionSelector ] ]
+		
 ]
 
 { #category : #instrumentation }
@@ -158,7 +161,8 @@ RFProxyInstrumenter >> instrumentSelector: selector withArgs: args [
 			args removeLast.
 			args addLast: (instrumentedClass lookupSelector: method selector)  ].
 		^ self ].
-	self instrumentMethod: method selector: selector
+	self instrumentMethod: method selector: selector.
+	
 ]
 
 { #category : #accessing }
@@ -206,6 +210,22 @@ RFProxyInstrumenter >> log: array [
 RFProxyInstrumenter >> metaObject: anObject [
 
 	metaObject := anObject
+]
+
+{ #category : #links }
+RFProxyInstrumenter >> newLinkForAssignments [
+
+	| link interceptor |
+	link := MetaLink new.
+	link control: #before.
+	interceptor := RFAssignmentInterceptor new.
+	interceptor metaObject: metaObject.
+	link metaObject: interceptor.
+	link selector: #execute:variable:value:newValue:.
+	link arguments: #( object name value newValue ).
+	link optionCompileOnLinkInstallation: true.
+	self log: { 'ENTER LINK FOR ASSIGNMENTS' }.
+	^ link
 ]
 
 { #category : #links }
@@ -288,4 +308,14 @@ RFProxyInstrumenter >> redirectSuperSendsIn: ast toSelector: aSelector [
 { #category : #instrumentation }
 RFProxyInstrumenter >> redirectVariableAccessesIn: ast [
 
+	| assignmentNodes |
+	self log: { 'ENTER LINK INSTRUMENTATION ASSIGNMENT' }.
+	assignmentNodes := ast assignmentNodes.
+	assignmentNodes do: [ :node | 
+		self log: { 
+				'Receiving assignementNode value:'.
+				node value printString.
+				' in  Variable'.
+				node variable printString }.
+		node link: self newLinkForAssignments ]
 ]

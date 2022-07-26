@@ -45,9 +45,9 @@ RFProxyMetaObject >> executeReflectiveOperationsFor: target uponReceptionOf: sel
 
 	<debuggerCompleteToSender>
 		"self haltOnce."
-	self metaLevel ifFalse: [ 
+	"self metaLevel ifFalse: [ 
 		metaLevel := true.
-		 RFObjectCentricBreak new metaObject: self; signal ].
+		 RFObjectCentricBreak new metaObject: self; signal ]."
 	(String streamContents: [ :stream | 
 		 stream << 'Reflective action for:'.
 		 stream space.
@@ -143,6 +143,24 @@ RFProxyMetaObject >> receive: aSelector withArgs: args [
 		  to: instrumenter instrumentedObject
 ]
 
+{ #category : #'message passing' }
+RFProxyMetaObject >> receiveAssignment: aVariable withOldValue: aOldValue withValue: aValue [
+
+	<debuggerCompleteToSender>
+	self class log:
+		'METAOBJECT receive Variable: ' , aVariable printString
+		, ' with Value: ' , aValue printString, '  old Value: ', aOldValue printString.
+	"self send: aValue withArgs: #(  ) to: instrumenter instrumentedObject.
+	^ self
+		  send: aVariable
+		  withArgs: #(  )
+		  to: instrumenter instrumentedObject"
+	"^ self
+		  send: ':='
+		  withArgs: #(  )
+		  to: instrumenter instrumentedObject"
+]
+
 { #category : #'reflective api' }
 RFProxyMetaObject >> reflectiveEvent: aReflectiveEvent [
 	^aReflectiveEvent reflectOn: self
@@ -152,7 +170,7 @@ RFProxyMetaObject >> reflectiveEvent: aReflectiveEvent [
 RFProxyMetaObject >> send: aMessage to: target [
 
 	
-	self class log: 'send: ' , aMessage printString.
+	self class log: 'sendNA: ' , aMessage printString.
 	aMessage arguments: aMessage arguments asOrderedCollection. 
 	self instrumenter instrumentSelector: aMessage selector withArgs: aMessage arguments.
 	aMessage arguments: aMessage arguments asArray.
@@ -168,10 +186,10 @@ RFProxyMetaObject >> send: selector withArgs: args to: target [
 	
 	self executeReflectiveOperationsFor: target uponReceptionOf: selector.
 	
-	self class log: 'send: ' , selector printString.
+	self class log: 'sendWA: ' , selector printString.
 	
 	self instrumenter instrumentSelector: selector withArgs: arguments.
-	
+
 	^ MirrorPrimitives
 		  withReceiver: target
 		  perform: selector

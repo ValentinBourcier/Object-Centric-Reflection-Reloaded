@@ -28,6 +28,22 @@ RFProxy class >> becomeTarget: anObject [
 	^ anObject
 ]
 
+{ #category : #proxy }
+RFProxy class >> becomeTarget: anObject  withMetaObject: mo [
+	| proxy metaObject newMetaObject|
+	proxy := self basicNew.
+	anObject become: proxy.
+	metaObject  := MetaObjectTest new.
+	"After the become, proxy and anObject have been swapped"	
+	newMetaObject := mo forObject: proxy proxy: anObject.
+	metaObject metaObject: newMetaObject .
+	MirrorPrimitives fixedFieldOf: anObject at: (self slotNamed: #target) index put: proxy.
+	MirrorPrimitives fixedFieldOf: anObject at: (self slotNamed: #metaObject) index put: metaObject metaObject.
+	metaObject  object: anObject.
+	"Crear un objecto con el return de aqui como accesor"
+	^ metaObject 
+]
+
 { #category : #'reflective operations' }
 RFProxy >> doesNotUnderstand: aMessage [
 	<debuggerCompleteToSender>

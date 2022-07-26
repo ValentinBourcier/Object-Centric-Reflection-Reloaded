@@ -31,6 +31,7 @@ RFMessageInterceptorTest >> setUp [
 { #category : #tests }
 RFMessageInterceptorTest >> testExecute [
 	interceptor execute.
+
 	self assert: tag equals: #yourself
 ]
 

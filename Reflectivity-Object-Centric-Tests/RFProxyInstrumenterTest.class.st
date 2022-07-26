@@ -27,7 +27,7 @@ RFProxyInstrumenterTest >> testBeForObject [
 	self assert: instrumenter instrumentedObject identicalTo: testObject.
 	self assert: instrumenter instrumentedClass identicalTo: testObject class.
 	self assert: instrumenter instrumentedClass isAnonymous.
-	self assert: instrumenter instrumentedClass superclass identicalTo: Object
+	self assert: instrumenter instrumentedClass superclass identicalTo: Object.
 ]
 
 { #category : #'tests - method flattening' }
@@ -131,7 +131,6 @@ RFProxyInstrumenterTest >> testCompileSuperSendChainWithoutSuper [
 RFProxyInstrumenterTest >> testFindEmptySuperSendsChainFor [
 
 	|method chain|	
-	
 	"Case 1: the method is not reachable from Bib instances"
 	instrumenter beForObject: Bib new.
 	method := Bub >> #mWithSuper.
@@ -217,9 +216,22 @@ RFProxyInstrumenterTest >> testIsMethodReachableInHierarchy [
 ]
 
 { #category : #tests }
+RFProxyInstrumenterTest >> testNewLinkForAssignments [
+
+	| link interceptor |
+	link := instrumenter newLinkForAssignments.
+	self assert: link control equals: #before.
+	self denyEmpty:  link arguments.
+	self assert: link arguments size equals: 4.
+	self assert: link optionCompileOnLinkInstallation.
+
+	interceptor := link metaObject.
+	self assert: interceptor metaObject equals: instrumenter metaObject.
+]
+
+{ #category : #tests }
 RFProxyInstrumenterTest >> testNewLinkForSelector [
 	|link interceptor|
-	
 	link := instrumenter newLinkForSelector: #selector.	
 	self assert: link control equals: #instead.
 	self assert: link selector equals: #execute.
@@ -254,6 +266,7 @@ RFProxyInstrumenterTest >> testOriginalClass [
 { #category : #'tests - instrumentation' }
 RFProxyInstrumenterTest >> testRedirectSuperSendsInToSelector [
 	|ast superSendNode result|
+
 	testObject := Bub new.
 	instrumenter beForObject: testObject.
 	testObject class compile: (Bub>>#mWithSuper) sourceCode.
