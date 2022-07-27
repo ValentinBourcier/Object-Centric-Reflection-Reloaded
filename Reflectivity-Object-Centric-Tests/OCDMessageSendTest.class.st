@@ -10,6 +10,6 @@ OCDMessageSendTest >> testExecute [
 	| a proxy |
 	a := Bub new.
 	proxy := a proxify.
-	"Transcript clear."
+	Transcript clear.
 	a mWithSuper
 ]
