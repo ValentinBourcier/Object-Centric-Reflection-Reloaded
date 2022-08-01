@@ -68,10 +68,10 @@ RFProxyMetaObject >> forObject: anObject [
 RFProxyMetaObject >> forObject: anObject proxy: aProxy [
 
 	self forObject: anObject.
-	proxy := aProxy
+	self proxy: aProxy
 ]
 
-{ #category : #'reflective api' }
+{ #category : #deprecated }
 RFProxyMetaObject >> instVarAccess: anInstVarAccess [
 ]
 
@@ -87,11 +87,11 @@ RFProxyMetaObject >> instrumenter: anObject [
 	instrumenter := anObject
 ]
 
-{ #category : #'reflective api' }
+{ #category : #deprecated }
 RFProxyMetaObject >> messageReceived: aReflectiveMessageReceive [
 ]
 
-{ #category : #'reflective api' }
+{ #category : #deprecated }
 RFProxyMetaObject >> messageSent: aReflectiveMessageSend [
 ]
 
@@ -126,7 +126,7 @@ RFProxyMetaObject >> receive: aSelector [
 	aSelector = #class ifTrue: [ 
 		self flag: 'Temporary hack in waiting a nicer solution'.
 		^ instrumenter instrumentedClass superclass ].
-	aSelector ifNil: [ ^ proxy ].
+	aSelector ifNil: [ ^ self proxy ].
 	^ self
 		  send: aSelector
 		  withArgs: #(  )
@@ -161,12 +161,12 @@ RFProxyMetaObject >> receiveAssignment: aVariable withOldValue: aOldValue withVa
 		  to: instrumenter instrumentedObject"
 ]
 
-{ #category : #'reflective api' }
+{ #category : #deprecated }
 RFProxyMetaObject >> reflectiveEvent: aReflectiveEvent [
 	^aReflectiveEvent reflectOn: self
 ]
 
-{ #category : #'message passing' }
+{ #category : #deprecated }
 RFProxyMetaObject >> send: aMessage to: target [
 
 	
