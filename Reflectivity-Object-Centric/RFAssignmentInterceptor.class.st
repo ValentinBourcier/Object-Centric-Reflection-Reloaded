@@ -19,6 +19,44 @@ RFAssignmentInterceptor >> execute: receiver variable: variable value: value new
 	^ metaObject receiveAssignment: variable withOldValue: value  withValue: newValue.
 ]
 
+{ #category : #execution }
+RFAssignmentInterceptor >> executeAfter: receiver variable: variable value: value newValue: newValue [
+
+	<debuggerCompleteToSender>
+	RFProxyMetaObject log:
+		'Receiver: ' , receiver printString , '  Variable: '
+		, variable printString , '  Value: ' , value printString
+		, '  NewValue: ' , newValue printString.
+	
+	^ metaObject afterAssignment: variable withOldValue: value  withValue: newValue.
+]
+
+{ #category : #execution }
+RFAssignmentInterceptor >> executeBefore: receiver variable: variable value: value newValue: newValue [
+
+	<debuggerCompleteToSender>
+	RFProxyMetaObject log:
+		'Receiver: ' , receiver printString , '  Variable: '
+		, variable printString , '  Value: ' , value printString
+		, '  NewValue: ' , newValue printString.
+	
+	^ metaObject beforeAssignment: variable withOldValue: value  withValue: newValue.
+]
+
+{ #category : #execution }
+RFAssignmentInterceptor >> executeInstead: operation [
+
+	<debuggerCompleteToSender>
+	RFProxyMetaObject log:
+		'Receiver: ' , operation printString , '  Variable: '
+		, operation variableName , '  Value: '
+		, (operation variable read: operation object) printString
+		, '  NewValue: ' , operation assignedValue printString.
+
+	^ metaObject
+		  insteadAssignment: operation
+]
+
 { #category : #accessing }
 RFAssignmentInterceptor >> metaObject [
 

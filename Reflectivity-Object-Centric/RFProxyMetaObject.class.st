@@ -13,7 +13,9 @@ Class {
 	#instVars : [
 		'proxy',
 		'instrumenter',
-		'metaLevel'
+		'metaLevel',
+		'assignments',
+		'messagesSend'
 	],
 	#classInstVars : [
 		'str'
@@ -38,6 +40,94 @@ RFProxyMetaObject class >> log: info [
 		nextPutAll: info;
 		cr;
 		close
+]
+
+{ #category : #'declaration accessing' }
+RFProxyMetaObject >> afterAnyAssignmentDo: aBlock [
+	
+	assignments valuesDo: [ :eachValue | eachValue addAfter: aBlock ]
+	
+]
+
+{ #category : #'declaration accessing' }
+RFProxyMetaObject >> afterAnyMessageSendDo: aBlock [
+	messagesSend valuesDo: [ :eachValue | eachValue addAfter: aBlock ]
+]
+
+{ #category : #'declaration accessing' }
+RFProxyMetaObject >> afterAssignmentTo: aVariable do: aBlock [
+
+	(self assignments includesKey: aVariable) ifTrue: [ 
+		| aTimeObject |
+		aTimeObject := assignments at: aVariable.
+		aTimeObject addAfter: aBlock.
+		^ aTimeObject ].
+	self assignments at: aVariable put: (RFTimeObject new
+			 addAfter: aBlock;
+			 yourself)
+]
+
+{ #category : #'declaration accessing' }
+RFProxyMetaObject >> afterMessageSendTo: aMethod do: aBlock [
+
+	(self messagesSend includesKey: aMethod) ifTrue: [ 
+		| aTimeObject |
+		aTimeObject := messagesSend at: aMethod.
+		aTimeObject addAfter: aBlock.
+		^ aTimeObject ].
+	self messagesSend at: aMethod put: (RFTimeObject new
+			 addAfter: aBlock;
+			 yourself)
+]
+
+{ #category : #accessing }
+RFProxyMetaObject >> assignments [
+
+	^ assignments ifNil: [ assignments:= (Dictionary new)  ]
+]
+
+{ #category : #accessing }
+RFProxyMetaObject >> assignments: anObject [
+
+	assignments := anObject
+]
+
+{ #category : #'declaration accessing' }
+RFProxyMetaObject >> beforeAnyAssignmentDo: aBlock [
+
+	assignments valuesDo: [ :eachValue | eachValue addBefore: aBlock ]
+]
+
+{ #category : #'declaration accessing' }
+RFProxyMetaObject >> beforeAnyMessageSendDo: aBlock [
+
+	messagesSend valuesDo: [ :eachValue | eachValue addBefore:  aBlock ]
+]
+
+{ #category : #'declaration accessing' }
+RFProxyMetaObject >> beforeAssignmentTo: aVariable do: aBlock [
+
+	(self assignments includesKey: aVariable) ifTrue: [ 
+		| aTimeObject |
+		aTimeObject := assignments at: aVariable.
+		aTimeObject addBefore: aBlock.
+		^ aTimeObject ].
+	self assignments at: aVariable put: (RFTimeObject new
+			 addBefore: aBlock;
+			 yourself)
+]
+
+{ #category : #'declaration accessing' }
+RFProxyMetaObject >> beforeMessageSendTo: aMethod do: aBlock [
+
+	(self messagesSend includesKey: aMethod) ifTrue: [ 
+		| aTimeObject |
+		aTimeObject := messagesSend  at: aMethod .
+		aTimeObject addBefore:  aBlock.
+		^ aTimeObject ].
+	self messagesSend  at: aMethod  put: (RFTimeObject new
+			 addBefore: aBlock;
+			 yourself)
 ]
 
 { #category : #'reflective api' }
@@ -75,6 +165,59 @@ RFProxyMetaObject >> forObject: anObject proxy: aProxy [
 RFProxyMetaObject >> instVarAccess: anInstVarAccess [
 ]
 
+{ #category : #'declaration accessing' }
+RFProxyMetaObject >> insteadAnyAssignmentDo: aBlock [
+
+	assignments valuesDo: [ :eachValue | eachValue instead: aBlock ]
+]
+
+{ #category : #'declaration accessing' }
+RFProxyMetaObject >> insteadAnyMessageSendDo: aBlock [
+
+	messagesSend  valuesDo: [ :eachValue | eachValue instead: aBlock ]
+]
+
+{ #category : #'declaration accessing' }
+RFProxyMetaObject >> insteadAssignment: operation [
+
+	"operation variableName."
+
+	| timeObject insteadColl |
+	timeObject := assignments
+		              at: operation variableName
+		              ifAbsent: [ ^ operation value ].
+	insteadColl := timeObject assignments values collect: [ :each | 
+		               each instead ].
+	insteadColl ifEmpty: [ ^ operation value ].
+	insteadColl do: [ :each | each value ]
+]
+
+{ #category : #'declaration accessing' }
+RFProxyMetaObject >> insteadAssignmentTo: aVariable do: aBlock [
+
+	(self assignments includesKey: aVariable) ifTrue: [ 
+		| aTimeObject |
+		aTimeObject := assignments at: aVariable.
+		aTimeObject instead: aBlock.
+		^ aTimeObject ].
+	self assignments at: aVariable put: (RFTimeObject new
+			 instead: aBlock;
+			 yourself)
+]
+
+{ #category : #'declaration accessing' }
+RFProxyMetaObject >> insteadMessageSendTo: aMethod do: aBlock [
+
+	(self messagesSend includesKey: aMethod) ifTrue: [ 
+		| aTimeObject |
+		aTimeObject := messagesSend at: aMethod.
+		aTimeObject instead: aBlock.
+		^ aTimeObject ].
+	self messagesSend at: aMethod put: (RFTimeObject new
+			 instead: aBlock;
+			 yourself)
+]
+
 { #category : #accessing }
 RFProxyMetaObject >> instrumenter [
 
@@ -93,6 +236,18 @@ RFProxyMetaObject >> messageReceived: aReflectiveMessageReceive [
 
 { #category : #deprecated }
 RFProxyMetaObject >> messageSent: aReflectiveMessageSend [
+]
+
+{ #category : #accessing }
+RFProxyMetaObject >> messagesSend [
+
+	^ messagesSend ifNil: [  messagesSend:=  (Dictionary new) ]
+]
+
+{ #category : #accessing }
+RFProxyMetaObject >> messagesSend: anObject [
+
+	messagesSend := anObject
 ]
 
 { #category : #accessing }

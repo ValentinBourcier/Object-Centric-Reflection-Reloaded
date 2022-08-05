@@ -21,7 +21,7 @@ RFAssignmentInterceptorTest >> testExecute [
 	self assert: metaobject logger oldValue isNil.
 ]
 
-{ #category : #tests }
+{ #category : #'as yet unclassified' }
 RFAssignmentInterceptorTest >> testExecuteAssignmentsWithMethods [
 
 	| b proxy metaobject  |

@@ -9,6 +9,18 @@ Class {
 	#category : #'Reflectivity-Object-Centric-Tests'
 }
 
+{ #category : #accessing }
+AssignmentsTestClass >> a [
+
+	^ a
+]
+
+{ #category : #accessing }
+AssignmentsTestClass >> a: anObject [
+
+	a := anObject
+]
+
 { #category : #operation }
 AssignmentsTestClass >> assignment1 [
 	b:= 3.
@@ -22,6 +34,24 @@ AssignmentsTestClass >> assignment2 [
 	^ 3 - b.
 ]
 
+{ #category : #accessing }
+AssignmentsTestClass >> b [
+
+	^ b
+]
+
+{ #category : #accessing }
+AssignmentsTestClass >> b: anObject [
+
+	b := anObject
+]
+
+{ #category : #operation }
+AssignmentsTestClass >> bAssignment [
+
+	b := a
+]
+
 { #category : #operation }
 AssignmentsTestClass >> methodsWithAssignments [
 	a:= self assignment1.
@@ -29,6 +59,18 @@ AssignmentsTestClass >> methodsWithAssignments [
  	result:= 2.
 	result:=  a + b.
 	^ result.
+]
+
+{ #category : #operation }
+AssignmentsTestClass >> onlyAssignment [
+	b:= 2.
+	a:= 3.
+]
+
+{ #category : #operation }
+AssignmentsTestClass >> onlyAssignmentResult [
+
+	result := a + b
 ]
 
 { #category : #operation }
@@ -46,4 +88,30 @@ AssignmentsTestClass >> reassignmentVariable [
 	result := 7.
 	result := 10.
 	^ result
+]
+
+{ #category : #accessing }
+AssignmentsTestClass >> result [
+
+	^ result
+]
+
+{ #category : #accessing }
+AssignmentsTestClass >> result: anObject [
+
+	result := anObject
+]
+
+{ #category : #operation }
+AssignmentsTestClass >> resultAssignment [
+
+	result := a
+]
+
+{ #category : #operation }
+AssignmentsTestClass >> selfAssignment [
+
+	b := a + 2.
+	a := a.
+	result := a + b
 ]

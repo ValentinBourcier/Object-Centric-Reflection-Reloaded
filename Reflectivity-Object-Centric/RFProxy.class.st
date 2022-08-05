@@ -44,10 +44,82 @@ RFProxy class >> becomeTarget: anObject  withMetaObject: mo [
 	^ metaObject 
 ]
 
+{ #category : #setting }
+RFProxy >> afterAnyAssignmentDo: aBlock [
+
+	^ metaObject afterAnyAssignmentDo: aBlock
+]
+
+{ #category : #setting }
+RFProxy >> afterAnyMessageSendDo: aBlock [
+
+	^ metaObject afterAnyMessageSendDo: aBlock
+]
+
+{ #category : #setting }
+RFProxy >> afterAssignmentTo: aVariable do: aBlock [
+
+	^ metaObject afterAssignmentTo: aVariable do: aBlock
+]
+
+{ #category : #setting }
+RFProxy >> afterMessageSendTo:  aVariable do: aBlock [
+
+	^ metaObject afterMessageSendTo: aVariable do: aBlock
+]
+
+{ #category : #setting }
+RFProxy >> beforeAnyAssignmentDo: aBlock [
+
+	^ metaObject beforeAnyAssignmentDo: aBlock
+]
+
+{ #category : #setting }
+RFProxy >> beforeAnyMessageSendDo: aBlock [
+
+	^ metaObject beforeAnyMessageSendDo: aBlock
+]
+
+{ #category : #setting }
+RFProxy >> beforeAssignmentTo: aVariable do: aBlock [
+
+	^ metaObject beforeAssignmentTo: aVariable do: aBlock
+]
+
+{ #category : #setting }
+RFProxy >> beforeMessageSendTo:  aVariable do: aBlock [
+
+	^ metaObject beforeMessageSendTo: aVariable do: aBlock
+]
+
 { #category : #'reflective operations' }
 RFProxy >> doesNotUnderstand: aMessage [
 	<debuggerCompleteToSender>
 	'Proxy receiving: ' crTrace.
 	aMessage trace. 
 	^ metaObject send: aMessage selector withArgs: aMessage arguments to: target
+]
+
+{ #category : #setting }
+RFProxy >> insteadAnyAssignmentDo: aBlock [
+
+	^ metaObject insteadAnyAssignmentDo: aBlock
+]
+
+{ #category : #setting }
+RFProxy >> insteadAnyMessageSendDo: aBlock [
+
+	^ metaObject insteadAnyMessageSendDo: aBlock
+]
+
+{ #category : #setting }
+RFProxy >> insteadAssignmentTo: aVariable do: aBlock [
+
+	^ metaObject insteadAssignmentTo: aVariable do: aBlock
+]
+
+{ #category : #setting }
+RFProxy >> insteadMessageSendTo:  aVariable do: aBlock [
+
+	^ metaObject insteadMessageSendTo: aVariable do: aBlock
 ]

@@ -213,6 +213,54 @@ RFProxyInstrumenter >> metaObject: anObject [
 ]
 
 { #category : #links }
+RFProxyInstrumenter >> newAfterLinkForAssignments [
+
+	| link interceptor |
+	link := MetaLink new.
+	link control: #after.
+	interceptor := RFAssignmentInterceptor new.
+	interceptor metaObject: metaObject.
+	link metaObject: interceptor.
+	link selector: #execute:variable:value:newValue:.
+	link arguments: #( object name value newValue ).
+	link optionCompileOnLinkInstallation: true.
+	self log: { 'ENTER LINK FOR ASSIGNMENTS' }.
+	^ link
+]
+
+{ #category : #links }
+RFProxyInstrumenter >> newBeforeLinkForAssignments [
+
+	| link interceptor |
+	link := MetaLink new.
+	link control: #before.
+	interceptor := RFAssignmentInterceptor new.
+	interceptor metaObject: metaObject.
+	link metaObject: interceptor.
+	link selector: #execute:variable:value:newValue:.
+	link arguments: #( object name value newValue ).
+	link optionCompileOnLinkInstallation: true.
+	self log: { 'ENTER LINK FOR ASSIGNMENTS' }.
+	^ link
+]
+
+{ #category : #links }
+RFProxyInstrumenter >> newInsteadLinkForAssignments [
+
+	| link interceptor |
+	link := MetaLink new.
+	link control: #instead.
+	interceptor := RFAssignmentInterceptor new.
+	interceptor metaObject: metaObject.
+	link metaObject: interceptor.
+	link selector: #executeInstead:.
+	link arguments: #( operation ).
+	link optionCompileOnLinkInstallation: true.
+	self log: { 'ENTER LINK FOR ASSIGNMENTS' }.
+	^ link
+]
+
+{ #category : #links }
 RFProxyInstrumenter >> newLinkForAssignments [
 
 	| link interceptor |
@@ -317,5 +365,7 @@ RFProxyInstrumenter >> redirectVariableAccessesIn: ast [
 				node value printString.
 				' in  Variable'.
 				node variable printString }.
-		node link: self newLinkForAssignments ]
+		node link: self newBeforeLinkForAssignments.
+		node link: self newInsteadLinkForAssignments.
+		node link: self newAfterLinkForAssignments ]
 ]

@@ -11,5 +11,6 @@ OCDMessageSendTest >> testExecute [
 	a := Bub new.
 	proxy := a proxify.
 	Transcript clear.
+	a mWithSuper.
 	a mWithSuper
 ]
