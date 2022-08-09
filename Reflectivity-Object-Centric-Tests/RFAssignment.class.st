@@ -7,17 +7,17 @@ Class {
 { #category : #tests }
 RFAssignment >> testAfterAllAssignment [
 
-	| b proxy metaobject |
-	b := AssignmentsTestClass new.
-	proxy := b proxifyWithMetaObject: RFProxyMetaObjectAssignmentTest.
+	| aAssignmentTestClass proxy metaobject |
+	aAssignmentTestClass := AssignmentsTestClass new.
+	proxy := aAssignmentTestClass proxifyWithMetaObject: RFProxyMetaObjectAssignmentTest.
 	metaobject := proxy metaObject.
 	Transcript clear.
-	b a: 0; b: 0; result: 0.
-	b beforeAnyAssignmentDo:  [self a: self a + 1].
-	b selfAssignment .
-	self assert: b a equals: 3.
-	self assert: b b equals: 2.
-	self assert: b result equals: 4.
+	aAssignmentTestClass a: 0; b: 0; result: 0.
+	aAssignmentTestClass beforeAnyAssignmentDo:  [aAssignmentTestClass a: aAssignmentTestClass a + 1].
+	aAssignmentTestClass selfAssignment .
+	self assert: aAssignmentTestClass a equals: 3.
+	self assert: aAssignmentTestClass b equals: 2.
+	self assert: aAssignmentTestClass result equals: 4.
 ]
 
 { #category : #tests }
@@ -29,6 +29,7 @@ RFAssignment >> testAssignment [
 	metaobject := proxy metaObject.
 	Transcript clear.
 	b a: 1.
+	
 	self assert: b a equals: 1.
 	b beforeAssignmentTo: #a do: [ 'This is A' crTrace ].
 	b afterAssignmentTo: #b do: [ 'This is B' crTrace ].
@@ -40,86 +41,91 @@ RFAssignment >> testAssignment [
 	self assert: (metaobject assignments includesKey: #c).
 	self assert: (metaobject assignments includesKey: #d).
 	self
-		assert: ((metaobject assignments at: #a) at: #before) asText
+		assert: ((metaobject assignments at: #a) before at: 1) asText
 		equals: [ 'This is A' crTrace ] asText.
 	self
-		assert: ((metaobject assignments at: #d) at: #instead) asText
+		assert: ((metaobject assignments at: #d) instead) asText
 		equals: [ 'This is D' crTrace ] asText
+		.
 ]
 
 { #category : #tests }
 RFAssignment >> testAssignmentAfter [
 
-	| b proxy metaobject |
-	b := AssignmentsTestClass new.
-	proxy := b proxifyWithMetaObject: RFProxyMetaObjectAssignmentTest.
+	| aAssignmentTestClass proxy metaobject |
+	aAssignmentTestClass := AssignmentsTestClass new.
+	proxy := aAssignmentTestClass proxifyWithMetaObject:
+		         RFProxyMetaObjectAssignmentTest.
 	metaobject := proxy metaObject.
 	Transcript clear.
-	b a: 1.
-	b afterAssignmentTo: #a do: [self result: self a + self b].
-	b onlyAssignment.
-	self assert: b result equals: 5.
-	
+	aAssignmentTestClass a: 1.
+	aAssignmentTestClass afterAssignmentTo: #a do: [ 
+		aAssignmentTestClass result:
+			aAssignmentTestClass a + aAssignmentTestClass b ].
+	aAssignmentTestClass onlyAssignment.
+	self assert: aAssignmentTestClass result equals: 5
 ]
 
 { #category : #tests }
 RFAssignment >> testAssignmentBefore [
 
-	| b proxy metaobject |
-	b := AssignmentsTestClass new.
-	proxy := b proxifyWithMetaObject: RFProxyMetaObjectAssignmentTest.
+	| aAssignmentTestClass proxy metaobject |
+	aAssignmentTestClass := AssignmentsTestClass new.
+	proxy := aAssignmentTestClass proxifyWithMetaObject:
+		         RFProxyMetaObjectAssignmentTest.
 	metaobject := proxy metaObject.
 	Transcript clear.
-	b a: 1.
-	b beforeAssignmentTo: #a do: [self result: self a + self b].
-	b onlyAssignment.
-	self assert: b result equals: 2.
-	
+	aAssignmentTestClass a: 1.
+	aAssignmentTestClass beforeAssignmentTo: #a do: [ 
+		aAssignmentTestClass result:
+			aAssignmentTestClass a + aAssignmentTestClass b ].
+	aAssignmentTestClass onlyAssignment.
+	self assert: aAssignmentTestClass result equals: 3
 ]
 
 { #category : #tests }
 RFAssignment >> testAssignmentInstead [
 
-	| b proxy metaobject |
-	b := AssignmentsTestClass new.
-	proxy := b proxifyWithMetaObject: RFProxyMetaObjectAssignmentTest.
+	| aAssignmentTestClass proxy metaobject |
+	aAssignmentTestClass := AssignmentsTestClass new.
+	proxy := aAssignmentTestClass proxifyWithMetaObject: RFProxyMetaObjectAssignmentTest.
 	metaobject := proxy metaObject.
 	Transcript clear.
-	b a: 1.
-	b insteadAssignmentTo: #a do: [self a: 2].
-	b onlyAssignment.
-	self assert: b a equals: 2.
+	aAssignmentTestClass a: 1.
+	aAssignmentTestClass insteadAssignmentTo: #a do: [aAssignmentTestClass writeSlotNamed: #a value: 2].
+	aAssignmentTestClass onlyAssignment.
+	self assert: aAssignmentTestClass a equals: 2.
 	
 ]
 
 { #category : #tests }
 RFAssignment >> testBeforeAllAssignment [
 
-	| b proxy metaobject |
-	b := AssignmentsTestClass new.
-	proxy := b proxifyWithMetaObject: RFProxyMetaObjectAssignmentTest.
+	| aAssignmentTestClass proxy metaobject |
+	aAssignmentTestClass := AssignmentsTestClass new.
+	proxy := aAssignmentTestClass proxifyWithMetaObject: RFProxyMetaObjectAssignmentTest.
 	metaobject := proxy metaObject.
 	Transcript clear.
-	b a: 0; b: 0; result: 0.
-	b beforeAnyAssignmentDo:  [self a: self a + 1].
-	b selfAssignment .
-	self assert: b a equals: 3.
-	self assert: b b equals: 3.
-	self assert: b result equals: 6.
+	aAssignmentTestClass a: 0; b: 0; result: 0.
+	aAssignmentTestClass beforeAnyAssignmentDo:  [aAssignmentTestClass a: aAssignmentTestClass a + 1].
+	aAssignmentTestClass selfAssignment .
+	self assert: aAssignmentTestClass a equals: 3.
+	self assert: aAssignmentTestClass b equals: 3.
+	self assert: aAssignmentTestClass result equals: 6.
 ]
 
 { #category : #tests }
 RFAssignment >> testInsteadAllAssignment [
 
-	| b proxy metaobject |
-	b := AssignmentsTestClass new.
-	proxy := b proxifyWithMetaObject: RFProxyMetaObjectAssignmentTest.
+	| aAssignmentTestClass proxy metaobject |
+	aAssignmentTestClass := AssignmentsTestClass new.
+	proxy := aAssignmentTestClass proxifyWithMetaObject: RFProxyMetaObjectAssignmentTest.
 	metaobject := proxy metaObject.
 	Transcript clear.
-	b a: 0; b: 0; result: 0.
-	b beforeAnyAssignmentDo:  [self a: self a + 1].
-	b selfAssignment .
-	self assert: b a equals: 3.
-	self assert: b b equals: 0.
-	self assert: b result equals: 0.
+	aAssignmentTestClass a: 0; b: 0; result: 0.
+	aAssignmentTestClass beforeAnyAssignmentDo:  [aAssignmentTestClass a: aAssignmentTestClass a + 1].
+	aAssignmentTestClass selfAssignment .
+	self assert: aAssignmentTestClass a equals: 3.
+	self assert: aAssignmentTestClass b equals: 0.
+	self assert: aAssignmentTestClass result equals: 0.
 ]

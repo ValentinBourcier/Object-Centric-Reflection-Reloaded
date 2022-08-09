@@ -6,7 +6,7 @@ Class {
 		'oldValue',
 		'newValue'
 	],
-	#category : #'Reflectivity-Object-Centric-Tests'
+	#category : #'Reflectivity-Object-Centric'
 }
 
 { #category : #accessing }

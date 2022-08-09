@@ -20,27 +20,31 @@ RFAssignmentInterceptor >> execute: receiver variable: variable value: value new
 ]
 
 { #category : #execution }
-RFAssignmentInterceptor >> executeAfter: receiver variable: variable value: value newValue: newValue [
+RFAssignmentInterceptor >> executeAfter: operation [
 
 	<debuggerCompleteToSender>
 	RFProxyMetaObject log:
-		'Receiver: ' , receiver printString , '  Variable: '
-		, variable printString , '  Value: ' , value printString
-		, '  NewValue: ' , newValue printString.
-	
-	^ metaObject afterAssignment: variable withOldValue: value  withValue: newValue.
+		'AFTERReceiver: ' , operation variable owningClass printString
+		, '  Variable: ' , operation variable name , '  Value: '
+		, (operation variable read: operation object) printString
+		, '  NewValue: ' , operation assignedValue printString.
+
+
+	^ metaObject afterAssignment: operation
 ]
 
 { #category : #execution }
-RFAssignmentInterceptor >> executeBefore: receiver variable: variable value: value newValue: newValue [
+RFAssignmentInterceptor >> executeBefore: operation [
 
 	<debuggerCompleteToSender>
 	RFProxyMetaObject log:
-		'Receiver: ' , receiver printString , '  Variable: '
-		, variable printString , '  Value: ' , value printString
-		, '  NewValue: ' , newValue printString.
-	
-	^ metaObject beforeAssignment: variable withOldValue: value  withValue: newValue.
+		'BEFOREReceiver: ' , operation variable owningClass printString
+		, '  Variable: ' , operation variable name , '  Value: '
+		, (operation variable read: operation object) printString
+		, '  NewValue: ' , operation assignedValue printString.
+
+
+	^ metaObject beforeAssignment: operation
 ]
 
 { #category : #execution }
@@ -48,13 +52,12 @@ RFAssignmentInterceptor >> executeInstead: operation [
 
 	<debuggerCompleteToSender>
 	RFProxyMetaObject log:
-		'Receiver: ' , operation printString , '  Variable: '
-		, operation variableName , '  Value: '
+		'INSTEADReceiver: ' , operation variable owningClass printString
+		, '  Variable: ' , operation variable name , '  Value: '
 		, (operation variable read: operation object) printString
 		, '  NewValue: ' , operation assignedValue printString.
 
-	^ metaObject
-		  insteadAssignment: operation
+	^ metaObject insteadAssignment: operation
 ]
 
 { #category : #accessing }

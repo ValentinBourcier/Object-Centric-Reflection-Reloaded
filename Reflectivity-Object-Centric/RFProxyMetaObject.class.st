@@ -45,13 +45,32 @@ RFProxyMetaObject class >> log: info [
 { #category : #'declaration accessing' }
 RFProxyMetaObject >> afterAnyAssignmentDo: aBlock [
 	
-	assignments valuesDo: [ :eachValue | eachValue addAfter: aBlock ]
+	self assignments valuesDo: [ :eachValue | eachValue addAfter: aBlock ]
 	
 ]
 
 { #category : #'declaration accessing' }
 RFProxyMetaObject >> afterAnyMessageSendDo: aBlock [
-	messagesSend valuesDo: [ :eachValue | eachValue addAfter: aBlock ]
+	self messagesSend valuesDo: [ :eachValue | eachValue addAfter: aBlock ]
+]
+
+{ #category : #'declaration accessing' }
+RFProxyMetaObject >> afterAssignment: operation [
+
+	| timeObject afterColl |
+	self class log:
+		'METAOBJECT AFTERS receive Variable: ' , operation variable name
+		, ' with Value: ' , operation assignedValue printString
+		, '  old Value: '
+		, (operation variable read: operation object) printString.
+
+	[ self assignments at: operation variable name ]
+		on: KeyNotFound
+		do: [ ^ self ].
+	timeObject := self assignments at: operation variable name.
+	afterColl := timeObject after.
+	afterColl ifEmpty: [ ^ self ].
+	afterColl do: [ :each |  each value].
 ]
 
 { #category : #'declaration accessing' }
@@ -95,13 +114,33 @@ RFProxyMetaObject >> assignments: anObject [
 { #category : #'declaration accessing' }
 RFProxyMetaObject >> beforeAnyAssignmentDo: aBlock [
 
-	assignments valuesDo: [ :eachValue | eachValue addBefore: aBlock ]
+	self assignments valuesDo: [ :eachValue | eachValue addBefore: aBlock ]
 ]
 
 { #category : #'declaration accessing' }
 RFProxyMetaObject >> beforeAnyMessageSendDo: aBlock [
 
-	messagesSend valuesDo: [ :eachValue | eachValue addBefore:  aBlock ]
+	self messagesSend valuesDo: [ :eachValue | eachValue addBefore:  aBlock ]
+]
+
+{ #category : #'declaration accessing' }
+RFProxyMetaObject >> beforeAssignment: operation [
+
+	| timeObject beforeColl |
+	self class log:
+		'METAOBJECT BEFORE receive Variable: ' , operation variable name
+		, ' with Value: ' , operation assignedValue printString
+		, '  old Value: '
+		, (operation variable read: operation object) printString.
+
+	
+	[ self assignments at: operation variable name ]
+		on: KeyNotFound
+		do: [ ^ self ].
+	timeObject := self assignments at: operation variable name.
+	beforeColl := timeObject before.
+	beforeColl ifEmpty: [ ^ self ].
+	beforeColl do: [ :each | each value ]
 ]
 
 { #category : #'declaration accessing' }
@@ -168,28 +207,33 @@ RFProxyMetaObject >> instVarAccess: anInstVarAccess [
 { #category : #'declaration accessing' }
 RFProxyMetaObject >> insteadAnyAssignmentDo: aBlock [
 
-	assignments valuesDo: [ :eachValue | eachValue instead: aBlock ]
+	self assignments valuesDo: [ :eachValue | eachValue instead: aBlock ]
 ]
 
 { #category : #'declaration accessing' }
 RFProxyMetaObject >> insteadAnyMessageSendDo: aBlock [
 
-	messagesSend  valuesDo: [ :eachValue | eachValue instead: aBlock ]
+	self messagesSend  valuesDo: [ :eachValue | eachValue instead: aBlock ]
 ]
 
 { #category : #'declaration accessing' }
 RFProxyMetaObject >> insteadAssignment: operation [
 
-	"operation variableName."
-
-	| timeObject insteadColl |
-	timeObject := assignments
-		              at: operation variableName
-		              ifAbsent: [ ^ operation value ].
-	insteadColl := timeObject assignments values collect: [ :each | 
-		               each instead ].
-	insteadColl ifEmpty: [ ^ operation value ].
-	insteadColl do: [ :each | each value ]
+	| timeObject insteadBlock |
+	
+	self class log:
+		'METAOBJECT INSTEAD receive Variable: ' , operation variable name
+		, ' with Value: ' , operation assignedValue printString
+		, '  old Value: '
+		, (operation variable read: operation object) printString.
+	
+	[ self assignments at: operation variable name ]
+		on: KeyNotFound
+		do: [ ^ operation value ].
+	timeObject := self assignments at: operation variable name.
+	insteadBlock := timeObject instead.
+	insteadBlock ifNil: [ ^ operation value ].
+	insteadBlock value
 ]
 
 { #category : #'declaration accessing' }
@@ -340,8 +384,6 @@ RFProxyMetaObject >> send: selector withArgs: args to: target [
 	arguments := args asOrderedCollection.
 	
 	self executeReflectiveOperationsFor: target uponReceptionOf: selector.
-	
-	self class log: 'sendWA: ' , selector printString.
 	
 	self instrumenter instrumentSelector: selector withArgs: arguments.
 

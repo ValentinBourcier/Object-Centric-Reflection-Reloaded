@@ -1,10 +1,24 @@
 Extension { #name : #Object }
 
 { #category : #'*Reflectivity-Object-Centric' }
+Object >> afterAnyAssignmentDo: aBlock [
+	self flag: 'We have to change the recursion'.
+	self proxify.
+	self afterAnyAssignmentDo: aBlock
+]
+
+{ #category : #'*Reflectivity-Object-Centric' }
 Object >> afterAssignmentTo: aVariableName do: aBlock [
 	self flag: 'We have to change the recursion'.
 	self proxify.
 	self afterAssignmentTo: aVariableName do: aBlock
+]
+
+{ #category : #'*Reflectivity-Object-Centric' }
+Object >> beforeAnyAssignmentDo: aBlock [
+	self flag: 'We have to change the recursion'.
+	self proxify.
+	self beforeAnyAssignmentDo: aBlock
 ]
 
 { #category : #'*Reflectivity-Object-Centric' }
@@ -18,6 +32,13 @@ Object >> beforeAssignmentTo: aVariableName do: aBlock [
 Object >> haltOnCall [
 
 	^ RFProxy becomeTarget: self
+]
+
+{ #category : #'*Reflectivity-Object-Centric' }
+Object >> insteadAnyAssignmentDo: aBlock [
+	self flag: 'We have to change the recursion'.
+	self proxify.
+	self insteadAnyAssignmentDo: aBlock
 ]
 
 { #category : #'*Reflectivity-Object-Centric' }

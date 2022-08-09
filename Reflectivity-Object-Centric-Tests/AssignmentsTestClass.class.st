@@ -63,8 +63,9 @@ AssignmentsTestClass >> methodsWithAssignments [
 
 { #category : #operation }
 AssignmentsTestClass >> onlyAssignment [
-	b:= 2.
-	a:= 3.
+
+	b := 2.
+	a := 3
 ]
 
 { #category : #operation }

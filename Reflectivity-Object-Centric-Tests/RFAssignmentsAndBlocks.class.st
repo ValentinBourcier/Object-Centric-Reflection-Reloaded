@@ -23,8 +23,8 @@ RFAssignmentsAndBlocks >> testAssignmentDictionaryCreation [
 	self assert: (metaobject assignments includesKey: #b).
 	self assert: (metaobject assignments includesKey: #c).
 	self assert: (metaobject assignments includesKey: #d).
-	self assert: ((metaobject assignments at: #a) at:#before) asText equals: [ 'This is A' crTrace ] asText.
-	self assert: ((metaobject assignments at: #d) at:#instead) asText equals: [ 'This is D' crTrace ] asText.
+	self assert: ((metaobject assignments at: #a) before at: 1) asText equals: [ 'This is A' crTrace ] asText.
+	self assert: ((metaobject assignments at: #d) instead ) asText equals: [ 'This is D' crTrace ] asText.
 ]
 
 { #category : #tests }
@@ -41,8 +41,9 @@ RFAssignmentsAndBlocks >> testAssignmentDictionaryCreationOverride [
 	b beforeAssignmentTo: #a do: [ 'This is NEXTBEFORE' crTrace ].
 	b afterAssignmentTo:  #a do: [ 'This is NEXTAFTER' crTrace ].
 	self assert: (metaobject assignments includesKey: #a).
-	self assert: ((metaobject assignments at: #a) at:#before) asText equals: [ 'This is NEXTBEFORE' crTrace ] asText.
-	self assert: ((metaobject assignments at: #a) at:#after) asText equals: [ 'This is NEXTAFTER' crTrace ] asText.
+	self assert: ((metaobject assignments at: #a) before at:1) asText equals: [ 'This is Before' crTrace ] asText.
+	self assert: ((metaobject assignments at: #a) before at:2) asText equals: [ 'This is NEXTBEFORE' crTrace ] asText.
+	self assert: ((metaobject assignments at: #a) after at:2) asText equals: [ 'This is NEXTAFTER' crTrace ] asText.
 ]
 
 { #category : #tests }
@@ -61,10 +62,10 @@ RFAssignmentsAndBlocks >> testAssignmentDictionaryCreationWithMoreThanOneCall [
 	b beforeAssignmentTo: #c do: [ 'This is CBEFORE' crTrace ].
 	
 	self assert: (metaobject assignments includesKey: #a).
-	self assert: ((metaobject assignments at: #a) at:#before) asText equals: [ 'This is Before' crTrace ] asText.
-	self assert: ((metaobject assignments at: #a) at:#instead) asText equals: [ 'This is Instead' crTrace ] asText.
-	self assert: ((metaobject assignments at: #a) at:#after) asText equals: [ 'This is After' crTrace ] asText.
-	self assert: ((metaobject assignments at: #b) at:#after) asText equals: [ 'This is BAFTER' crTrace ] asText.
-	self assert: ((metaobject assignments at: #c) at:#before) asText equals: [ 'This is CBEFORE' crTrace ] asText.
-	self should: [(metaobject assignments at: #c) at:#instead] raise: KeyNotFound .
+	self assert: ((metaobject assignments at: #a) before at:1) asText equals: [ 'This is Before' crTrace ] asText.
+	self assert: ((metaobject assignments at: #a) instead) asText equals: [ 'This is Instead' crTrace ] asText.
+	self assert: ((metaobject assignments at: #a) after at:1) asText equals: [ 'This is After' crTrace ] asText.
+	self assert: ((metaobject assignments at: #b) after at: 1) asText equals: [ 'This is BAFTER' crTrace ] asText.
+	self assert: ((metaobject assignments at: #c) before at: 1) asText equals: [ 'This is CBEFORE' crTrace ] asText.
+	self assert: (metaobject assignments at: #c) instead isNil .
 ]

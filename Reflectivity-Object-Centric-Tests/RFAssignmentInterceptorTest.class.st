@@ -18,7 +18,7 @@ RFAssignmentInterceptorTest >> testExecute [
 	b assignmentTest.
 	self assert: metaobject logger variable equals: #var1.
 	self assert: metaobject logger newValue equals: 16.
-	self assert: metaobject logger oldValue isNil.
+
 ]
 
 { #category : #'as yet unclassified' }
@@ -32,7 +32,7 @@ RFAssignmentInterceptorTest >> testExecuteAssignmentsWithMethods [
 	b methodsWithAssignments.
 	self assert: metaobject logger variable equals: #result.
 	self assert: metaobject logger newValue equals: 6.
-	self assert: metaobject logger oldValue equals: 2.
+
 ]
 
 { #category : #tests }
@@ -46,7 +46,7 @@ RFAssignmentInterceptorTest >> testExecuteReAssignmentVariable [
 	b reassignmentVariable .
 	self assert: metaobject logger variable equals: #result.
 	self assert: metaobject logger newValue equals: 10.
-	self assert: metaobject logger oldValue equals: 7.
+
 ]
 
 { #category : #tests }
@@ -60,5 +60,5 @@ RFAssignmentInterceptorTest >> testExecuteVariousAssignments [
 	b predefinedAddition.
 	self assert: metaobject logger variable equals: #result.
 	self assert: metaobject logger newValue equals: 10.
-	self assert: metaobject logger oldValue isNil.
+
 ]

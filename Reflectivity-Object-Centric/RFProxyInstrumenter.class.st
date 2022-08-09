@@ -220,9 +220,13 @@ RFProxyInstrumenter >> newAfterLinkForAssignments [
 	link control: #after.
 	interceptor := RFAssignmentInterceptor new.
 	interceptor metaObject: metaObject.
-	link metaObject: interceptor.
+	link metaObject: interceptor.	
+	"
 	link selector: #execute:variable:value:newValue:.
 	link arguments: #( object name value newValue ).
+	"
+	link selector: #executeAfter:.
+	link arguments: #( operation ).
 	link optionCompileOnLinkInstallation: true.
 	self log: { 'ENTER LINK FOR ASSIGNMENTS' }.
 	^ link
@@ -237,8 +241,12 @@ RFProxyInstrumenter >> newBeforeLinkForAssignments [
 	interceptor := RFAssignmentInterceptor new.
 	interceptor metaObject: metaObject.
 	link metaObject: interceptor.
+	"
 	link selector: #execute:variable:value:newValue:.
 	link arguments: #( object name value newValue ).
+	"
+	link selector: #executeBefore:.
+	link arguments: #( operation ).
 	link optionCompileOnLinkInstallation: true.
 	self log: { 'ENTER LINK FOR ASSIGNMENTS' }.
 	^ link
@@ -365,7 +373,11 @@ RFProxyInstrumenter >> redirectVariableAccessesIn: ast [
 				node value printString.
 				' in  Variable'.
 				node variable printString }.
+		"node link: self newLinkForAssignments."
+		
 		node link: self newBeforeLinkForAssignments.
 		node link: self newInsteadLinkForAssignments.
-		node link: self newAfterLinkForAssignments ]
+		node link: self newAfterLinkForAssignments 
+		
+		]
 ]

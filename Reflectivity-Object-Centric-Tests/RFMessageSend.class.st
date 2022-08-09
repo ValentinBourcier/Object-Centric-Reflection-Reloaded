@@ -22,10 +22,10 @@ RFMessageSend >> testMessageSend [
 	self assert: (metaobject messagesSend includesKey: #a).
 	self assert: (metaobject messagesSend includesKey: #result).
 	self
-		assert: ((metaobject messagesSend at: #a) at: #before) asText
+		assert: ((metaobject messagesSend at: #a) before at:1) asText
 		equals: [ 'This is A' crTrace ] asText.
 	self
-		assert: ((metaobject messagesSend at: #b) at: #instead) asText
+		assert: ((metaobject messagesSend at: #b) instead) asText
 		equals: [ 'This is B' crTrace ] asText
 ]
 
