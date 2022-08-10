@@ -14,8 +14,8 @@ Class {
 		'proxy',
 		'instrumenter',
 		'metaLevel',
-		'assignments',
-		'messagesSend'
+		'messagesSend',
+		'assignmentsStoring'
 	],
 	#classInstVars : [
 		'str'
@@ -44,9 +44,10 @@ RFProxyMetaObject class >> log: info [
 
 { #category : #'declaration accessing' }
 RFProxyMetaObject >> afterAnyAssignmentDo: aBlock [
-	
-	self assignments valuesDo: [ :eachValue | eachValue addAfter: aBlock ]
-	
+
+	self assignmentsStoring assignments valuesDo: [ :eachValue | 
+		eachValue addAfter: aBlock ].
+	self assignmentsStoring addAllAssignmentsAfter: aBlock.
 ]
 
 { #category : #'declaration accessing' }
@@ -64,26 +65,38 @@ RFProxyMetaObject >> afterAssignment: operation [
 		, '  old Value: '
 		, (operation variable read: operation object) printString.
 
-	[ self assignments at: operation variable name ]
+	[ self assignmentsStoring assignments at: operation variable name ]
 		on: KeyNotFound
-		do: [ ^ self ].
-	timeObject := self assignments at: operation variable name.
+		do: [ 
+			self assignmentsStoring assignments
+				at: operation variable name
+				put: RFTimeObject new.].
+	timeObject := self assignmentsStoring assignments at:
+		              operation variable name.
 	afterColl := timeObject after.
 	afterColl ifEmpty: [ ^ self ].
-	afterColl do: [ :each |  each value].
+	afterColl do: [ :each | each value ]
 ]
 
 { #category : #'declaration accessing' }
 RFProxyMetaObject >> afterAssignmentTo: aVariable do: aBlock [
 
-	(self assignments includesKey: aVariable) ifTrue: [ 
+	| variableToStore |
+	(self assignmentsStoring assignments includesKey: aVariable) ifTrue: [ 
 		| aTimeObject |
-		aTimeObject := assignments at: aVariable.
+		aTimeObject := self assignmentsStoring assignments at: aVariable.
 		aTimeObject addAfter: aBlock.
 		^ aTimeObject ].
-	self assignments at: aVariable put: (RFTimeObject new
-			 addAfter: aBlock;
-			 yourself)
+
+	variableToStore := self assignmentsStoring assignments at: aVariable put: RFTimeObject new.
+	variableToStore := self assignmentsStoring assignments at: aVariable.
+	assignmentsStoring allAssignmentsBefore do: [ :each | 
+		variableToStore addBefore: each ].
+	assignmentsStoring allAssignmentsAfter do: [ :each | 
+		variableToStore addAfter: each ].
+	[ assignmentsStoring allAssignmentsInstead ] ifNotNil: [ 
+		variableToStore instead: assignmentsStoring allAssignmentsInstead ].
+	variableToStore addAfter: aBlock
 ]
 
 { #category : #'declaration accessing' }
@@ -100,21 +113,23 @@ RFProxyMetaObject >> afterMessageSendTo: aMethod do: aBlock [
 ]
 
 { #category : #accessing }
-RFProxyMetaObject >> assignments [
+RFProxyMetaObject >> assignmentsStoring [
 
-	^ assignments ifNil: [ assignments:= (Dictionary new)  ]
+	^ assignmentsStoring ifNil: [ assignmentsStoring:= (RFAssignmentsStoring new)  ]
 ]
 
 { #category : #accessing }
-RFProxyMetaObject >> assignments: anObject [
+RFProxyMetaObject >> assignmentsStoring: anObject [
 
-	assignments := anObject
+	assignmentsStoring := anObject
 ]
 
 { #category : #'declaration accessing' }
 RFProxyMetaObject >> beforeAnyAssignmentDo: aBlock [
 
-	self assignments valuesDo: [ :eachValue | eachValue addBefore: aBlock ]
+	self assignmentsStoring assignments valuesDo: [ :eachValue | 
+		eachValue addBefore: aBlock ].
+	self assignmentsStoring addAllAssignmentsBefore: aBlock
 ]
 
 { #category : #'declaration accessing' }
@@ -134,10 +149,10 @@ RFProxyMetaObject >> beforeAssignment: operation [
 		, (operation variable read: operation object) printString.
 
 	
-	[ self assignments at: operation variable name ]
+	[ self assignmentsStoring assignments at: operation variable name ]
 		on: KeyNotFound
 		do: [ ^ self ].
-	timeObject := self assignments at: operation variable name.
+	timeObject := self assignmentsStoring assignments at: operation variable name.
 	beforeColl := timeObject before.
 	beforeColl ifEmpty: [ ^ self ].
 	beforeColl do: [ :each | each value ]
@@ -146,14 +161,22 @@ RFProxyMetaObject >> beforeAssignment: operation [
 { #category : #'declaration accessing' }
 RFProxyMetaObject >> beforeAssignmentTo: aVariable do: aBlock [
 
-	(self assignments includesKey: aVariable) ifTrue: [ 
+	| variableToStore |
+	(self assignmentsStoring assignments includesKey: aVariable) ifTrue: [ 
 		| aTimeObject |
-		aTimeObject := assignments at: aVariable.
+		aTimeObject := self assignmentsStoring assignments at: aVariable.
 		aTimeObject addBefore: aBlock.
 		^ aTimeObject ].
-	self assignments at: aVariable put: (RFTimeObject new
-			 addBefore: aBlock;
-			 yourself)
+
+	variableToStore := self assignmentsStoring assignments at: aVariable put: RFTimeObject new.
+	variableToStore := self assignmentsStoring assignments at: aVariable.
+	assignmentsStoring allAssignmentsBefore do: [ :each | 
+		variableToStore addBefore: each ].
+	assignmentsStoring allAssignmentsAfter do: [ :each | 
+		variableToStore addAfter: each ].
+	[ assignmentsStoring allAssignmentsInstead ] ifNotNil: [ 
+		variableToStore instead: assignmentsStoring allAssignmentsInstead ].
+	variableToStore addBefore: aBlock
 ]
 
 { #category : #'declaration accessing' }
@@ -207,7 +230,9 @@ RFProxyMetaObject >> instVarAccess: anInstVarAccess [
 { #category : #'declaration accessing' }
 RFProxyMetaObject >> insteadAnyAssignmentDo: aBlock [
 
-	self assignments valuesDo: [ :eachValue | eachValue instead: aBlock ]
+	self assignmentsStoring assignments valuesDo: [ :eachValue | 
+		eachValue instead: aBlock ].
+	self assignmentsStoring allAssignmentsInstead: aBlock
 ]
 
 { #category : #'declaration accessing' }
@@ -227,10 +252,10 @@ RFProxyMetaObject >> insteadAssignment: operation [
 		, '  old Value: '
 		, (operation variable read: operation object) printString.
 	
-	[ self assignments at: operation variable name ]
+	[ self assignmentsStoring assignments at: operation variable name ]
 		on: KeyNotFound
 		do: [ ^ operation value ].
-	timeObject := self assignments at: operation variable name.
+	timeObject := self assignmentsStoring assignments at: operation variable name.
 	insteadBlock := timeObject instead.
 	insteadBlock ifNil: [ ^ operation value ].
 	insteadBlock value
@@ -239,14 +264,21 @@ RFProxyMetaObject >> insteadAssignment: operation [
 { #category : #'declaration accessing' }
 RFProxyMetaObject >> insteadAssignmentTo: aVariable do: aBlock [
 
-	(self assignments includesKey: aVariable) ifTrue: [ 
+	| variableToStore |
+	(self assignmentsStoring assignments includesKey: aVariable) ifTrue: [ 
 		| aTimeObject |
-		aTimeObject := assignments at: aVariable.
+		aTimeObject := self assignmentsStoring assignments at: aVariable.
 		aTimeObject instead: aBlock.
 		^ aTimeObject ].
-	self assignments at: aVariable put: (RFTimeObject new
-			 instead: aBlock;
-			 yourself)
+	variableToStore := self assignmentsStoring assignments
+		                   at: aVariable
+		                   put: RFTimeObject new.
+	variableToStore := self assignmentsStoring assignments at: aVariable.
+	assignmentsStoring allAssignmentsBefore do: [ :each | 
+		variableToStore addBefore: each ].
+	assignmentsStoring allAssignmentsAfter do: [ :each | 
+		variableToStore addAfter: each ].
+	variableToStore instead: aBlock
 ]
 
 { #category : #'declaration accessing' }

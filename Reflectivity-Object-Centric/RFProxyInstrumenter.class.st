@@ -228,7 +228,7 @@ RFProxyInstrumenter >> newAfterLinkForAssignments [
 	link selector: #executeAfter:.
 	link arguments: #( operation ).
 	link optionCompileOnLinkInstallation: true.
-	self log: { 'ENTER LINK FOR ASSIGNMENTS' }.
+	"self log: { 'ENTER LINK FOR ASSIGNMENTS' }."
 	^ link
 ]
 
@@ -248,7 +248,7 @@ RFProxyInstrumenter >> newBeforeLinkForAssignments [
 	link selector: #executeBefore:.
 	link arguments: #( operation ).
 	link optionCompileOnLinkInstallation: true.
-	self log: { 'ENTER LINK FOR ASSIGNMENTS' }.
+	"self log: { 'ENTER LINK FOR ASSIGNMENTS' }."
 	^ link
 ]
 
@@ -264,7 +264,7 @@ RFProxyInstrumenter >> newInsteadLinkForAssignments [
 	link selector: #executeInstead:.
 	link arguments: #( operation ).
 	link optionCompileOnLinkInstallation: true.
-	self log: { 'ENTER LINK FOR ASSIGNMENTS' }.
+	"self log: { 'ENTER LINK FOR ASSIGNMENTS' }."
 	^ link
 ]
 
@@ -365,14 +365,15 @@ RFProxyInstrumenter >> redirectSuperSendsIn: ast toSelector: aSelector [
 RFProxyInstrumenter >> redirectVariableAccessesIn: ast [
 
 	| assignmentNodes |
-	self log: { 'ENTER LINK INSTRUMENTATION ASSIGNMENT' }.
+	"self log: { 'ENTER LINK INSTRUMENTATION ASSIGNMENT' }."
 	assignmentNodes := ast assignmentNodes.
 	assignmentNodes do: [ :node | 
-		self log: { 
+		"self log: { 
 				'Receiving assignementNode value:'.
 				node value printString.
 				' in  Variable'.
-				node variable printString }.
+				node variable printString }."
+		
 		"node link: self newLinkForAssignments."
 		
 		node link: self newBeforeLinkForAssignments.

@@ -23,11 +23,11 @@ RFAssignmentInterceptor >> execute: receiver variable: variable value: value new
 RFAssignmentInterceptor >> executeAfter: operation [
 
 	<debuggerCompleteToSender>
-	RFProxyMetaObject log:
+	"RFProxyMetaObject log:
 		'AFTERReceiver: ' , operation variable owningClass printString
 		, '  Variable: ' , operation variable name , '  Value: '
 		, (operation variable read: operation object) printString
-		, '  NewValue: ' , operation assignedValue printString.
+		, '  NewValue: ' , operation assignedValue printString."
 
 
 	^ metaObject afterAssignment: operation
@@ -37,11 +37,11 @@ RFAssignmentInterceptor >> executeAfter: operation [
 RFAssignmentInterceptor >> executeBefore: operation [
 
 	<debuggerCompleteToSender>
-	RFProxyMetaObject log:
+	"RFProxyMetaObject log:
 		'BEFOREReceiver: ' , operation variable owningClass printString
 		, '  Variable: ' , operation variable name , '  Value: '
 		, (operation variable read: operation object) printString
-		, '  NewValue: ' , operation assignedValue printString.
+		, '  NewValue: ' , operation assignedValue printString."
 
 
 	^ metaObject beforeAssignment: operation
@@ -51,11 +51,11 @@ RFAssignmentInterceptor >> executeBefore: operation [
 RFAssignmentInterceptor >> executeInstead: operation [
 
 	<debuggerCompleteToSender>
-	RFProxyMetaObject log:
+	"RFProxyMetaObject log:
 		'INSTEADReceiver: ' , operation variable owningClass printString
 		, '  Variable: ' , operation variable name , '  Value: '
 		, (operation variable read: operation object) printString
-		, '  NewValue: ' , operation assignedValue printString.
+		, '  NewValue: ' , operation assignedValue printString."
 
 	^ metaObject insteadAssignment: operation
 ]

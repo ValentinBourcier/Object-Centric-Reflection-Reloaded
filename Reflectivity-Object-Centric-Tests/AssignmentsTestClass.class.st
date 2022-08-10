@@ -113,6 +113,6 @@ AssignmentsTestClass >> resultAssignment [
 AssignmentsTestClass >> selfAssignment [
 
 	b := a + 2.
-	a := a.
+	a := a + 1.
 	result := a + b
 ]
