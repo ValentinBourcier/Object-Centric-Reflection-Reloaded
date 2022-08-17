@@ -33,7 +33,7 @@ RFProxy class >> becomeTarget: anObject  withMetaObject: mo [
 	| proxy metaObject newMetaObject|
 	proxy := self basicNew.
 	anObject become: proxy.
-	metaObject  := MetaObjectTest new.
+	metaObject  := RFMetaObjectAndOriginalObject new.
 	"After the become, proxy and anObject have been swapped"	
 	newMetaObject := mo forObject: proxy proxy: anObject.
 	metaObject metaObject: newMetaObject .
@@ -94,10 +94,14 @@ RFProxy >> beforeMessageSendTo:  aVariable do: aBlock [
 
 { #category : #'reflective operations' }
 RFProxy >> doesNotUnderstand: aMessage [
+
 	<debuggerCompleteToSender>
 	'Proxy receiving: ' crTrace.
-	aMessage trace. 
-	^ metaObject send: aMessage selector withArgs: aMessage arguments to: target
+	aMessage trace.
+	^ metaObject
+		  send: aMessage selector
+		  withArgs: aMessage arguments
+		  to: target
 ]
 
 { #category : #setting }

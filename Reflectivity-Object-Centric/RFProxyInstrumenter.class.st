@@ -123,7 +123,6 @@ RFProxyInstrumenter >> instrumentMethod: method selector: selector [
 	methodsToInstrument isEmpty ifTrue: [ ^ self ].
 
 	instrumentedMessages add: selector.
-	"Supposes the object will not change (for now)"
 	compiledSelectors := self compileSuperSendChain: methodsToInstrument.
 
 	compiledSelectors do: [ :cs | 
@@ -139,7 +138,6 @@ RFProxyInstrumenter >> instrumentMethod: method selector: selector [
 			at: cs
 			ifPresent: [ :redirectionSelector | 
 				self redirectSuperSendsIn: ast toSelector: redirectionSelector ] ]
-		
 ]
 
 { #category : #instrumentation }
@@ -220,15 +218,10 @@ RFProxyInstrumenter >> newAfterLinkForAssignments [
 	link control: #after.
 	interceptor := RFAssignmentInterceptor new.
 	interceptor metaObject: metaObject.
-	link metaObject: interceptor.	
-	"
-	link selector: #execute:variable:value:newValue:.
-	link arguments: #( object name value newValue ).
-	"
+	link metaObject: interceptor.
 	link selector: #executeAfter:.
 	link arguments: #( operation ).
 	link optionCompileOnLinkInstallation: true.
-	"self log: { 'ENTER LINK FOR ASSIGNMENTS' }."
 	^ link
 ]
 
@@ -241,14 +234,10 @@ RFProxyInstrumenter >> newBeforeLinkForAssignments [
 	interceptor := RFAssignmentInterceptor new.
 	interceptor metaObject: metaObject.
 	link metaObject: interceptor.
-	"
-	link selector: #execute:variable:value:newValue:.
-	link arguments: #( object name value newValue ).
-	"
 	link selector: #executeBefore:.
 	link arguments: #( operation ).
 	link optionCompileOnLinkInstallation: true.
-	"self log: { 'ENTER LINK FOR ASSIGNMENTS' }."
+
 	^ link
 ]
 
@@ -264,7 +253,7 @@ RFProxyInstrumenter >> newInsteadLinkForAssignments [
 	link selector: #executeInstead:.
 	link arguments: #( operation ).
 	link optionCompileOnLinkInstallation: true.
-	"self log: { 'ENTER LINK FOR ASSIGNMENTS' }."
+
 	^ link
 ]
 
@@ -365,20 +354,9 @@ RFProxyInstrumenter >> redirectSuperSendsIn: ast toSelector: aSelector [
 RFProxyInstrumenter >> redirectVariableAccessesIn: ast [
 
 	| assignmentNodes |
-	"self log: { 'ENTER LINK INSTRUMENTATION ASSIGNMENT' }."
 	assignmentNodes := ast assignmentNodes.
 	assignmentNodes do: [ :node | 
-		"self log: { 
-				'Receiving assignementNode value:'.
-				node value printString.
-				' in  Variable'.
-				node variable printString }."
-		
-		"node link: self newLinkForAssignments."
-		
 		node link: self newBeforeLinkForAssignments.
 		node link: self newInsteadLinkForAssignments.
-		node link: self newAfterLinkForAssignments 
-		
-		]
+		node link: self newAfterLinkForAssignments ]
 ]

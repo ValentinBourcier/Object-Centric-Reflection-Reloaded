@@ -1,9 +1,6 @@
 Class {
 	#name : #RFAssignmentInterceptorTest,
 	#superclass : #TestCase,
-	#instVars : [
-		'interceptor'
-	],
 	#category : #'Reflectivity-Object-Centric-Tests'
 }
 

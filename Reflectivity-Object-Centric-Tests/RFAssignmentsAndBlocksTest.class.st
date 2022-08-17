@@ -1,11 +1,11 @@
 Class {
-	#name : #RFAssignmentsAndBlocks,
+	#name : #RFAssignmentsAndBlocksTest,
 	#superclass : #TestCase,
 	#category : #'Reflectivity-Object-Centric-Tests'
 }
 
 { #category : #tests }
-RFAssignmentsAndBlocks >> testAssignmentDictionaryCreation [
+RFAssignmentsAndBlocksTest >> testAssignmentDictionaryCreation [
 
 	| b proxy metaobject |
 	b := AssignmentsTestClass  new.
@@ -28,7 +28,7 @@ RFAssignmentsAndBlocks >> testAssignmentDictionaryCreation [
 ]
 
 { #category : #tests }
-RFAssignmentsAndBlocks >> testAssignmentDictionaryCreationOverride [
+RFAssignmentsAndBlocksTest >> testAssignmentDictionaryCreationOverride [
 
 	| b proxy metaobject |
 	b := AssignmentsTestClass  new.
@@ -47,7 +47,7 @@ RFAssignmentsAndBlocks >> testAssignmentDictionaryCreationOverride [
 ]
 
 { #category : #tests }
-RFAssignmentsAndBlocks >> testAssignmentDictionaryCreationWithMoreThanOneCall [
+RFAssignmentsAndBlocksTest >> testAssignmentDictionaryCreationWithMoreThanOneCall [
 
 	| b proxy metaobject |
 	b := AssignmentsTestClass  new.

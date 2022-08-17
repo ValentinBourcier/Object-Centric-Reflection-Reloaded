@@ -11,36 +11,36 @@ Class {
 }
 
 { #category : #'message passing' }
-RFProxyMetaObjectAssignmentTest >> afterAssignment: operation [
+RFProxyMetaObjectAssignmentTest >> linkAfterAssignment: operation [
 
 	logger := RFAssignmentMetaObjectInterceptor new.
 	logger variable: operation variable name.
 	logger newValue: operation assignedValue.
 	logger oldValue: (operation variable read: operation object).
 
-	super afterAssignment: operation
+	super linkAfterAssignment: operation
 ]
 
 { #category : #'message passing' }
-RFProxyMetaObjectAssignmentTest >> beforeAssignment: operation [
+RFProxyMetaObjectAssignmentTest >> linkBeforeAssignment: operation [
 
 	logger := RFAssignmentMetaObjectInterceptor new.
 	logger variable: operation variable name.
 	logger newValue: operation assignedValue.
 	logger oldValue: (operation variable read: operation object).
 
-	super beforeAssignment: operation
+	super linkBeforeAssignment: operation
 ]
 
 { #category : #'message passing' }
-RFProxyMetaObjectAssignmentTest >> insteadAssignment: operation [
+RFProxyMetaObjectAssignmentTest >> linkInsteadAssignment: operation [
 
 	logger := RFAssignmentMetaObjectInterceptor new.
 	logger variable: operation variable name.
 	logger newValue: operation assignedValue.
 	logger oldValue: (operation variable read: operation object).
 
-	super insteadAssignment: operation
+	super linkInsteadAssignment: operation
 ]
 
 { #category : #accessing }

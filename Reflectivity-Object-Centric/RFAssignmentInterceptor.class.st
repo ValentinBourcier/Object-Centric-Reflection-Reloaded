@@ -7,7 +7,7 @@ Class {
 	#category : #'Reflectivity-Object-Centric'
 }
 
-{ #category : #execution }
+{ #category : #deprecated }
 RFAssignmentInterceptor >> execute: receiver variable: variable value: value newValue: newValue [
 
 	<debuggerCompleteToSender>
@@ -23,41 +23,22 @@ RFAssignmentInterceptor >> execute: receiver variable: variable value: value new
 RFAssignmentInterceptor >> executeAfter: operation [
 
 	<debuggerCompleteToSender>
-	"RFProxyMetaObject log:
-		'AFTERReceiver: ' , operation variable owningClass printString
-		, '  Variable: ' , operation variable name , '  Value: '
-		, (operation variable read: operation object) printString
-		, '  NewValue: ' , operation assignedValue printString."
-
-
-	^ metaObject afterAssignment: operation
+	^ metaObject linkAfterAssignment: operation
 ]
 
 { #category : #execution }
 RFAssignmentInterceptor >> executeBefore: operation [
 
 	<debuggerCompleteToSender>
-	"RFProxyMetaObject log:
-		'BEFOREReceiver: ' , operation variable owningClass printString
-		, '  Variable: ' , operation variable name , '  Value: '
-		, (operation variable read: operation object) printString
-		, '  NewValue: ' , operation assignedValue printString."
-
-
-	^ metaObject beforeAssignment: operation
+	^ metaObject linkBeforeAssignment: operation
 ]
 
 { #category : #execution }
 RFAssignmentInterceptor >> executeInstead: operation [
 
 	<debuggerCompleteToSender>
-	"RFProxyMetaObject log:
-		'INSTEADReceiver: ' , operation variable owningClass printString
-		, '  Variable: ' , operation variable name , '  Value: '
-		, (operation variable read: operation object) printString
-		, '  NewValue: ' , operation assignedValue printString."
 
-	^ metaObject insteadAssignment: operation
+	^ metaObject linkInsteadAssignment: operation
 ]
 
 { #category : #accessing }

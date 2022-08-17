@@ -10,13 +10,13 @@ Class {
 	#category : #'Reflectivity-Object-Centric'
 }
 
-{ #category : #accessing }
+{ #category : #adding }
 RFAssignmentsStoring >> addAllAssignmentsAfter: aBlock [
 
 	self allAssignmentsAfter add: aBlock.
 ]
 
-{ #category : #accessing }
+{ #category : #adding }
 RFAssignmentsStoring >> addAllAssignmentsBefore: aBlock [
 
 	self allAssignmentsBefore add: aBlock.

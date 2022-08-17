@@ -1,5 +1,5 @@
 Class {
-	#name : #MetaObjectTest,
+	#name : #RFMetaObjectAndOriginalObject,
 	#superclass : #Object,
 	#instVars : [
 		'object',
@@ -9,25 +9,25 @@ Class {
 }
 
 { #category : #accessing }
-MetaObjectTest >> metaObject [
+RFMetaObjectAndOriginalObject >> metaObject [
 
 	^ metaObject
 ]
 
 { #category : #accessing }
-MetaObjectTest >> metaObject: anObject [
+RFMetaObjectAndOriginalObject >> metaObject: anObject [
 
 	metaObject := anObject
 ]
 
 { #category : #accessing }
-MetaObjectTest >> object [
+RFMetaObjectAndOriginalObject >> object [
 
 	^ object
 ]
 
 { #category : #accessing }
-MetaObjectTest >> object: anObject [
+RFMetaObjectAndOriginalObject >> object: anObject [
 
 	object := anObject
 ]

@@ -1,11 +1,11 @@
 Class {
-	#name : #RFMessageSend,
+	#name : #RFMessageSendTest,
 	#superclass : #TestCase,
 	#category : #'Reflectivity-Object-Centric-Tests'
 }
 
 { #category : #tests }
-RFMessageSend >> testMessageSend [
+RFMessageSendTest >> testMessageSend [
 
 	| b proxy metaobject |
 	b := AssignmentsTestClass new.
@@ -30,7 +30,7 @@ RFMessageSend >> testMessageSend [
 ]
 
 { #category : #tests }
-RFMessageSend >> testMessageSendAfter [
+RFMessageSendTest >> testMessageSendAfter [
 
 	| b proxy metaobject |
 	b := AssignmentsTestClass new.
@@ -47,7 +47,7 @@ RFMessageSend >> testMessageSendAfter [
 ]
 
 { #category : #tests }
-RFMessageSend >> testMessageSendAllAfter [
+RFMessageSendTest >> testMessageSendAllAfter [
 
 	| b proxy metaobject |
 	b := AssignmentsTestClass new.
@@ -67,7 +67,7 @@ RFMessageSend >> testMessageSendAllAfter [
 ]
 
 { #category : #tests }
-RFMessageSend >> testMessageSendAllBefore [
+RFMessageSendTest >> testMessageSendAllBefore [
 
 	| b proxy metaobject |
 	b := AssignmentsTestClass new.
@@ -87,7 +87,7 @@ RFMessageSend >> testMessageSendAllBefore [
 ]
 
 { #category : #tests }
-RFMessageSend >> testMessageSendAllInstead [
+RFMessageSendTest >> testMessageSendAllInstead [
 
 	| b proxy metaobject |
 	b := AssignmentsTestClass new.
@@ -107,7 +107,7 @@ RFMessageSend >> testMessageSendAllInstead [
 ]
 
 { #category : #tests }
-RFMessageSend >> testMessageSendBefore [
+RFMessageSendTest >> testMessageSendBefore [
 
 	| b proxy metaobject |
 	b := AssignmentsTestClass new.
@@ -122,7 +122,7 @@ RFMessageSend >> testMessageSendBefore [
 ]
 
 { #category : #tests }
-RFMessageSend >> testMessageSendInstead [
+RFMessageSendTest >> testMessageSendInstead [
 
 | b proxy metaobject |
 	b := AssignmentsTestClass new.

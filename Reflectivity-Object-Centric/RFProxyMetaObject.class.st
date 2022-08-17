@@ -56,29 +56,6 @@ RFProxyMetaObject >> afterAnyMessageSendDo: aBlock [
 ]
 
 { #category : #'declaration accessing' }
-RFProxyMetaObject >> afterAssignment: operation [
-
-	| timeObject afterColl |
-	self class log:
-		'METAOBJECT AFTERS receive Variable: ' , operation variable name
-		, ' with Value: ' , operation assignedValue printString
-		, '  old Value: '
-		, (operation variable read: operation object) printString.
-
-	[ self assignmentsStoring assignments at: operation variable name ]
-		on: KeyNotFound
-		do: [ 
-			self assignmentsStoring assignments
-				at: operation variable name
-				put: RFTimeObject new.].
-	timeObject := self assignmentsStoring assignments at:
-		              operation variable name.
-	afterColl := timeObject after.
-	afterColl ifEmpty: [ ^ self ].
-	afterColl do: [ :each | each value ]
-]
-
-{ #category : #'declaration accessing' }
 RFProxyMetaObject >> afterAssignmentTo: aVariable do: aBlock [
 
 	| variableToStore |
@@ -139,36 +116,15 @@ RFProxyMetaObject >> beforeAnyMessageSendDo: aBlock [
 ]
 
 { #category : #'declaration accessing' }
-RFProxyMetaObject >> beforeAssignment: operation [
-
-	| timeObject beforeColl |
-	self class log:
-		'METAOBJECT BEFORE receive Variable: ' , operation variable name
-		, ' with Value: ' , operation assignedValue printString
-		, '  old Value: '
-		, (operation variable read: operation object) printString.
-
-	
-	[ self assignmentsStoring assignments at: operation variable name ]
-		on: KeyNotFound
-		do: [ ^ self ].
-	timeObject := self assignmentsStoring assignments at: operation variable name.
-	beforeColl := timeObject before.
-	beforeColl ifEmpty: [ ^ self ].
-	beforeColl do: [ :each | each value ]
-]
-
-{ #category : #'declaration accessing' }
 RFProxyMetaObject >> beforeAssignmentTo: aVariable do: aBlock [
 
 	| variableToStore |
 	(self assignmentsStoring assignments includesKey: aVariable) ifTrue: [ 
-		| aTimeObject |
-		aTimeObject := self assignmentsStoring assignments at: aVariable.
-		aTimeObject addBefore: aBlock.
-		^ aTimeObject ].
-
-	variableToStore := self assignmentsStoring assignments at: aVariable put: RFTimeObject new.
+		^ (self assignmentsStoring assignments at: aVariable) addBefore:
+			  aBlock ].
+	self assignmentsStoring assignments
+		at: aVariable
+		put: RFTimeObject new.
 	variableToStore := self assignmentsStoring assignments at: aVariable.
 	assignmentsStoring allAssignmentsBefore do: [ :each | 
 		variableToStore addBefore: each ].
@@ -242,26 +198,6 @@ RFProxyMetaObject >> insteadAnyMessageSendDo: aBlock [
 ]
 
 { #category : #'declaration accessing' }
-RFProxyMetaObject >> insteadAssignment: operation [
-
-	| timeObject insteadBlock |
-	
-	self class log:
-		'METAOBJECT INSTEAD receive Variable: ' , operation variable name
-		, ' with Value: ' , operation assignedValue printString
-		, '  old Value: '
-		, (operation variable read: operation object) printString.
-	
-	[ self assignmentsStoring assignments at: operation variable name ]
-		on: KeyNotFound
-		do: [ ^ operation value ].
-	timeObject := self assignmentsStoring assignments at: operation variable name.
-	insteadBlock := timeObject instead.
-	insteadBlock ifNil: [ ^ operation value ].
-	insteadBlock value
-]
-
-{ #category : #'declaration accessing' }
 RFProxyMetaObject >> insteadAssignmentTo: aVariable do: aBlock [
 
 	| variableToStore |
@@ -304,6 +240,71 @@ RFProxyMetaObject >> instrumenter [
 RFProxyMetaObject >> instrumenter: anObject [
 
 	instrumenter := anObject
+]
+
+{ #category : #'declaration accessing' }
+RFProxyMetaObject >> linkAfterAssignment: operation [
+
+	| timeObject afterColl |
+	self class log:
+		'METAOBJECT AFTERS receive Variable: ' , operation variable name
+		, ' with Value: ' , operation assignedValue printString
+		, '  old Value: '
+		, (operation variable read: operation object) printString.
+
+	[ self assignmentsStoring assignments at: operation variable name ]
+		on: KeyNotFound
+		do: [ 
+			self assignmentsStoring assignments
+				at: operation variable name
+				put: RFTimeObject new ].
+	timeObject := self assignmentsStoring assignments at:
+		              operation variable name.
+	afterColl := timeObject after.
+	afterColl ifEmpty: [ ^ self ].
+	afterColl do: [ :each | each value ]
+]
+
+{ #category : #'declaration accessing' }
+RFProxyMetaObject >> linkBeforeAssignment: operation [
+
+	| timeObject beforeColl |
+	self class log:
+		'METAOBJECT BEFORE receive Variable: ' , operation variable name
+		, ' with Value: ' , operation assignedValue printString
+		, '  old Value: '
+		, (operation variable read: operation object) printString.
+	[ self assignmentsStoring assignments at: operation variable name ]
+		on: KeyNotFound
+		do: [ 
+			self assignmentsStoring assignments
+				at: operation variable name
+				put: RFTimeObject new ].
+	timeObject := self assignmentsStoring assignments at:
+		              operation variable name.
+	beforeColl := timeObject before.
+	beforeColl ifEmpty: [ ^ self ].
+	beforeColl do: [ :each | each value ]
+]
+
+{ #category : #'declaration accessing' }
+RFProxyMetaObject >> linkInsteadAssignment: operation [
+
+	| timeObject insteadBlock |
+	
+	self class log:
+		'METAOBJECT INSTEAD receive Variable: ' , operation variable name
+		, ' with Value: ' , operation assignedValue printString
+		, '  old Value: '
+		, (operation variable read: operation object) printString.
+	
+	[ self assignmentsStoring assignments at: operation variable name ]
+		on: KeyNotFound
+		do: [ ^ operation value ].
+	timeObject := self assignmentsStoring assignments at: operation variable name.
+	insteadBlock := timeObject instead.
+	insteadBlock ifNil: [ ^ operation value ].
+	insteadBlock value
 ]
 
 { #category : #deprecated }
@@ -374,7 +375,7 @@ RFProxyMetaObject >> receive: aSelector withArgs: args [
 		  to: instrumenter instrumentedObject
 ]
 
-{ #category : #'message passing' }
+{ #category : #deprecated }
 RFProxyMetaObject >> receiveAssignment: aVariable withOldValue: aOldValue withValue: aValue [
 
 	<debuggerCompleteToSender>
@@ -411,18 +412,17 @@ RFProxyMetaObject >> send: aMessage to: target [
 
 { #category : #'message passing' }
 RFProxyMetaObject >> send: selector withArgs: args to: target [
+
 	<debuggerCompleteToSender>
-	|arguments|
+	| arguments |
 	arguments := args asOrderedCollection.
-	
+
 	self executeReflectiveOperationsFor: target uponReceptionOf: selector.
-	
+
 	self instrumenter instrumentSelector: selector withArgs: arguments.
 
 	^ MirrorPrimitives
 		  withReceiver: target
 		  perform: selector
 		  withArguments: arguments asArray
-
-
 ]
