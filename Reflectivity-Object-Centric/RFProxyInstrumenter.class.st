@@ -356,7 +356,8 @@ RFProxyInstrumenter >> redirectVariableAccessesIn: ast [
 	| assignmentNodes |
 	assignmentNodes := ast assignmentNodes.
 	assignmentNodes do: [ :node | 
-		node link: self newBeforeLinkForAssignments.
-		node link: self newInsteadLinkForAssignments.
-		node link: self newAfterLinkForAssignments ]
+		self metaObject metaLevel ifFalse: [ 
+			node link: self newBeforeLinkForAssignments.
+			node link: self newInsteadLinkForAssignments.
+			node link: self newAfterLinkForAssignments ] ]
 ]

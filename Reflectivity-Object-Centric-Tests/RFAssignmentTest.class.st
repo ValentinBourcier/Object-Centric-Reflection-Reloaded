@@ -18,9 +18,8 @@ RFAssignmentTest >> testAfterAllAssignment [
 		b: 0;
 		result: 0.
 	aAssignmentTestClass afterAnyAssignmentDo: [ 
-		aAssignmentTestClass
-			writeSlotNamed: #a
-			value: aAssignmentTestClass a + 1 ].
+		"aAssignmentTestClass writeSlotNamed: #a value: aAssignmentTestClass a + 1" 
+		aAssignmentTestClass a: aAssignmentTestClass a + 1 ].
 	aAssignmentTestClass selfAssignment.
 	self assert: aAssignmentTestClass a equals: 4.
 	self assert: aAssignmentTestClass b equals: 2.
@@ -70,7 +69,7 @@ RFAssignmentTest >> testAssignmentAfter [
 		aAssignmentTestClass result:
 			aAssignmentTestClass a + aAssignmentTestClass b ].
 	aAssignmentTestClass onlyAssignment.
-	self assert: aAssignmentTestClass result equals: 5
+	self assert: aAssignmentTestClass result equals: 11
 ]
 
 { #category : #tests }
@@ -95,14 +94,33 @@ RFAssignmentTest >> testAssignmentInstead [
 
 	| aAssignmentTestClass proxy metaobject |
 	aAssignmentTestClass := AssignmentsTestClass new.
-	proxy := aAssignmentTestClass proxifyWithMetaObject: RFProxyMetaObjectAssignmentTest.
+	proxy := aAssignmentTestClass proxifyWithMetaObject:
+		         RFProxyMetaObjectAssignmentTest.
 	metaobject := proxy metaObject.
 	Transcript clear.
 	aAssignmentTestClass a: 1.
-	aAssignmentTestClass insteadAssignmentTo: #a do: [aAssignmentTestClass writeSlotNamed: #a value: 2].
+	aAssignmentTestClass
+		insteadAssignmentTo: #a
+		do: [ aAssignmentTestClass a: 2 ].
 	aAssignmentTestClass onlyAssignment.
-	self assert: aAssignmentTestClass a equals: 2.
-	
+	self assert: aAssignmentTestClass a equals: 2
+]
+
+{ #category : #tests }
+RFAssignmentTest >> testAssignmentInsteadAllWithAssignment [
+
+	| aAssignmentTestClass proxy metaobject |
+	aAssignmentTestClass := AssignmentsTestClass new.
+	proxy := aAssignmentTestClass proxifyWithMetaObject:
+		         RFProxyMetaObjectAssignmentTest.
+	metaobject := proxy metaObject.
+	Transcript clear.
+	aAssignmentTestClass a: 1.
+	aAssignmentTestClass
+		insteadAssignmentTo: #a
+		do: [ aAssignmentTestClass a: aAssignmentTestClass a + 2 ].
+	aAssignmentTestClass onlyAssignment.
+	self assert: aAssignmentTestClass a equals: 3
 ]
 
 { #category : #tests }
@@ -115,15 +133,11 @@ RFAssignmentTest >> testAssignmentInsteadWithAssignment [
 	metaobject := proxy metaObject.
 	Transcript clear.
 	aAssignmentTestClass
-		a: 0;
-		b: 0;
-		result: 0.
+		a: 0.
 	aAssignmentTestClass insteadAnyAssignmentDo: [ 
-		aAssignmentTestClass a: aAssignmentTestClass a + 1 ].
+		aAssignmentTestClass a: aAssignmentTestClass a + 5 ].
 	aAssignmentTestClass selfAssignment.
-	self assert: aAssignmentTestClass a equals: 3.
-	self assert: aAssignmentTestClass b equals: 0.
-	self assert: aAssignmentTestClass result equals: 0
+	self assert: aAssignmentTestClass a equals: 15
 ]
 
 { #category : #tests }
@@ -140,12 +154,10 @@ RFAssignmentTest >> testBeforeAllAssignment [
 		b: 0;
 		result: 0.
 	aAssignmentTestClass beforeAnyAssignmentDo: [ 
-		aAssignmentTestClass
-			writeSlotNamed: #result
-			value: aAssignmentTestClass result + 1 ].
+		aAssignmentTestClass result: aAssignmentTestClass result + 1 ].
 	aAssignmentTestClass onlyAssignment.
-	
-	self assert: aAssignmentTestClass a equals: 3.
+
+	self assert: aAssignmentTestClass a equals: 9.
 	self assert: aAssignmentTestClass b equals: 2.
 	self assert: aAssignmentTestClass result equals: 2
 ]
@@ -154,24 +166,21 @@ RFAssignmentTest >> testBeforeAllAssignment [
 RFAssignmentTest >> testBeforeAllAssignmentSelfAssignment [
 
 	| aAssignmentTestClass proxy metaobject |
+	"The assignment is executed after doing the operations"
 	aAssignmentTestClass := AssignmentsTestClass new.
 	proxy := aAssignmentTestClass proxifyWithMetaObject:
 		         RFProxyMetaObjectAssignmentTest.
 	metaobject := proxy metaObject.
-	Transcript clear.
 	aAssignmentTestClass
 		a: 0;
 		b: 0;
 		result: 0.
 	aAssignmentTestClass beforeAnyAssignmentDo: [ 
-		aAssignmentTestClass
-			writeSlotNamed: #a
-			value: aAssignmentTestClass a + 1 ].
+		aAssignmentTestClass a: aAssignmentTestClass a + 1 ].
 	aAssignmentTestClass selfAssignment.
-	
-	self assert: aAssignmentTestClass a equals: 4.
-	self assert: aAssignmentTestClass b equals: 3.
-	self assert: aAssignmentTestClass result equals: 7
+	self assert: aAssignmentTestClass a equals: 3.
+	self assert: aAssignmentTestClass b equals: 2.
+	self assert: aAssignmentTestClass result equals: 4
 ]
 
 { #category : #tests }
@@ -188,9 +197,7 @@ RFAssignmentTest >> testInsteadAllAssignment [
 		b: 0;
 		result: 0.
 	aAssignmentTestClass insteadAnyAssignmentDo: [ 
-		aAssignmentTestClass
-			writeSlotNamed: #a
-			value: aAssignmentTestClass a + 1 ].
+		aAssignmentTestClass a: aAssignmentTestClass a + 1 ].
 	aAssignmentTestClass selfAssignment.
 	self assert: aAssignmentTestClass a equals: 3.
 	self assert: aAssignmentTestClass b equals: 0.

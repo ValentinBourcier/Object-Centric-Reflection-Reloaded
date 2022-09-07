@@ -152,10 +152,7 @@ RFProxyMetaObject >> beforeMessageSendTo: aMethod do: aBlock [
 RFProxyMetaObject >> executeReflectiveOperationsFor: target uponReceptionOf: selector [
 
 	<debuggerCompleteToSender>
-		"self haltOnce."
-	"self metaLevel ifFalse: [ 
-		metaLevel := true.
-		 RFObjectCentricBreak new metaObject: self; signal ]."
+	
 	(String streamContents: [ :stream | 
 		 stream << 'Reflective action for:'.
 		 stream space.
@@ -251,7 +248,8 @@ RFProxyMetaObject >> linkAfterAssignment: operation [
 		, ' with Value: ' , operation assignedValue printString
 		, '  old Value: '
 		, (operation variable read: operation object) printString.
-
+	self halt.
+	self metaLevel ifTrue: [ ^ operation value ].
 	[ self assignmentsStoring assignments at: operation variable name ]
 		on: KeyNotFound
 		do: [ 
@@ -262,7 +260,9 @@ RFProxyMetaObject >> linkAfterAssignment: operation [
 		              operation variable name.
 	afterColl := timeObject after.
 	afterColl ifEmpty: [ ^ self ].
-	afterColl do: [ :each | each value ]
+	self metaLevel: true.
+	afterColl do: [ :each | each value ].
+	self metaLevel: false
 ]
 
 { #category : #'declaration accessing' }
@@ -274,6 +274,8 @@ RFProxyMetaObject >> linkBeforeAssignment: operation [
 		, ' with Value: ' , operation assignedValue printString
 		, '  old Value: '
 		, (operation variable read: operation object) printString.
+	self halt.
+	self metaLevel ifTrue: [ ^ self ].
 	[ self assignmentsStoring assignments at: operation variable name ]
 		on: KeyNotFound
 		do: [ 
@@ -284,27 +286,32 @@ RFProxyMetaObject >> linkBeforeAssignment: operation [
 		              operation variable name.
 	beforeColl := timeObject before.
 	beforeColl ifEmpty: [ ^ self ].
-	beforeColl do: [ :each | each value ]
+	self metaLevel: true.
+	beforeColl do: [ :each | each value ].
+	self metaLevel: false
 ]
 
 { #category : #'declaration accessing' }
 RFProxyMetaObject >> linkInsteadAssignment: operation [
 
 	| timeObject insteadBlock |
-	
 	self class log:
 		'METAOBJECT INSTEAD receive Variable: ' , operation variable name
 		, ' with Value: ' , operation assignedValue printString
 		, '  old Value: '
 		, (operation variable read: operation object) printString.
-	
+	self halt.
+	self metaLevel ifTrue: [ ^ operation value ].
 	[ self assignmentsStoring assignments at: operation variable name ]
 		on: KeyNotFound
 		do: [ ^ operation value ].
-	timeObject := self assignmentsStoring assignments at: operation variable name.
+	timeObject := self assignmentsStoring assignments at:
+		              operation variable name.
 	insteadBlock := timeObject instead.
 	insteadBlock ifNil: [ ^ operation value ].
-	insteadBlock value
+	self metaLevel: true.
+	insteadBlock value.
+	self metaLevel: false
 ]
 
 { #category : #deprecated }
@@ -419,8 +426,7 @@ RFProxyMetaObject >> send: selector withArgs: args to: target [
 
 	self executeReflectiveOperationsFor: target uponReceptionOf: selector.
 
-	self instrumenter instrumentSelector: selector withArgs: arguments.
-
+		self instrumenter instrumentSelector: selector withArgs: arguments.
 	^ MirrorPrimitives
 		  withReceiver: target
 		  perform: selector

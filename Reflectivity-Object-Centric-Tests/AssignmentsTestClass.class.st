@@ -65,7 +65,7 @@ AssignmentsTestClass >> methodsWithAssignments [
 AssignmentsTestClass >> onlyAssignment [
 
 	b := 2.
-	a := 3
+	a := 9
 ]
 
 { #category : #operation }
@@ -115,4 +115,9 @@ AssignmentsTestClass >> selfAssignment [
 	b := a + 2.
 	a := a + 1.
 	result := a + b
+]
+
+{ #category : #operation }
+AssignmentsTestClass >> selfAssignmentSingle [
+	a := 1.
 ]
