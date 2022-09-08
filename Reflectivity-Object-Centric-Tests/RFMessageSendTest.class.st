@@ -18,14 +18,14 @@ RFMessageSendTest >> testMessageSend [
 	b insteadMessageSendTo: #b do: [ 'This is B' crTrace ].
 	b afterMessageSendTo: #result do: [ 'This is result' crTrace ].
 
-	self assert: (metaobject messagesSend  includesKey: #b).
-	self assert: (metaobject messagesSend includesKey: #a).
-	self assert: (metaobject messagesSend includesKey: #result).
+	self assert: (metaobject messagesStoring valuesStored  includesKey: #b).
+	self assert: (metaobject messagesStoring valuesStored includesKey: #a).
+	self assert: (metaobject messagesStoring valuesStored includesKey: #result).
 	self
-		assert: ((metaobject messagesSend at: #a) before at:1) asText
+		assert: ((metaobject messagesStoring valuesStored at: #a) before at:1) asText
 		equals: [ 'This is A' crTrace ] asText.
 	self
-		assert: ((metaobject messagesSend at: #b) instead) asText
+		assert: ((metaobject messagesStoring valuesStored at: #b) instead) asText
 		equals: [ 'This is B' crTrace ] asText
 ]
 
@@ -39,9 +39,10 @@ RFMessageSendTest >> testMessageSendAfter [
 	Transcript clear.
 	b a: 1.
 	b b: 2.
-	b afterMessageSendTo: #onlyAssignmentResult do: [self a: 5].
-	b onlyAssignmentResult.
-	self assert: b result equals: 3.
+	b afterMessageSendTo: #methodsWithAssignments do: [b a: 8].
+	
+	b methodsWithAssignments.
+	self assert: b result equals: 6.
 	self assert: b a equals: 5.
 	
 ]

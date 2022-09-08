@@ -43,14 +43,14 @@ RFAssignmentTest >> testAssignment [
 	b insteadAssignmentTo: #d do: [ 'This is D' crTrace ].
 
 
-	self assert: (metaobject assignmentsStoring assignments includesKey: #b).
-	self assert: (metaobject assignmentsStoring assignments includesKey: #c).
-	self assert: (metaobject assignmentsStoring assignments includesKey: #d).
+	self assert: (metaobject assignmentsStoring valuesStored includesKey: #b).
+	self assert: (metaobject assignmentsStoring valuesStored includesKey: #c).
+	self assert: (metaobject assignmentsStoring valuesStored includesKey: #d).
 	self
-		assert: ((metaobject assignmentsStoring assignments at: #a) before at: 1) asText
+		assert: ((metaobject assignmentsStoring valuesStored at: #a) before at: 1) asText
 		equals: [ 'This is A' crTrace ] asText.
 	self
-		assert: ((metaobject assignmentsStoring assignments at: #d) instead) asText
+		assert: ((metaobject assignmentsStoring valuesStored at: #d) instead) asText
 		equals: [ 'This is D' crTrace ] asText
 		.
 ]
@@ -133,7 +133,8 @@ RFAssignmentTest >> testAssignmentInsteadWithAssignment [
 	metaobject := proxy metaObject.
 	Transcript clear.
 	aAssignmentTestClass
-		a: 0.
+		a: 0;
+		b: 1.
 	aAssignmentTestClass insteadAnyAssignmentDo: [ 
 		aAssignmentTestClass a: aAssignmentTestClass a + 5 ].
 	aAssignmentTestClass selfAssignment.

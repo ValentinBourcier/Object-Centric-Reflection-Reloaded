@@ -114,7 +114,7 @@ AssignmentsTestClass >> selfAssignment [
 
 	b := a + 2.
 	a := a + 1.
-	result := a + b
+	result := a +  b
 ]
 
 { #category : #operation }

@@ -63,9 +63,9 @@ RFProxy >> afterAssignmentTo: aVariable do: aBlock [
 ]
 
 { #category : #setting }
-RFProxy >> afterMessageSendTo:  aVariable do: aBlock [
+RFProxy >> afterMessageSendTo: aMethod do: aBlock [
 
-	^ metaObject afterMessageSendTo: aVariable do: aBlock
+	^ metaObject afterMessageSendTo: aMethod do: aBlock
 ]
 
 { #category : #setting }
@@ -87,9 +87,9 @@ RFProxy >> beforeAssignmentTo: aVariable do: aBlock [
 ]
 
 { #category : #setting }
-RFProxy >> beforeMessageSendTo:  aVariable do: aBlock [
+RFProxy >> beforeMessageSendTo:  aMethod do: aBlock [
 
-	^ metaObject beforeMessageSendTo: aVariable do: aBlock
+	^ metaObject beforeMessageSendTo: aMethod do: aBlock
 ]
 
 { #category : #'reflective operations' }
@@ -123,7 +123,7 @@ RFProxy >> insteadAssignmentTo: aVariable do: aBlock [
 ]
 
 { #category : #setting }
-RFProxy >> insteadMessageSendTo:  aVariable do: aBlock [
+RFProxy >> insteadMessageSendTo: aMethod do: aBlock [
 
-	^ metaObject insteadMessageSendTo: aVariable do: aBlock
+	^ metaObject insteadMessageSendTo: aMethod do: aBlock
 ]
