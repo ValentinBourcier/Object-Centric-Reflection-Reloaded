@@ -245,7 +245,7 @@ RFProxyInstrumenter >> newBeforeLinkForMessagesSend [
 	link := MetaLink new.
 	link control: #before.
 	link metaObject: metaObject .
-	link selector: #executeBefore:.
+	link selector: #linkBeforeMessageSend:.
 	link arguments: #( operation ).
 	link optionCompileOnLinkInstallation: true.
 
@@ -300,8 +300,8 @@ RFProxyInstrumenter >> redirectMessagesSendIn: ast [
 	messageSendNode := ast sendNodes.
 	self halt.
 	messageSendNode do: [ :node | 
-			"node link: self newBeforeLinkForMessagesSend.
-			node link: self newInsteadLinkForMessagesSend.
+			node link: self newBeforeLinkForMessagesSend.
+			"node link: self newInsteadLinkForMessagesSend.
 			node link: self newAfterLinkForMessagesSend"
 			
 			 ] 

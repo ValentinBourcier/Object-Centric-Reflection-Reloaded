@@ -22,7 +22,7 @@ RFAssignmentInterceptorTest >> testExecute [
 RFAssignmentInterceptorTest >> testExecuteAssignmentsWithMethods [
 
 	| b proxy metaobject  |
-	b := AssignmentsTestClass  new.
+	b := TestClass  new.
 	proxy := b proxifyWithMetaObject: RFProxyMetaObjectAssignmentTest.
 	metaobject := proxy metaObject.
 	Transcript clear.
@@ -36,7 +36,7 @@ RFAssignmentInterceptorTest >> testExecuteAssignmentsWithMethods [
 RFAssignmentInterceptorTest >> testExecuteReAssignmentVariable [
 
 	| b proxy metaobject  |
-	b := AssignmentsTestClass  new.
+	b := TestClass  new.
 	proxy := b proxifyWithMetaObject: RFProxyMetaObjectAssignmentTest.
 	metaobject := proxy metaObject.
 	Transcript clear.
@@ -50,7 +50,7 @@ RFAssignmentInterceptorTest >> testExecuteReAssignmentVariable [
 RFAssignmentInterceptorTest >> testExecuteVariousAssignments [
 
 	| b proxy metaobject  |
-	b := AssignmentsTestClass  new.
+	b := TestClass  new.
 	proxy := b proxifyWithMetaObject: RFProxyMetaObjectAssignmentTest.
 	metaobject := proxy metaObject.
 	Transcript clear.

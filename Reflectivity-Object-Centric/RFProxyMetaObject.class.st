@@ -328,7 +328,7 @@ RFProxyMetaObject >> linkBeforeAssignment: operation [
 
 { #category : #'declaration accessing' }
 RFProxyMetaObject >> linkBeforeMessageSend: operation [
-
+	self halt.
 	self class log:
 		'METAOBJECT BEFORE receive Variable: ' , operation variable name
 		, ' with Value: ' , operation assignedValue printString
