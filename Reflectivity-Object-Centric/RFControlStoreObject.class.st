@@ -1,5 +1,11 @@
 "
-THIS CLASS HAS ONLY TESTING PURPOUSE
+This class store the control of the values stored that are blocks to execute, has a linkedlist for controls after, before and a value for instead:
+
+
+after: #([],[],[])
+before: #([],[],[])
+instead: []
+
 
 Please comment me using the following template inspired by Class Responsibility Collaborator (CRC) design:
 
@@ -20,56 +26,56 @@ Public API and Key Messages
 Internal Representation and Key Implementation Points.
 
     Instance Variables
-	newValue:		<Object>
-	oldValue:		<Object>
-	variable:		<Object>
+	after:		<Object>
+	before:		<Object>
+	instead:		<Object>
 
 
     Implementation Points
 "
 Class {
-	#name : #RFAssignmentMetaObjectInterceptor,
+	#name : #RFControlStoreObject,
 	#superclass : #Object,
 	#instVars : [
-		'variable',
-		'oldValue',
-		'newValue'
+		'before',
+		'after',
+		'instead'
 	],
 	#category : #'Reflectivity-Object-Centric'
 }
 
 { #category : #accessing }
-RFAssignmentMetaObjectInterceptor >> newValue [
+RFControlStoreObject >> addAfter: aBlock [
 
-	^ newValue
+	self after add: aBlock.
 ]
 
 { #category : #accessing }
-RFAssignmentMetaObjectInterceptor >> newValue: anObject [
+RFControlStoreObject >> addBefore: aBlock [
 
-	newValue := anObject
+	self before  add: aBlock
 ]
 
 { #category : #accessing }
-RFAssignmentMetaObjectInterceptor >> oldValue [
+RFControlStoreObject >> after [
 
-	^ oldValue
+	^ after ifNil: [ after := (LinkedList new)  ]
 ]
 
 { #category : #accessing }
-RFAssignmentMetaObjectInterceptor >> oldValue: anObject [
+RFControlStoreObject >> before [
 
-	oldValue := anObject
+	^ before ifNil: [ before := (LinkedList new)  ]
 ]
 
 { #category : #accessing }
-RFAssignmentMetaObjectInterceptor >> variable [
+RFControlStoreObject >> instead [
 
-	^ variable
+	^ instead
 ]
 
 { #category : #accessing }
-RFAssignmentMetaObjectInterceptor >> variable: anObject [
+RFControlStoreObject >> instead: anObject [
 
-	variable := anObject
+	instead := anObject
 ]

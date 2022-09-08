@@ -216,20 +216,6 @@ RFProxyInstrumenterTest >> testIsMethodReachableInHierarchy [
 ]
 
 { #category : #tests }
-RFProxyInstrumenterTest >> testNewLinkForAssignments [
-
-	| link interceptor |
-	link := instrumenter newLinkForAssignments.
-	self assert: link control equals: #before.
-	self denyEmpty:  link arguments.
-	self assert: link arguments size equals: 4.
-	self assert: link optionCompileOnLinkInstallation.
-
-	interceptor := link metaObject.
-	self assert: interceptor metaObject equals: instrumenter metaObject.
-]
-
-{ #category : #tests }
 RFProxyInstrumenterTest >> testNewLinkForSelector [
 	|link interceptor|
 	link := instrumenter newLinkForSelector: #selector.	

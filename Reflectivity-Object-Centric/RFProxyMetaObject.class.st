@@ -70,7 +70,7 @@ RFProxyMetaObject >> afterAssignmentTo: aVariable do: aBlock [
 			^ aTimeObject ].
 	self assignmentsStoring valuesStored
 		at: aVariable
-		put: RFTimeObject new.
+		put: RFControlStoreObject new.
 	variableToStore := self assignmentsStoring valuesStored at: aVariable.
 	assignmentsStoring allValuesBefore do: [ :each | 
 		variableToStore addBefore: each ].
@@ -90,7 +90,7 @@ RFProxyMetaObject >> afterMessageSendTo: aMethod do: aBlock [
 		aTimeObject := self messagesStoring valuesStored at: aMethod.
 		aTimeObject addAfter: aBlock.
 		^ aTimeObject ].
-	self messagesStoring valuesStored at: aMethod put: RFTimeObject new.
+	self messagesStoring valuesStored at: aMethod put: RFControlStoreObject new.
 	messageToStore := self messagesStoring valuesStored at: aMethod.
 	messagesStoring allValuesBefore do: [ :each | 
 		messageToStore addBefore: each ].
@@ -139,7 +139,7 @@ RFProxyMetaObject >> beforeAssignmentTo: aVariable do: aBlock [
 				  aBlock ].
 	self assignmentsStoring valuesStored
 		at: aVariable
-		put: RFTimeObject new.
+		put: RFControlStoreObject new.
 	variableToStore := self assignmentsStoring valuesStored at: aVariable.
 	assignmentsStoring allValuesBefore do: [ :each | 
 		variableToStore addBefore: each ].
@@ -160,7 +160,7 @@ RFProxyMetaObject >> beforeMessageSendTo: aMethod do: aBlock [
 		aTimeObject := self messagesStoring valuesStored at: aMethod.
 		aTimeObject addAfter: aBlock.
 		^ aTimeObject ].
-	self messagesStoring valuesStored at: aMethod put: RFTimeObject new.
+	self messagesStoring valuesStored at: aMethod put: RFControlStoreObject new.
 	messageToStore := self messagesStoring valuesStored at: aMethod.
 	messagesStoring allValuesBefore do: [ :each | 
 		messageToStore addBefore: each ].
@@ -230,7 +230,7 @@ RFProxyMetaObject >> insteadAssignmentTo: aVariable do: aBlock [
 		^ aTimeObject ].
 	variableToStore := self assignmentsStoring valuesStored
 		                   at: aVariable
-		                   put: RFTimeObject new.
+		                   put: RFControlStoreObject new.
 	variableToStore := self assignmentsStoring valuesStored at: aVariable.
 	assignmentsStoring allValuesBefore do: [ :each | 
 		variableToStore addBefore: each ].
@@ -250,7 +250,7 @@ RFProxyMetaObject >> insteadMessageSendTo: aMethod do: aBlock [
 		^ aTimeObject ].
 	messageToStore := self messagesStoring valuesStored
 		                   at: aMethod
-		                   put: RFTimeObject new.
+		                   put: RFControlStoreObject new.
 	messageToStore := self messagesStoring valuesStored at: aMethod.
 	assignmentsStoring allValuesBefore do: [ :each | 
 		messageToStore addBefore: each ].
@@ -287,7 +287,7 @@ RFProxyMetaObject >> linkAfterAssignment: operation [
 		do: [ 
 			self assignmentsStoring valuesStored
 				at: operation variable name
-				put: RFTimeObject new.
+				put: RFControlStoreObject new.
 			self assignmentsStoring addAllValuesStored: operation variable name
 			 ].
 	timeObject := self assignmentsStoring valuesStored at:
@@ -315,7 +315,7 @@ RFProxyMetaObject >> linkBeforeAssignment: operation [
 		do: [ 
 			self assignmentsStoring valuesStored
 				at: operation variable name
-				put: RFTimeObject new.
+				put: RFControlStoreObject new.
 			self assignmentsStoring addAllValuesStored: operation variable name ].
 	timeObject := self assignmentsStoring valuesStored at:
 		              operation variable name.
@@ -324,6 +324,18 @@ RFProxyMetaObject >> linkBeforeAssignment: operation [
 	self metaLevel: true.
 	beforeColl do: [ :each | each value ].
 	self metaLevel: false
+]
+
+{ #category : #'declaration accessing' }
+RFProxyMetaObject >> linkBeforeMessageSend: operation [
+
+	self class log:
+		'METAOBJECT BEFORE receive Variable: ' , operation variable name
+		, ' with Value: ' , operation assignedValue printString
+		, '  old Value: '
+		, (operation variable read: operation object) printString.
+
+
 ]
 
 { #category : #'declaration accessing' }
@@ -341,7 +353,7 @@ RFProxyMetaObject >> linkInsteadAssignment: operation [
 		do: [ 
 			self assignmentsStoring valuesStored
 				at: operation variable name
-				put: RFTimeObject new.
+				put: RFControlStoreObject new.
 			self assignmentsStoring addAllValuesStored: operation variable name.
 			^ operation value ].
 	timeObject := self assignmentsStoring valuesStored at:

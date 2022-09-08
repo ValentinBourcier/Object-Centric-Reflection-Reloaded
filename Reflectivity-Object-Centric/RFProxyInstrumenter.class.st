@@ -134,6 +134,7 @@ RFProxyInstrumenter >> instrumentMethod: method selector: selector [
 		"self redirectSelfArgsIn: ast."
 		self redirectSelfReturnsIn: ast.
 		self redirectVariableAccessesIn: ast.
+		"self redirectMessagesSendIn: ast."
 		self compiledSelectorsMap
 			at: cs
 			ifPresent: [ :redirectionSelector | 
@@ -213,13 +214,11 @@ RFProxyInstrumenter >> metaObject: anObject [
 { #category : #links }
 RFProxyInstrumenter >> newAfterLinkForAssignments [
 
-	| link interceptor |
+	| link |
 	link := MetaLink new.
 	link control: #after.
-	interceptor := RFAssignmentInterceptor new.
-	interceptor metaObject: metaObject.
-	link metaObject: interceptor.
-	link selector: #executeAfter:.
+	link metaObject: metaObject .
+	link selector: #linkAfterAssignment: .
 	link arguments: #( operation ).
 	link optionCompileOnLinkInstallation: true.
 	^ link
@@ -228,12 +227,24 @@ RFProxyInstrumenter >> newAfterLinkForAssignments [
 { #category : #links }
 RFProxyInstrumenter >> newBeforeLinkForAssignments [
 
-	| link interceptor |
+	| link |
 	link := MetaLink new.
 	link control: #before.
-	interceptor := RFAssignmentInterceptor new.
-	interceptor metaObject: metaObject.
-	link metaObject: interceptor.
+	link metaObject: metaObject .
+	link selector: #linkBeforeAssignment:.
+	link arguments: #( operation ).
+	link optionCompileOnLinkInstallation: true.
+
+	^ link
+]
+
+{ #category : #links }
+RFProxyInstrumenter >> newBeforeLinkForMessagesSend [
+
+	| link  |
+	link := MetaLink new.
+	link control: #before.
+	link metaObject: metaObject .
 	link selector: #executeBefore:.
 	link arguments: #( operation ).
 	link optionCompileOnLinkInstallation: true.
@@ -244,32 +255,13 @@ RFProxyInstrumenter >> newBeforeLinkForAssignments [
 { #category : #links }
 RFProxyInstrumenter >> newInsteadLinkForAssignments [
 
-	| link interceptor |
+	| link |
 	link := MetaLink new.
 	link control: #instead.
-	interceptor := RFAssignmentInterceptor new.
-	interceptor metaObject: metaObject.
-	link metaObject: interceptor.
-	link selector: #executeInstead:.
+	link metaObject: metaObject.
+	link selector: #linkInsteadAssignment:.
 	link arguments: #( operation ).
 	link optionCompileOnLinkInstallation: true.
-
-	^ link
-]
-
-{ #category : #links }
-RFProxyInstrumenter >> newLinkForAssignments [
-
-	| link interceptor |
-	link := MetaLink new.
-	link control: #before.
-	interceptor := RFAssignmentInterceptor new.
-	interceptor metaObject: metaObject.
-	link metaObject: interceptor.
-	link selector: #execute:variable:value:newValue:.
-	link arguments: #( object name value newValue ).
-	link optionCompileOnLinkInstallation: true.
-	self log: { 'ENTER LINK FOR ASSIGNMENTS' }.
 	^ link
 ]
 
@@ -299,6 +291,20 @@ RFProxyInstrumenter >> newLinkForSelector: selector [
 { #category : #accessing }
 RFProxyInstrumenter >> originalClass [
 	^instrumentedClass superclass
+]
+
+{ #category : #instrumentation }
+RFProxyInstrumenter >> redirectMessagesSendIn: ast [
+
+	| messageSendNode |
+	messageSendNode := ast sendNodes.
+	self halt.
+	messageSendNode do: [ :node | 
+			"node link: self newBeforeLinkForMessagesSend.
+			node link: self newInsteadLinkForMessagesSend.
+			node link: self newAfterLinkForMessagesSend"
+			
+			 ] 
 ]
 
 { #category : #instrumentation }
@@ -356,8 +362,7 @@ RFProxyInstrumenter >> redirectVariableAccessesIn: ast [
 	| assignmentNodes |
 	assignmentNodes := ast assignmentNodes.
 	assignmentNodes do: [ :node | 
-		self metaObject metaLevel ifFalse: [ 
 			node link: self newBeforeLinkForAssignments.
 			node link: self newInsteadLinkForAssignments.
-			node link: self newAfterLinkForAssignments ] ]
+			node link: self newAfterLinkForAssignments ] 
 ]
