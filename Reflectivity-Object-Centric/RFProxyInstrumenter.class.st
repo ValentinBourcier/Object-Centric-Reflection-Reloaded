@@ -131,6 +131,7 @@ RFProxyInstrumenter >> instrumentMethod: method selector: selector [
 
 		newMethod := instrumentedClass >> cs.
 		ast := newMethod ast.
+		"self halt."
 		"self redirectSelfArgsIn: ast."
 		self redirectSelfReturnsIn: ast.
 		self redirectVariableAccessesIn: ast.
@@ -297,13 +298,13 @@ RFProxyInstrumenter >> originalClass [
 RFProxyInstrumenter >> redirectMessagesSendIn: ast [
 
 	| messageSendNode |
-	messageSendNode := ast sendNodes.
+	messageSendNode := ast sendNodes select: [ :node | node receiver isSelfVariable ].
 	self halt.
 	messageSendNode do: [ :node | 
 			node link: self newBeforeLinkForMessagesSend.
+			self halt.
 			"node link: self newInsteadLinkForMessagesSend.
 			node link: self newAfterLinkForMessagesSend"
-			
 			 ] 
 ]
 
@@ -313,7 +314,6 @@ RFProxyInstrumenter >> redirectSelfArgsIn: ast [
 	| methodName nodes  |
 	methodName := ast methodNode method name .
 	nodes := ast sendNodes select: [ :node | node arguments notEmpty ].
-
 	nodes do: 
 		[ :sendNode | 
 			(sendNode arguments select: [ :node | node isSelfVariable ]) 
@@ -361,8 +361,9 @@ RFProxyInstrumenter >> redirectVariableAccessesIn: ast [
 
 	| assignmentNodes |
 	assignmentNodes := ast assignmentNodes.
+
 	assignmentNodes do: [ :node | 
-			node link: self newBeforeLinkForAssignments.
-			node link: self newInsteadLinkForAssignments.
-			node link: self newAfterLinkForAssignments ] 
+		node link: self newBeforeLinkForAssignments.
+		node link: self newInsteadLinkForAssignments.
+		node link: self newAfterLinkForAssignments ]
 ]

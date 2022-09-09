@@ -118,7 +118,8 @@ TestClass >> selfAssignment [
 { #category : #operation }
 TestClass >> sendingMethods [
 
-	self var1SimpleAsssignment .
+	result := var1.
+	self var1SimpleAsssignment.
 	self var2SimpleAsssignment
 ]
 
