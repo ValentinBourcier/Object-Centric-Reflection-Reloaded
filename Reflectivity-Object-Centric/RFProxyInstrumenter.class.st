@@ -326,8 +326,8 @@ RFProxyInstrumenter >> redirectMessagesSendIn: ast [
 	messageSendNode := ast sendNodes select: [ :node | node receiver isSelfVariable ].
 	messageSendNode do: [ :node | 
 			node link: self newBeforeLinkForMessagesSend.
-			"node link: self newInsteadLinkForMessagesSend.
-			node link: self newAfterLinkForMessagesSend"
+			node link: self newInsteadLinkForMessagesSend.
+			node link: self newAfterLinkForMessagesSend
 			 ] 
 ]
 

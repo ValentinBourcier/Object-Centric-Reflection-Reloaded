@@ -67,19 +67,19 @@ RFMessageSendTest >> testAllMessageSendInstead [
 { #category : #tests }
 RFMessageSendTest >> testMessageSendAfter [
 
-	| b proxy metaobject |
-	b := TestClass new.
-	proxy := b proxifyWithMetaObject: RFProxyMetaObjectAssignmentTest.
+	| aMethodTest proxy metaobject |
+	aMethodTest := TestClass new.
+	proxy := aMethodTest proxifyWithMetaObject:
+		         RFProxyMetaObjectAssignmentTest.
 	metaobject := proxy metaObject.
 	Transcript clear.
-	b var1: 1.
-	b var2: 2.
-	self halt.
-	b afterMessageSendTo: #methodsWithAssignments do: [b var1: 8].
-	b methodsWithAssignments.
-	self assert: b result equals: 6.
-	self assert: b var1 equals: 5.
-	
+	aMethodTest var1: 1.
+	aMethodTest var2: 2.
+	aMethodTest
+		afterMessageSendTo: #var1SimpleAsssignment
+		do: [ aMethodTest var1: aMethodTest var1 + 3 ].
+	aMethodTest sendingMethods.
+	self assert: aMethodTest var1 equals: 7
 ]
 
 { #category : #tests }
@@ -87,33 +87,35 @@ RFMessageSendTest >> testMessageSendBefore [
 
 	| aMethodTest proxy metaobject |
 	aMethodTest := TestClass new.
-	proxy := aMethodTest proxifyWithMetaObject: RFProxyMetaObjectAssignmentTest.
+	proxy := aMethodTest proxifyWithMetaObject:
+		         RFProxyMetaObjectAssignmentTest.
 	metaobject := proxy metaObject.
 	Transcript clear.
 	aMethodTest var1: 1.
 	aMethodTest var2: 2.
-	aMethodTest beforeMessageSendTo:#sendingMethods do: [ aMethodTest var1: 5 ].
-	self halt.
+	aMethodTest
+		beforeMessageSendTo: #var1SimpleAsssignment
+		do: [ aMethodTest var1: aMethodTest var1 + 3 ].
 	aMethodTest sendingMethods.
-	self assert: aMethodTest result equals: 5
+	self assert: aMethodTest var1 equals: 7
 ]
 
 { #category : #tests }
 RFMessageSendTest >> testMessageSendInstead [
 
-	| b proxy metaobject |
-	b := TestClass new.
-	proxy := b proxifyWithMetaObject: RFProxyMetaObjectAssignmentTest.
+	| aMethodTest proxy metaobject |
+	aMethodTest := TestClass new.
+	proxy := aMethodTest proxifyWithMetaObject:
+		         RFProxyMetaObjectAssignmentTest.
 	metaobject := proxy metaObject.
-
 	Transcript clear.
-	b var1: 1.
-	b var2: 2.
-	b
-		afterMessageSendTo: #onlyAssignmentResult
-		do: [ b result: b var1 - b var2 ].
-	b onlyAssignmentResult.
-	self assert: b result equals: -1
+	aMethodTest var1: 1.
+	aMethodTest var2: 2.
+	aMethodTest
+		insteadMessageSendTo:  #var1SimpleAsssignment
+		do: [ aMethodTest var1: aMethodTest var1 + 3 ].
+	aMethodTest sendingMethods.
+	self assert: aMethodTest var1 equals: 4
 ]
 
 { #category : #tests }
