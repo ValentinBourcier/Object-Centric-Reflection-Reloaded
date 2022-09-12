@@ -135,7 +135,7 @@ RFProxyInstrumenter >> instrumentMethod: method selector: selector [
 		"self redirectSelfArgsIn: ast."
 		self redirectSelfReturnsIn: ast.
 		self redirectVariableAccessesIn: ast.
-		"self redirectMessagesSendIn: ast."
+		self redirectMessagesSendIn: ast.
 		self compiledSelectorsMap
 			at: cs
 			ifPresent: [ :redirectionSelector | 
@@ -226,6 +226,18 @@ RFProxyInstrumenter >> newAfterLinkForAssignments [
 ]
 
 { #category : #links }
+RFProxyInstrumenter >> newAfterLinkForMessagesSend [
+	| link |
+	link := MetaLink new.
+	link control: #after.
+	link metaObject: metaObject .
+	link selector: #linkAfterMessageSend: .
+	link arguments: #( operation ).
+	link optionCompileOnLinkInstallation: true.
+	^ link
+]
+
+{ #category : #links }
 RFProxyInstrumenter >> newBeforeLinkForAssignments [
 
 	| link |
@@ -267,6 +279,19 @@ RFProxyInstrumenter >> newInsteadLinkForAssignments [
 ]
 
 { #category : #links }
+RFProxyInstrumenter >> newInsteadLinkForMessagesSend [
+
+	| link |
+	link := MetaLink new.
+	link control: #instead.
+	link metaObject: metaObject.
+	link selector: #linkInsteadMessageSend:.
+	link arguments: #( operation ).
+	link optionCompileOnLinkInstallation: true.
+	^ link
+]
+
+{ #category : #links }
 RFProxyInstrumenter >> newLinkForSelector: selector [
 
 	| link interceptor |
@@ -299,10 +324,8 @@ RFProxyInstrumenter >> redirectMessagesSendIn: ast [
 
 	| messageSendNode |
 	messageSendNode := ast sendNodes select: [ :node | node receiver isSelfVariable ].
-	self halt.
 	messageSendNode do: [ :node | 
 			node link: self newBeforeLinkForMessagesSend.
-			self halt.
 			"node link: self newInsteadLinkForMessagesSend.
 			node link: self newAfterLinkForMessagesSend"
 			 ] 
