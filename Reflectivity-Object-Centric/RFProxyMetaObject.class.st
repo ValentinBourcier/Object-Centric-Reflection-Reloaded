@@ -328,14 +328,25 @@ RFProxyMetaObject >> linkBeforeAssignment: operation [
 
 { #category : #'declaration accessing' }
 RFProxyMetaObject >> linkBeforeMessageSend: operation [
-	self halt.
+
+	| timeObject beforeColl |
 	self class log:
-		'METAOBJECT BEFORE receive Variable: ' , operation variable name
-		, ' with Value: ' , operation assignedValue printString
-		, '  old Value: '
-		, (operation variable read: operation object) printString.
-
-
+		'METAOBJECT BEFORE MessageSend: ' , operation selector.
+	self metaLevel ifTrue: [ ^ self ].
+	[ self messagesStoring valuesStored at: operation selector ]
+		on: KeyNotFound
+		do: [ 
+			self messagesStoring valuesStored
+				at: operation selector
+				put: RFControlStoreObject new.
+			self messagesStoring addAllValuesStored: operation selector ].
+	timeObject := self messagesStoring valuesStored at:
+		              operation selector.
+	beforeColl := timeObject before.
+	beforeColl ifEmpty: [ ^ self ].
+	self metaLevel: true.
+	beforeColl do: [ :each | each value ].
+	self metaLevel: false
 ]
 
 { #category : #'declaration accessing' }

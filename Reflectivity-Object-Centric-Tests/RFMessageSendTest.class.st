@@ -93,6 +93,7 @@ RFMessageSendTest >> testMessageSendBefore [
 	aMethodTest var1: 1.
 	aMethodTest var2: 2.
 	aMethodTest beforeMessageSendTo:#sendingMethods do: [ aMethodTest var1: 5 ].
+	self halt.
 	aMethodTest sendingMethods.
 	self assert: aMethodTest result equals: 5
 ]
