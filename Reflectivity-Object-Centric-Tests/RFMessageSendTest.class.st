@@ -76,10 +76,10 @@ RFMessageSendTest >> testMessageSendAfter [
 	aMethodTest var1: 1.
 	aMethodTest var2: 2.
 	aMethodTest
-		afterMessageSendTo: #var1SimpleAsssignment
-		do: [ aMethodTest var1: aMethodTest var1 + 3 ].
+		afterMessageSendTo: #var2SimpleAsssignment
+		do: [ aMethodTest var2: aMethodTest var2 + 1 ].
 	aMethodTest sendingMethods.
-	self assert: aMethodTest var1 equals: 7
+	self assert: aMethodTest var2 equals: 5
 ]
 
 { #category : #tests }
@@ -94,10 +94,10 @@ RFMessageSendTest >> testMessageSendBefore [
 	aMethodTest var1: 1.
 	aMethodTest var2: 2.
 	aMethodTest
-		beforeMessageSendTo: #var1SimpleAsssignment
-		do: [ aMethodTest var1: aMethodTest var1 + 3 ].
+		beforeMessageSendTo: #var2SimpleAsssignment
+		do: [ aMethodTest var2: aMethodTest var2 + 1 ].
 	aMethodTest sendingMethods.
-	self assert: aMethodTest var1 equals: 7
+	self assert: aMethodTest var2 equals: 6
 ]
 
 { #category : #tests }

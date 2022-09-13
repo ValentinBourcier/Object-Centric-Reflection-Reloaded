@@ -160,5 +160,6 @@ TestClass >> var2Assignment [
 
 { #category : #operation }
 TestClass >> var2SimpleAsssignment [
-	var2 := 5
+
+	var2 := self var2 * 2
 ]
