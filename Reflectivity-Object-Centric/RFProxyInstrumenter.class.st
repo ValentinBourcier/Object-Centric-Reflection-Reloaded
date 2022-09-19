@@ -132,7 +132,7 @@ RFProxyInstrumenter >> instrumentMethod: method selector: selector [
 		newMethod := instrumentedClass >> cs.
 		ast := newMethod ast.
 		"self redirectSelfArgsIn: ast."
-		"self redirectSelfReturnsIn: ast."
+		self redirectSelfReturnsIn: ast.
 		self redirectVariableAccessesIn: ast.
 		self redirectMessagesSendIn: ast.
 		self compiledSelectorsMap
@@ -340,20 +340,9 @@ RFProxyInstrumenter >> redirectSelfArgsIn: ast [
 		[ :sendNode | 
 			(sendNode arguments select: [ :node | node isSelfVariable ]) 
 				do: [ :node | 
+					self halt.
 					self log: { 'overriden self argument: '. node selector. ' in '. methodName}.
 					node link: ((self newLinkForSelector: nil) control: #instead; yourself) ] ]
-]
-
-{ #category : #instrumentation }
-RFProxyInstrumenter >> redirectSelfMethodIn: ast [
-
-	| valuesStored |
-	valuesStored := self metaObject messagesStoring valuesStored.
-	valuesStored
-		at: ast selector
-		ifPresent: [ "ast methodNode link: self newBeforeLinkForMethod .
-			ast methodNode link: self newInsteadLinkForMethod." 
-			ast methodNode link: self newAfterLinkForMethod ]
 ]
 
 { #category : #instrumentation }
@@ -363,6 +352,7 @@ RFProxyInstrumenter >> redirectSelfReturnsIn: ast [
 	returnNodes := ast allChildren select: [ :node | 
 		               node isReturn and: [ node value isSelfVariable ] ].
 	returnNodes do: [ :node | 
+		self halt.
 		node value link:
 			((self newLinkForSelector: nil)
 				 control: #after;

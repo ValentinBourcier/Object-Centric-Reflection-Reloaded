@@ -522,9 +522,7 @@ RFProxyMetaObject >> send: selector withArgs: args to: target [
 	<debuggerCompleteToSender>
 	| arguments |
 	arguments := args asOrderedCollection.
-
 	"self executeReflectiveOperationsFor: target uponReceptionOf: selector."
-
 	self instrumenter instrumentSelector: selector withArgs: arguments.
 	^ MirrorPrimitives
 		  withReceiver: target
