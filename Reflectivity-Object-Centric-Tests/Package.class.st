@@ -22,7 +22,7 @@ Package >> calculatePackageTax [
 { #category : #accessing }
 Package >> clearPackage [
 
-	self packagePrice.
+	self packagePrice: 0.
 	self clearTaxes.
 ]
 

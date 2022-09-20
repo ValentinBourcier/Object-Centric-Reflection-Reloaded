@@ -33,16 +33,16 @@ CaseTest >> testAnyAssignmentCounter [
 { #category : #initialization }
 CaseTest >> testAnyMessageSendCounter [
 
-	package afterAnyMessageSendDo: [package counter: package counter + 1 ].
-	package clearPackage .
-	self assert: package counter equals: 2.
+	package beforeAnyMessageSendDo:  [ 
+		package counter: package counter + 1 ].
+	package clearPackage.
+	self assert: package counter equals: 2
 ]
 
 { #category : #initialization }
 CaseTest >> testLaunchredirectSelfArgsIn [
 
 	package afterAnyMessageSendDo: [package counter: package counter + 1 ].
-	self halt.
 	package clearPackage .
 	self assert: package counter equals: 2.
 ]
