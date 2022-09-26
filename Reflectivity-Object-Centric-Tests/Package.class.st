@@ -21,7 +21,6 @@ Package >> calculatePackageTax [
 
 { #category : #accessing }
 Package >> clearPackage [
-
 	self packagePrice: 0.
 	self clearTaxes.
 ]
@@ -42,6 +41,27 @@ Package >> counter [
 Package >> counter: anObject [
 
 	counter := anObject
+]
+
+{ #category : #accessing }
+Package >> m1 [
+
+	^ 1
+]
+
+{ #category : #accessing }
+Package >> m2 [
+
+	self m1.
+	self m3.
+	self m1.
+]
+
+{ #category : #accessing }
+Package >> m3 [
+
+	self m1.
+
 ]
 
 { #category : #accessing }
@@ -90,6 +110,13 @@ Package >> packageWeight [
 Package >> packageWeight: anObject [
 
 	packageWeight := anObject
+]
+
+{ #category : #accessing }
+Package >> setPackagePrice: aPrice andTax: aTax [
+
+	packagePrice := aPrice.
+	packageTax := aTax.
 ]
 
 { #category : #'api - accessing' }

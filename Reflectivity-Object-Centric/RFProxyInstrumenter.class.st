@@ -94,22 +94,28 @@ RFProxyInstrumenter >> compiledSelectorsMap [
 { #category : #instrumentation }
 RFProxyInstrumenter >> findSuperSendsChainFor: aMethod [
 
-	| selector nextMethod  methodChain |
-	(self isClassReachableInHierarchy: aMethod methodClass) 
-		ifFalse:[^OrderedCollection new.].
-	
-	methodChain := OrderedCollection new.
-	selector := aMethod selector.			
-	nextMethod := self originalClass lookupSelector: selector.	
-	
-	nextMethod := self buildSuperSendsChainFrom: nextMethod upTo: aMethod in: methodChain.
-	nextMethod == aMethod ifFalse: [ ^ OrderedCollection new ].
-	nextMethod hasSuperSends 
-		ifFalse:[methodChain add: nextMethod. 
-			^methodChain].
+	| selector nextMethod methodChain |
+	(self isClassReachableInHierarchy: aMethod methodClass) ifFalse: [ 
+		^ OrderedCollection new ].
 
-	nextMethod := self buildSuperSendsChainFrom: nextMethod upTo: nil in: methodChain.
-	nextMethod ifNotNil:[methodChain add: nextMethod].
+	methodChain := OrderedCollection new.
+	selector := aMethod selector.
+	nextMethod := self originalClass lookupSelector: selector.
+
+	nextMethod := self
+		              buildSuperSendsChainFrom: nextMethod
+		              upTo: aMethod
+		              in: methodChain.
+	nextMethod == aMethod ifFalse: [ ^ OrderedCollection new ].
+	nextMethod hasSuperSends ifFalse: [ 
+		methodChain add: nextMethod.
+		^ methodChain ].
+
+	nextMethod := self
+		              buildSuperSendsChainFrom: nextMethod
+		              upTo: nil
+		              in: methodChain.
+	nextMethod ifNotNil: [ methodChain add: nextMethod ].
 	^ methodChain
 ]
 
@@ -128,10 +134,10 @@ RFProxyInstrumenter >> instrumentMethod: method selector: selector [
 	compiledSelectors do: [ :cs | 
 		| ast |
 		RFProxyMetaObject log: 'Instrumenting: ' , cs printString.
-		
 		newMethod := instrumentedClass >> cs.
 		ast := newMethod ast.
 		"self redirectSelfArgsIn: ast."
+		"self redirectSelfMethodIn: ast."
 		self redirectSelfReturnsIn: ast.
 		self redirectVariableAccessesIn: ast.
 		self redirectMessagesSendIn: ast.
@@ -216,7 +222,7 @@ RFProxyInstrumenter >> newAfterLinkForAssignments [
 
 	| link |
 	link := MetaLink new.
-	link control: #before.
+	link control: #after.
 	link metaObject: metaObject .
 	link selector: #linkAfterAssignment: .
 	link arguments: #( operation ).
@@ -322,12 +328,14 @@ RFProxyInstrumenter >> originalClass [
 RFProxyInstrumenter >> redirectMessagesSendIn: ast [
 
 	| messageSendNode |
+	
 	messageSendNode := ast sendNodes select: [ :node | 
 		                   node receiver isSelfVariable ].
 	messageSendNode do: [ :node | 
 		node link: self newBeforeLinkForMessagesSend.
-		node link: self newInsteadLinkForMessagesSend.
-		node link: self newAfterLinkForMessagesSend 
+		node link: self newAfterLinkForMessagesSend.
+		node link: self newInsteadLinkForMessagesSend. 
+		self instrumentSelector: node selector value withArgs: node arguments. 
 		]
 ]
 
@@ -340,10 +348,23 @@ RFProxyInstrumenter >> redirectSelfArgsIn: ast [
 	nodes do: 
 		[ :sendNode | 
 			(sendNode arguments select: [ :node | node isSelfVariable ]) 
-				do: [ :node | 
-					self halt.
+				do: [ :node |
 					self log: { 'overriden self argument: '. node selector. ' in '. methodName}.
 					node link: ((self newLinkForSelector: nil) control: #instead; yourself) ] ]
+]
+
+{ #category : #instrumentation }
+RFProxyInstrumenter >> redirectSelfMethodIn: ast [
+
+"	| messageSendNode |
+	messageSendNode := ast sendNodes select: [ :node | 
+		                   node receiver isSelfVariable ].
+	messageSendNode do: [ :node | 
+		node link: self newBeforeLinkForMessagesSend.
+		node link: self newAfterLinkForMessagesSend.
+		node link: self newInsteadLinkForMessagesSend. 
+		node
+		]"
 ]
 
 { #category : #instrumentation }
@@ -353,7 +374,7 @@ RFProxyInstrumenter >> redirectSelfReturnsIn: ast [
 	returnNodes := ast allChildren select: [ :node | 
 		               node isReturn and: [ node value isSelfVariable ] ].
 	returnNodes do: [ :node | 
-		self halt.
+	
 		node value link:
 			((self newLinkForSelector: nil)
 				 control: #after;
@@ -389,6 +410,6 @@ RFProxyInstrumenter >> redirectVariableAccessesIn: ast [
 
 	assignmentNodes do: [ :node | 
 		node link: self newBeforeLinkForAssignments.
-		node link: self newInsteadLinkForAssignments.
-		node link: self newAfterLinkForAssignments ]
+		node link: self newAfterLinkForAssignments.
+		node link: self newInsteadLinkForAssignments ]
 ]

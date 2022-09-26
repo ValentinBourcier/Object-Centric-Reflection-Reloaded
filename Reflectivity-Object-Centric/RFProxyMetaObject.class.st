@@ -97,7 +97,7 @@ RFProxyMetaObject >> afterMessageSendTo: aMethod do: aBlock [
 	messagesStoring allValuesAfter do: [ :each | 
 		messageToStore addAfter: each ].
 	[ messagesStoring allValuesInstead ] ifNotNil: [ 
-		messageToStore instead: assignmentsStoring allValuesInstead ].
+		messageToStore instead: messagesStoring allValuesInstead ].
 	messageToStore addAfter: aBlock
 ]
 
@@ -167,7 +167,7 @@ RFProxyMetaObject >> beforeMessageSendTo: aMethod do: aBlock [
 	messagesStoring allValuesAfter do: [ :each | 
 		messageToStore addAfter: each ].
 	[ messagesStoring allValuesInstead ] ifNotNil: [ 
-		messageToStore instead: assignmentsStoring allValuesInstead ].
+		messageToStore instead: messagesStoring allValuesInstead ].
 	messageToStore addBefore: aBlock
 ]
 
@@ -252,9 +252,9 @@ RFProxyMetaObject >> insteadMessageSendTo: aMethod do: aBlock [
 		                   at: aMethod
 		                   put: RFControlStoreObject new.
 	messageToStore := self messagesStoring valuesStored at: aMethod.
-	assignmentsStoring allValuesBefore do: [ :each | 
+	messagesStoring allValuesBefore do: [ :each | 
 		messageToStore addBefore: each ].
-	assignmentsStoring allValuesAfter do: [ :each | 
+	messagesStoring allValuesAfter do: [ :each | 
 		messageToStore addAfter: each ].
 	messageToStore instead: aBlock
 ]
@@ -410,6 +410,7 @@ RFProxyMetaObject >> linkInsteadAssignment: operation [
 RFProxyMetaObject >> linkInsteadMessageSend: operation [
 
 	| timeObject insteadBlock |
+
 	self class log:
 		'METAOBJECT INSTEAD MessageSend: ' , operation selector.
 	self metaLevel ifTrue: [ 

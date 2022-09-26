@@ -35,7 +35,7 @@ RFMessageSendTest >> testAllMessageSendBefore [
 	aMethodTest beforeAnyMessageSendDo: [ 
 		aMethodTest var2: aMethodTest var2 + 1 ].
 	aMethodTest sendingMethods.
-	self assert: aMethodTest var2 equals: 8
+	self assert: aMethodTest var2 equals: 10
 ]
 
 { #category : #tests }

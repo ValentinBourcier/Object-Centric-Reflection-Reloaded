@@ -25,7 +25,7 @@ Object >> afterAssignmentTo: aVariableName do: aBlock [
 Object >> afterMessageSendTo: aMethod do: aBlock [
 	self flag: 'We have to change the recursion'.
 	self proxify.
-	self afterAssignmentTo: aMethod  do: aBlock
+	self afterMessageSendTo:  aMethod  do: aBlock
 ]
 
 { #category : #'*Reflectivity-Object-Centric' }
