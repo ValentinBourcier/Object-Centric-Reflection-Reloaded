@@ -91,8 +91,8 @@ CaseTest >> testInsideMessageSendBeforeCounterSelfMessage [
 	package
 		beforeMessageSendTo: #m1
 		do: [ package counter: package counter + 1 ].
-	package m2.
-	self assert: package counter equals: 3
+	package m1.
+	self assert: package counter equals: 1
 ]
 
 { #category : #initialization }

@@ -297,12 +297,11 @@ RFProxyMetaObject >> instrumenter: anObject [
 RFProxyMetaObject >> linkAfterAssignment: operation [
 
 	| timeObject afterColl |
-	self class log:
+	"	self class log:
 		'METAOBJECT AFTERS receive Variable: ' , operation variable name
 		, ' with Value: ' , operation assignedValue printString
 		, '  old Value: '
-		, (operation variable read: operation object) printString.
-	
+		, (operation variable read: operation object) printString."
 	self metaLevel ifTrue: [ ^ operation value ].
 	[ self assignmentsStoring valuesStored at: operation variable name ]
 		on: KeyNotFound
@@ -310,8 +309,7 @@ RFProxyMetaObject >> linkAfterAssignment: operation [
 			self assignmentsStoring valuesStored
 				at: operation variable name
 				put: RFControlStoreObject new.
-			self assignmentsStoring addAllValuesStored: operation variable name
-			 ].
+			self assignmentsStoring addAllValuesStored: operation variable name ].
 	timeObject := self assignmentsStoring valuesStored at:
 		              operation variable name.
 	afterColl := timeObject after.
@@ -325,14 +323,11 @@ RFProxyMetaObject >> linkAfterAssignment: operation [
 RFProxyMetaObject >> linkAfterMessageSend: operation [
 
 	| timeObject afterColl |
-	self class log: 'METAOBJECT AFTER MessageSend: ' , operation selector.
+	"self class log: 'METAOBJECT AFTER MessageSend: ' , operation selector."
 	self metaLevel ifTrue: [ 
-		operation arguments
-			ifNil: [ ^ proxy perform: operation selector ]
-			ifNotNil: [ 
-				^ proxy
-					  perform: operation selector
-					  withArguments: operation arguments ] ].
+		^ proxy
+			  perform: operation selector
+			  withArguments: operation arguments ].
 	[ self messagesStoring valuesStored at: operation selector ]
 		on: KeyNotFound
 		do: [ 
@@ -353,11 +348,11 @@ RFProxyMetaObject >> linkAfterMessageSend: operation [
 RFProxyMetaObject >> linkBeforeAssignment: operation [
 
 	| timeObject beforeColl |
-	self class log:
+	"self class log:
 		'METAOBJECT BEFORE receive Variable: ' , operation variable name
 		, ' with Value: ' , operation assignedValue printString
 		, '  old Value: '
-		, (operation variable read: operation object) printString.
+		, (operation variable read: operation object) printString."
 
 	self metaLevel ifTrue: [ ^ self ].
 	[ self assignmentsStoring valuesStored at: operation variable name ]
@@ -381,8 +376,8 @@ RFProxyMetaObject >> linkBeforeMessageSend: operation [
 	
 	| timeObject beforeColl |
 	
-	self class log:
-		'METAOBJECT BEFORE MessageSend: ' , operation selector.
+	"self class log:
+		'METAOBJECT BEFORE MessageSend: ' , operation selector."
 	self metaLevel ifTrue: [ ^ self ].
 	[ self messagesStoring valuesStored at: operation selector ]
 		on: KeyNotFound
@@ -405,11 +400,11 @@ RFProxyMetaObject >> linkInsteadAssignment: operation [
 	
 	| timeObject insteadBlock |
 
-	self class log:
+	"self class log:
 		'METAOBJECT INSTEAD receive Variable: ' , operation variable name
 		, ' with Value: ' , operation assignedValue printString
 		, '  old Value: '
-		, (operation variable read: operation object) printString.
+		, (operation variable read: operation object) printString."
 	self metaLevel ifTrue: [ ^ operation value ].
 	[ self assignmentsStoring valuesStored at: operation variable name ]
 		on: KeyNotFound
@@ -432,16 +427,12 @@ RFProxyMetaObject >> linkInsteadAssignment: operation [
 RFProxyMetaObject >> linkInsteadMessageSend: operation [
 
 	| timeObject insteadBlock |
-
-	self class log:
-		'METAOBJECT INSTEAD MessageSend: ' , operation selector.
+	"self class log:
+		'METAOBJECT INSTEAD MessageSend: ' , operation selector."
 	self metaLevel ifTrue: [ 
-		operation arguments
-			ifNil: [ ^ proxy perform: operation selector ]
-			ifNotNil: [ 
-				^ proxy
-					  perform: operation selector
-					  withArguments: operation arguments ] ].
+		^ proxy
+			  perform: operation selector
+			  withArguments: operation arguments ].
 	[ self messagesStoring valuesStored at: operation selector ]
 		on: KeyNotFound
 		do: [ 
@@ -454,12 +445,9 @@ RFProxyMetaObject >> linkInsteadMessageSend: operation [
 		              operation selector.
 	insteadBlock := timeObject instead.
 	insteadBlock ifNil: [ 
-		operation arguments
-			ifNil: [ ^ proxy perform: operation selector ]
-			ifNotNil: [ 
-				^ proxy
-					  perform: operation selector
-					  withArguments: operation arguments ] ].
+		^ proxy
+			  perform: operation selector
+			  withArguments: operation arguments ].
 	self metaLevel: true.
 	insteadBlock value.
 	self metaLevel: false
