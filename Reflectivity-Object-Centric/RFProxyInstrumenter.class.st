@@ -253,7 +253,6 @@ RFProxyInstrumenter >> newBeforeLinkForAssignments [
 	link selector: #linkBeforeAssignment:.
 	link arguments: #( operation ).
 	link optionCompileOnLinkInstallation: true.
-
 	^ link
 ]
 
@@ -328,7 +327,6 @@ RFProxyInstrumenter >> originalClass [
 RFProxyInstrumenter >> redirectMessagesSendIn: ast [
 
 	| messageSendNode |
-	
 	messageSendNode := ast sendNodes select: [ :node | 
 		                   node receiver isSelfVariable ].
 	messageSendNode do: [ :node | 
@@ -356,15 +354,7 @@ RFProxyInstrumenter >> redirectSelfArgsIn: ast [
 { #category : #instrumentation }
 RFProxyInstrumenter >> redirectSelfMethodIn: ast [
 
-"	| messageSendNode |
-	messageSendNode := ast sendNodes select: [ :node | 
-		                   node receiver isSelfVariable ].
-	messageSendNode do: [ :node | 
-		node link: self newBeforeLinkForMessagesSend.
-		node link: self newAfterLinkForMessagesSend.
-		node link: self newInsteadLinkForMessagesSend. 
-		node
-		]"
+	ast isMethod ifTrue: [ self halt ]
 ]
 
 { #category : #instrumentation }

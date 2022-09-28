@@ -86,11 +86,22 @@ CaseTest >> testInsideMessageSendBeforeCounter [
 ]
 
 { #category : #initialization }
+CaseTest >> testInsideMessageSendBeforeCounterSelfMessage [
+
+	package
+		beforeMessageSendTo: #m1
+		do: [ package counter: package counter + 1 ].
+	package m2.
+	self assert: package counter equals: 3
+]
+
+{ #category : #initialization }
 CaseTest >> testMessageSendAfterFirstInstruction [
 
 	package
 		afterMessageSendTo: #setPackagePrice:andTax:
 		do: [ package counter: package counter + 1 ].
+
 	package setPackagePrice: 5 andTax: 7.
 	self assert: package counter equals: 1.
 	self assert: package packagePrice equals: 5.

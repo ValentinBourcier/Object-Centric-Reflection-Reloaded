@@ -15,7 +15,8 @@ Class {
 		'instrumenter',
 		'metaLevel',
 		'assignmentsStoring',
-		'messagesStoring'
+		'messagesStoring',
+		'instrument'
 	],
 	#classInstVars : [
 		'str'
@@ -175,15 +176,36 @@ RFProxyMetaObject >> beforeMessageSendTo: aMethod do: aBlock [
 RFProxyMetaObject >> executeReflectiveOperationsFor: target uponReceptionOf: selector [
 
 	<debuggerCompleteToSender>
+	self messagesStoring valuesStored
+		at: selector
+		ifPresent: [ :control | 
+		instrumenter crearMetaLinks: selector controles: control ]
+		ifAbsent: [ 
+			| allAfter allBefore allInstead |
+			allAfter := self messagesStoring allValuesAfter.
+			allBefore := self messagesStoring allValuesBefore.
+			allInstead := self messagesStoring allValuesInstead.
+			allBefore ifNotEmpty: [ 
+				allAfter do: [ :each | instrumenter crearMetalinkBefore: selector ] ].
+			allAfter ifNotEmpty: [ 
+				allAfter do: [ :each | instrumenter crearMetalinkAfter: selector ] ].
+			allInstead ifNotNil: [ 
+					instrument := false.
+					instrumenter crearMetalinkInstead: selector
+				 ]
+			 ]
+		
 	
-	(String streamContents: [ :stream | 
+
+
+"	(String streamContents: [ :stream | 
 		 stream << 'Reflective action for:'.
 		 stream space.
 		 stream << target printString.
 		 stream space.
 		 stream << 'receiving message:'.
 		 stream space.
-		 stream << selector printString ]) crTrace
+		 stream << selector printString ]) crTrace"
 ]
 
 { #category : #private }
@@ -540,8 +562,14 @@ RFProxyMetaObject >> send: selector withArgs: args to: target [
 	<debuggerCompleteToSender>
 	| arguments |
 	arguments := args asOrderedCollection.
-	"self executeReflectiveOperationsFor: target uponReceptionOf: selector."
+
+	"	instrumenter := true.
+	self executeReflectiveOperationsFor: target uponReceptionOf: selector.
+	instrument ifTrue: [ 
+"
 	self instrumenter instrumentSelector: selector withArgs: arguments.
+
+	"	].instrumenter := true."
 	^ MirrorPrimitives
 		  withReceiver: target
 		  perform: selector
