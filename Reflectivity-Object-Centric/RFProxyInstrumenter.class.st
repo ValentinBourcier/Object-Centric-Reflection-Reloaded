@@ -15,7 +15,8 @@ Class {
 		'instrumentedMessages',
 		'instrumentedObject',
 		'instrumentedClass',
-		'compiledSelectorsMap'
+		'compiledSelectorsMap',
+		'firstStage'
 	],
 	#category : #'Reflectivity-Object-Centric'
 }
@@ -119,6 +120,12 @@ RFProxyInstrumenter >> findSuperSendsChainFor: aMethod [
 	^ methodChain
 ]
 
+{ #category : #accessing }
+RFProxyInstrumenter >> firstStage [
+
+	^ firstStage ifNil:[ firstStage:= true]
+]
+
 { #category : #instrumentation }
 RFProxyInstrumenter >> instrumentMethod: method selector: selector [
 
@@ -137,7 +144,7 @@ RFProxyInstrumenter >> instrumentMethod: method selector: selector [
 		newMethod := instrumentedClass >> cs.
 		ast := newMethod ast.
 		"self redirectSelfArgsIn: ast."
-		"self redirectSelfMethodIn: ast."
+		self redirectSelfMethodIn: ast.
 		self redirectSelfReturnsIn: ast.
 		self redirectVariableAccessesIn: ast.
 		self redirectMessagesSendIn: ast.
@@ -329,12 +336,13 @@ RFProxyInstrumenter >> redirectMessagesSendIn: ast [
 	| messageSendNode |
 	messageSendNode := ast sendNodes select: [ :node | 
 		                   node receiver isSelfVariable ].
-	messageSendNode do: [ :node | 
+	messageSendNode do: [ :node | "self halt."
 		node link: self newBeforeLinkForMessagesSend.
 		node link: self newAfterLinkForMessagesSend.
-		node link: self newInsteadLinkForMessagesSend. 
-		self instrumentSelector: node selector value withArgs: node arguments. 
-		]
+		node link: self newInsteadLinkForMessagesSend.
+		self
+			instrumentSelector: node selector value
+			withArgs: node arguments ]
 ]
 
 { #category : #instrumentation }
@@ -354,7 +362,10 @@ RFProxyInstrumenter >> redirectSelfArgsIn: ast [
 { #category : #instrumentation }
 RFProxyInstrumenter >> redirectSelfMethodIn: ast [
 
-	ast isMethod ifTrue: [ self halt ]
+	self firstStage ifFalse: [ ^ self ].
+	ast isMethod ifTrue: [ 
+		self log: 'REDIRECT METHOD Selector:  #' , ast selector ].
+	firstStage := false
 ]
 
 { #category : #instrumentation }
