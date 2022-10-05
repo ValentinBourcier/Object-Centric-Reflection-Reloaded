@@ -32,10 +32,27 @@ Class {
 	#instVars : [
 		'result',
 		'var1',
-		'var2'
+		'var2',
+		'collection',
+		'counter'
 	],
 	#category : #'Reflectivity-Object-Centric-Tests'
 }
+
+{ #category : #operation }
+TestClass >> add: aValue [
+
+	var1 := aValue
+]
+
+{ #category : #operation }
+TestClass >> assigningValues [
+
+	self var1SimpleAsssignment.
+	var1 := self returningValue.
+	var2 := self returningValue + 2.
+	^ self returningValue + 1
+]
 
 { #category : #operation }
 TestClass >> assignment1 [
@@ -47,7 +64,40 @@ TestClass >> assignment1 [
 { #category : #operation }
 TestClass >> assignment2 [
 	var2:= 2.
-	^ 3 - var2.
+	^ 3 - self var2.
+]
+
+{ #category : #accessing }
+TestClass >> collection [
+
+	^ collection
+]
+
+{ #category : #accessing }
+TestClass >> collection: anObject [
+
+	collection := anObject
+]
+
+{ #category : #accessing }
+TestClass >> counter [
+
+	^ counter
+]
+
+{ #category : #accessing }
+TestClass >> counter: anObject [
+
+	counter := anObject
+]
+
+{ #category : #accessing }
+TestClass >> messageSendOtherObjects [
+
+	self add: 1.
+	collection add: 2.
+	self add: 3.
+	collection add: 4
 ]
 
 { #category : #operation }
@@ -108,6 +158,12 @@ TestClass >> resultAssignment [
 ]
 
 { #category : #operation }
+TestClass >> returningValue [
+
+	^ 2
+]
+
+{ #category : #operation }
 TestClass >> selfAssignment [
 
 	var2 := var1 + 2.
@@ -162,4 +218,21 @@ TestClass >> var2Assignment [
 TestClass >> var2SimpleAsssignment [
 
 	var2 := self var2 * 2
+]
+
+{ #category : #operation }
+TestClass >> variablesReadandAssignment [
+
+	result := var1 + var2.
+	self var2.
+	self var1.
+	^ self result
+]
+
+{ #category : #operation }
+TestClass >> variablesReadandAssignmentToOneVariable [
+
+	result := var1.
+	self var1.
+	^ var1
 ]

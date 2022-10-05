@@ -15,8 +15,7 @@ Class {
 		'instrumentedMessages',
 		'instrumentedObject',
 		'instrumentedClass',
-		'compiledSelectorsMap',
-		'firstStage'
+		'compiledSelectorsMap'
 	],
 	#category : #'Reflectivity-Object-Centric'
 }
@@ -120,12 +119,6 @@ RFProxyInstrumenter >> findSuperSendsChainFor: aMethod [
 	^ methodChain
 ]
 
-{ #category : #accessing }
-RFProxyInstrumenter >> firstStage [
-
-	^ firstStage ifNil:[ firstStage:= true]
-]
-
 { #category : #instrumentation }
 RFProxyInstrumenter >> instrumentMethod: method selector: selector [
 
@@ -144,9 +137,8 @@ RFProxyInstrumenter >> instrumentMethod: method selector: selector [
 		newMethod := instrumentedClass >> cs.
 		ast := newMethod ast.
 		"self redirectSelfArgsIn: ast."
-		self redirectSelfMethodIn: ast.
 		self redirectSelfReturnsIn: ast.
-		self redirectVariableAccessesIn: ast.
+		self redirectVariableWritingIn: ast.
 		self redirectMessagesSendIn: ast.
 		self compiledSelectorsMap
 			at: cs
@@ -334,9 +326,13 @@ RFProxyInstrumenter >> originalClass [
 RFProxyInstrumenter >> redirectMessagesSendIn: ast [
 
 	| messageSendNode |
-	messageSendNode := ast sendNodes select: [ :node | 
-		                   node receiver isSelfVariable ].
-	messageSendNode do: [ :node | "self halt."
+	"I should comment the selfVariable to intercept all MessageSend"
+
+	messageSendNode := ast sendNodes reject: [:node | node isBinary or: node receiver value isInteger].
+	"select: [ :node | node receiver isVariable isSelfVariable]."
+	"reject: [ :node | node parent isAssignment  ].	"
+	messageSendNode do: [ :node | .
+		"self halt."
 		node link: self newBeforeLinkForMessagesSend.
 		node link: self newAfterLinkForMessagesSend.
 		node link: self newInsteadLinkForMessagesSend.
@@ -357,15 +353,6 @@ RFProxyInstrumenter >> redirectSelfArgsIn: ast [
 				do: [ :node |
 					self log: { 'overriden self argument: '. node selector. ' in '. methodName}.
 					node link: ((self newLinkForSelector: nil) control: #instead; yourself) ] ]
-]
-
-{ #category : #instrumentation }
-RFProxyInstrumenter >> redirectSelfMethodIn: ast [
-
-	self firstStage ifFalse: [ ^ self ].
-	ast isMethod ifTrue: [ 
-		self log: 'REDIRECT METHOD Selector:  #' , ast selector ].
-	firstStage := false
 ]
 
 { #category : #instrumentation }
@@ -404,11 +391,22 @@ RFProxyInstrumenter >> redirectSuperSendsIn: ast toSelector: aSelector [
 ]
 
 { #category : #instrumentation }
-RFProxyInstrumenter >> redirectVariableAccessesIn: ast [
+RFProxyInstrumenter >> redirectVariableReadingIn: ast [
+
+	| variableReadNodes |
+	variableReadNodes := ast variableNodes.
+	variableReadNodes do: [ :node | 
+		"Implement own link interceptor"
+		node link: self newBeforeLinkForAssignments.
+		node link: self newAfterLinkForAssignments.
+		node link: self newInsteadLinkForAssignments ]
+]
+
+{ #category : #instrumentation }
+RFProxyInstrumenter >> redirectVariableWritingIn: ast [
 
 	| assignmentNodes |
 	assignmentNodes := ast assignmentNodes.
-
 	assignmentNodes do: [ :node | 
 		node link: self newBeforeLinkForAssignments.
 		node link: self newAfterLinkForAssignments.

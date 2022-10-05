@@ -93,7 +93,7 @@ CaseTest >> testInsideMessageSendBeforeCounterSelfMessage [
 		do: [ package counter: package counter + 1 ].
 
 	package m1.
-	self assert: package counter equals: 1
+	self assert: package counter equals: 0
 ]
 
 { #category : #initialization }
@@ -104,7 +104,7 @@ CaseTest >> testMessageSendAfterFirstInstruction [
 		do: [ package counter: package counter + 1 ].
 	
 	package setPackagePrice: 5 andTax: 7.
-	self assert: package counter equals: 1.
+	self assert: package counter equals: 0.
 	self assert: package packagePrice equals: 5.
 	self assert: package packageTax equals: 7.
 ]
@@ -242,12 +242,11 @@ CaseTest >> testTwoObjectsMessageSendInstead [
 		do: [ package counter: package counter + 1 ].
 	opackage setPackagePrice: 5 andTax: 7.
 	self assert: opackage counter equals: 0.
-	self assert: opackage packagePrice equals: 5.
-	self assert: opackage packageTax equals: 7.
-	self assert: package counter equals: 1.
 	self assert: package packagePrice equals: 20.
 	self assert: package packageTax equals: 10.
-
+	self assert: package counter equals: 0.
+	self assert: opackage packagePrice equals: 5.
+	self assert: opackage packageTax equals: 7
 ]
 
 { #category : #initialization }

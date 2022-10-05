@@ -1,20 +1,26 @@
 Class {
 	#name : #RFMessageSendTest,
 	#superclass : #TestCase,
+	#instVars : [
+		'aMethodTest',
+		'proxy',
+		'metaobject'
+	],
 	#category : #'Reflectivity-Object-Centric-Tests'
 }
 
 { #category : #tests }
-RFMessageSendTest >> testAllMessageSendAfter [
+RFMessageSendTest >> setUp [
 
-	| aMethodTest proxy metaobject |
 	aMethodTest := TestClass new.
-	proxy := aMethodTest proxifyWithMetaObject:
-		         RFProxyMetaObjectAssignmentTest.
-	metaobject := proxy metaObject.
-	Transcript clear.
 	aMethodTest var1: 1.
 	aMethodTest var2: 2.
+	Transcript clear
+]
+
+{ #category : #tests }
+RFMessageSendTest >> testAllMessageSendAfter [
+
 	aMethodTest afterAnyMessageSendDo: [ 
 		aMethodTest var2: aMethodTest var2 + 1 ].
 	aMethodTest sendingMethods.
@@ -24,14 +30,6 @@ RFMessageSendTest >> testAllMessageSendAfter [
 { #category : #tests }
 RFMessageSendTest >> testAllMessageSendBefore [
 
-	| aMethodTest proxy metaobject |
-	aMethodTest := TestClass new.
-	proxy := aMethodTest proxifyWithMetaObject:
-		         RFProxyMetaObjectAssignmentTest.
-	metaobject := proxy metaObject.
-	Transcript clear.
-	aMethodTest var1: 1.
-	aMethodTest var2: 2.
 	aMethodTest beforeAnyMessageSendDo: [ 
 		aMethodTest var2: aMethodTest var2 + 1 ].
 	aMethodTest sendingMethods.
@@ -41,14 +39,6 @@ RFMessageSendTest >> testAllMessageSendBefore [
 { #category : #tests }
 RFMessageSendTest >> testAllMessageSendInstead [
 
-	| aMethodTest proxy metaobject |
-	aMethodTest := TestClass new.
-	proxy := aMethodTest proxifyWithMetaObject:
-		         RFProxyMetaObjectAssignmentTest.
-	metaobject := proxy metaObject.
-	Transcript clear.
-	aMethodTest var1: 1.
-	aMethodTest var2: 2.
 	aMethodTest insteadAnyMessageSendDo: [ 
 		aMethodTest var2: aMethodTest var2 + 1 ].
 	aMethodTest sendingMethods.
@@ -58,32 +48,16 @@ RFMessageSendTest >> testAllMessageSendInstead [
 { #category : #tests }
 RFMessageSendTest >> testMessageSendAfter [
 
-	| aMethodTest proxy metaobject |
-	aMethodTest := TestClass new.
-	proxy := aMethodTest proxifyWithMetaObject:
-		         RFProxyMetaObjectAssignmentTest.
-	metaobject := proxy metaObject.
-	Transcript clear.
-	aMethodTest var1: 1.
-	aMethodTest var2: 2.
 	aMethodTest
 		afterMessageSendTo: #var2SimpleAsssignment
 		do: [ aMethodTest var2: aMethodTest var2 + 1 ].
-	aMethodTest sendingMethods .
+	aMethodTest sendingMethods.
 	self assert: aMethodTest var2 equals: 5
 ]
 
 { #category : #tests }
 RFMessageSendTest >> testMessageSendBefore [
 
-	| aMethodTest proxy metaobject |
-	aMethodTest := TestClass new.
-	proxy := aMethodTest proxifyWithMetaObject:
-		         RFProxyMetaObjectAssignmentTest.
-	metaobject := proxy metaObject.
-	Transcript clear.
-	aMethodTest var1: 1.
-	aMethodTest var2: 2.
 	aMethodTest
 		beforeMessageSendTo: #var2SimpleAsssignment
 		do: [ aMethodTest var2: aMethodTest var2 + 1 ].
@@ -92,44 +66,64 @@ RFMessageSendTest >> testMessageSendBefore [
 ]
 
 { #category : #tests }
+RFMessageSendTest >> testMessageSendInAssignment [
+
+	aMethodTest result: 0.
+	aMethodTest beforeAnyMessageSendDo: [ 
+		aMethodTest result: aMethodTest result + 1 ].
+	aMethodTest assigningValues.
+	self assert: aMethodTest result equals: 4
+]
+
+{ #category : #tests }
 RFMessageSendTest >> testMessageSendInstead [
 
-	| aMethodTest proxy metaobject |
-	aMethodTest := TestClass new.
-	proxy := aMethodTest proxifyWithMetaObject:
-		         RFProxyMetaObjectAssignmentTest.
-	metaobject := proxy metaObject.
-	Transcript clear.
-	aMethodTest var1: 1.
-	aMethodTest var2: 2.
 	aMethodTest
-		insteadMessageSendTo:  #var1SimpleAsssignment
+		insteadMessageSendTo: #var1SimpleAsssignment
 		do: [ aMethodTest var1: aMethodTest var1 + 3 ].
 	aMethodTest sendingMethods.
 	self assert: aMethodTest var1 equals: 4
 ]
 
 { #category : #tests }
+RFMessageSendTest >> testMessageSendOtherObjects [
+
+	aMethodTest collection: OrderedCollection new.
+	aMethodTest result: 0.
+	aMethodTest
+		afterMessageSendTo: #add:
+		do: [ aMethodTest result: aMethodTest result + 1 ].
+	aMethodTest messageSendOtherObjects.
+	self assert: aMethodTest result equals: 4
+]
+
+{ #category : #tests }
 RFMessageSendTest >> testMessageSendStoringDictionary [
 
-	| b proxy metaobject |
-	b := TestClass new.
-	proxy := b proxifyWithMetaObject: RFProxyMetaObjectAssignmentTest.
-	metaobject := proxy metaObject.
-	Transcript clear.
-	b var1: 1.
-	self assert: b var1 equals: 1.
-	b beforeMessageSendTo: #var1 do: [ 'This is A' crTrace ].
-	b insteadMessageSendTo: #var2 do: [ 'This is B' crTrace ].
-	b afterMessageSendTo: #result do: [ 'This is result' crTrace ].
+	self assert: aMethodTest var1 equals: 1.
 
-	self assert: (metaobject messagesStoring valuesStored  includesKey: #var2).
-	self assert: (metaobject messagesStoring valuesStored includesKey: #var1).
-	self assert: (metaobject messagesStoring valuesStored includesKey: #result).
+	proxy := aMethodTest proxifyWithMetaObject:
+		         RFProxyMetaObjectAssignmentTest.
+	metaobject := proxy metaObject.
+	aMethodTest beforeMessageSendTo: #var1 do: [ 'This is A' crTrace ].
+	aMethodTest insteadMessageSendTo: #var2 do: [ 'This is B' crTrace ].
+	aMethodTest
+		afterMessageSendTo: #result
+		do: [ 'This is result' crTrace ].
+
+	self assert:
+		(metaobject messagesStoring valuesStored includesKey: #var1).
+	self assert:
+		(metaobject messagesStoring valuesStored includesKey: #var2).
+	self assert:
+		(metaobject messagesStoring valuesStored includesKey: #result).
 	self
-		assert: ((metaobject messagesStoring valuesStored at: #var1) before at:1) asText
+		assert:
+			((metaobject messagesStoring valuesStored at: #var1) before at: 1)
+				asText
 		equals: [ 'This is A' crTrace ] asText.
 	self
-		assert: ((metaobject messagesStoring valuesStored at: #var2) instead) asText
+		assert:
+		(metaobject messagesStoring valuesStored at: #var2) instead asText
 		equals: [ 'This is B' crTrace ] asText
 ]

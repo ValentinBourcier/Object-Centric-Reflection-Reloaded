@@ -8,23 +8,35 @@ Class {
 RFAssignmentsAndBlocksTest >> testAssignmentDictionaryCreation [
 
 	| b proxy metaobject |
-	b := TestClass  new.
+	b := TestClass new.
 	proxy := b proxifyWithMetaObject: RFProxyMetaObjectAssignmentTest.
 	metaobject := proxy metaObject.
 	Transcript clear.
 	b assignment1.
 	b beforeAssignmentTo: #var1 do: [ 'This is A' crTrace ].
-	self assert: (metaobject assignmentsStoring valuesStored includesKey: #var1).
-	b afterAssignmentTo:  #var2 do: [ 'This is B' crTrace ].
+	self assert:
+		(metaobject assignmentsStoring valuesStored includesKey: #var1).
+	b afterAssignmentTo: #var2 do: [ 'This is B' crTrace ].
 	b beforeAssignmentTo: #c do: [ 'This is C' crTrace ].
 	b insteadAssignmentTo: #d do: [ 'This is D' crTrace ].
-	
-	self assert: (metaobject assignmentsStoring valuesStored includesKey: #var1).
-	self assert: (metaobject assignmentsStoring valuesStored includesKey: #var2).
-	self assert: (metaobject assignmentsStoring valuesStored includesKey: #c).
-	self assert: (metaobject assignmentsStoring valuesStored includesKey: #d).
-	self assert: ((metaobject assignmentsStoring valuesStored at: #var1) before at: 1) asText equals: [ 'This is A' crTrace ] asText.
-	self assert: ((metaobject assignmentsStoring valuesStored at: #d) instead ) asText equals: [ 'This is D' crTrace ] asText.
+
+	self assert:
+		(metaobject assignmentsStoring valuesStored includesKey: #var1).
+	self assert:
+		(metaobject assignmentsStoring valuesStored includesKey: #var2).
+	self assert:
+		(metaobject assignmentsStoring valuesStored includesKey: #c).
+	self assert:
+		(metaobject assignmentsStoring valuesStored includesKey: #d).
+	self
+		assert:
+			((metaobject assignmentsStoring valuesStored at: #var1) before at:
+				 1) asText
+		equals: [ 'This is A' crTrace ] asText.
+	self
+		assert:
+		(metaobject assignmentsStoring valuesStored at: #d) instead asText
+		equals: [ 'This is D' crTrace ] asText
 ]
 
 { #category : #tests }
