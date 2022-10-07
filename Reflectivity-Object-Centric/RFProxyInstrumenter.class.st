@@ -140,6 +140,7 @@ RFProxyInstrumenter >> instrumentMethod: method selector: selector [
 		self redirectSelfReturnsIn: ast.
 		self redirectVariableWritingIn: ast.
 		self redirectMessagesSendIn: ast.
+		self redirectVariableReadingIn: ast.
 		self compiledSelectorsMap
 			at: cs
 			ifPresent: [ :redirectionSelector | 
@@ -243,6 +244,19 @@ RFProxyInstrumenter >> newAfterLinkForMessagesSend [
 ]
 
 { #category : #links }
+RFProxyInstrumenter >> newAfterLinkForVariableRead [
+
+	| link  |
+	link := MetaLink new.
+	link control: #after.
+	link metaObject: metaObject .
+	link selector: #linkAfterVariableRead:.
+	link arguments: #( operation ).
+	link optionCompileOnLinkInstallation: true.	
+	^ link
+]
+
+{ #category : #links }
 RFProxyInstrumenter >> newBeforeLinkForAssignments [
 
 	| link |
@@ -263,6 +277,19 @@ RFProxyInstrumenter >> newBeforeLinkForMessagesSend [
 	link control: #before.
 	link metaObject: metaObject .
 	link selector: #linkBeforeMessageSend:.
+	link arguments: #( operation ).
+	link optionCompileOnLinkInstallation: true.	
+	^ link
+]
+
+{ #category : #links }
+RFProxyInstrumenter >> newBeforeLinkForVariableRead [
+
+	| link  |
+	link := MetaLink new.
+	link control: #before.
+	link metaObject: metaObject .
+	link selector: #linkBeforeVariableRead:.
 	link arguments: #( operation ).
 	link optionCompileOnLinkInstallation: true.	
 	^ link
@@ -291,6 +318,19 @@ RFProxyInstrumenter >> newInsteadLinkForMessagesSend [
 	link selector: #linkInsteadMessageSend:.
 	link arguments: #( operation ).
 	link optionCompileOnLinkInstallation: true.
+	^ link
+]
+
+{ #category : #links }
+RFProxyInstrumenter >> newInsteadLinkForVariableRead [
+
+	| link  |
+	link := MetaLink new.
+	link control: #instead.
+	link metaObject: metaObject .
+	link selector: #linkInsteadVariableRead:.
+	link arguments: #( operation ).
+	link optionCompileOnLinkInstallation: true.	
 	^ link
 ]
 
@@ -328,11 +368,11 @@ RFProxyInstrumenter >> redirectMessagesSendIn: ast [
 	| messageSendNode |
 	"I should comment the selfVariable to intercept all MessageSend"
 
-	messageSendNode := ast sendNodes reject: [:node | node isBinary or: node receiver value isInteger].
+	messageSendNode := ast sendNodes reject: [ :node | 
+		                   node isBinary or: [ node receiver value isNumber ] ].
 	"select: [ :node | node receiver isVariable isSelfVariable]."
 	"reject: [ :node | node parent isAssignment  ].	"
-	messageSendNode do: [ :node | .
-		"self halt."
+	messageSendNode do: [ :node | 
 		node link: self newBeforeLinkForMessagesSend.
 		node link: self newAfterLinkForMessagesSend.
 		node link: self newInsteadLinkForMessagesSend.
@@ -394,12 +434,16 @@ RFProxyInstrumenter >> redirectSuperSendsIn: ast toSelector: aSelector [
 RFProxyInstrumenter >> redirectVariableReadingIn: ast [
 
 	| variableReadNodes |
-	variableReadNodes := ast variableNodes.
+	variableReadNodes := ast variableReadNodes.
+	variableReadNodes := variableReadNodes reject: [ :node | 
+		                     node isSelfVariable or: [ 
+			                     node isSuperVariable or: [ 
+				                     node isThisContextVariable ] ] ].
 	variableReadNodes do: [ :node | 
-		"Implement own link interceptor"
-		node link: self newBeforeLinkForAssignments.
-		node link: self newAfterLinkForAssignments.
-		node link: self newInsteadLinkForAssignments ]
+	
+		node link: self newBeforeLinkForVariableRead.
+		node link: self newAfterLinkForVariableRead.
+		node link: self newInsteadLinkForVariableRead  ]
 ]
 
 { #category : #instrumentation }

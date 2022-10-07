@@ -15,6 +15,13 @@ Object >> afterAnyMessageSendDo: aBlock [
 ]
 
 { #category : #'*Reflectivity-Object-Centric' }
+Object >> afterAnyVariableReadDo: aBlock [
+	self flag: 'We have to change the recursion'.
+	self proxify.
+	self afterAnyVariableReadDo: aBlock
+]
+
+{ #category : #'*Reflectivity-Object-Centric' }
 Object >> afterAssignmentTo: aVariableName do: aBlock [
 	self flag: 'We have to change the recursion'.
 	self proxify.
@@ -26,6 +33,13 @@ Object >> afterMessageSendTo: aMethod do: aBlock [
 	self flag: 'We have to change the recursion'.
 	self proxify.
 	self afterMessageSendTo:  aMethod  do: aBlock
+]
+
+{ #category : #'*Reflectivity-Object-Centric' }
+Object >> afterVariableRead: aVariableName do: aBlock [
+	self flag: 'We have to change the recursion'.
+	self proxify.
+	self afterVariableRead: aVariableName do: aBlock
 ]
 
 { #category : #'*Reflectivity-Object-Centric' }
@@ -44,6 +58,13 @@ Object >> beforeAnyMessageSendDo: aBlock [
 ]
 
 { #category : #'*Reflectivity-Object-Centric' }
+Object >> beforeAnyVariableReadDo: aBlock [
+	self flag: 'We have to change the recursion'.
+	self proxify.
+	self beforeAnyVariableReadDo: aBlock
+]
+
+{ #category : #'*Reflectivity-Object-Centric' }
 Object >> beforeAssignmentTo: aVariableName do: aBlock [
 	self flag: 'We have to change the recursion'.
 	self proxify.
@@ -56,6 +77,14 @@ Object >> beforeMessageSendTo: aMethod do: aBlock [
 	self flag: 'We have to change the recursion'.
 	self proxify.
 	self beforeMessageSendTo: aMethod do: aBlock
+]
+
+{ #category : #'*Reflectivity-Object-Centric' }
+Object >> beforeVariableRead: aVariable do: aBlock [
+
+	self flag: 'We have to change the recursion'.
+	self proxify.
+	self beforeVariableRead: aVariable do: aBlock
 ]
 
 { #category : #'*Reflectivity-Object-Centric' }
@@ -80,6 +109,13 @@ Object >> insteadAnyMessageSendDo: aBlock [
 ]
 
 { #category : #'*Reflectivity-Object-Centric' }
+Object >> insteadAnyVariableReadDo: aBlock [
+	self flag: 'We have to change the recursion'.
+	self proxify.
+	self insteadAnyVariableReadDo: aBlock
+]
+
+{ #category : #'*Reflectivity-Object-Centric' }
 Object >> insteadAssignmentTo: aVariableName do: aBlock [
 	self flag: 'We have to change the recursion'.
 	self proxify.
@@ -92,6 +128,13 @@ Object >> insteadMessageSendTo: aMethod do: aBlock [
 	self flag: 'We have to change the recursion'.
 	self proxify.
 	self insteadMessageSendTo: aMethod do: aBlock
+]
+
+{ #category : #'*Reflectivity-Object-Centric' }
+Object >> insteadVariableRead: aVariableName do: aBlock [
+	self flag: 'We have to change the recursion'.
+	self proxify.
+	self insteadVariableRead: aVariableName do: aBlock
 ]
 
 { #category : #'*Reflectivity-Object-Centric' }

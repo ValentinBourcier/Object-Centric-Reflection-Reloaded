@@ -57,6 +57,12 @@ RFProxy >> afterAnyMessageSendDo: aBlock [
 ]
 
 { #category : #setting }
+RFProxy >> afterAnyVariableReadDo: aBlock [
+
+	^ metaObject afterAnyVariableReadDo: aBlock
+]
+
+{ #category : #setting }
 RFProxy >> afterAssignmentTo: aVariable do: aBlock [
 
 	^ metaObject afterAssignmentTo: aVariable do: aBlock
@@ -66,6 +72,12 @@ RFProxy >> afterAssignmentTo: aVariable do: aBlock [
 RFProxy >> afterMessageSendTo: aMethod do: aBlock [
 
 	^ metaObject afterMessageSendTo: aMethod do: aBlock
+]
+
+{ #category : #setting }
+RFProxy >> afterVariableRead: aVariable do: aBlock [
+
+	^ metaObject afterVariableRead: aVariable do: aBlock
 ]
 
 { #category : #setting }
@@ -81,6 +93,12 @@ RFProxy >> beforeAnyMessageSendDo: aBlock [
 ]
 
 { #category : #setting }
+RFProxy >> beforeAnyVariableReadDo: aBlock [
+
+	^ metaObject beforeAnyVariableReadDo: aBlock
+]
+
+{ #category : #setting }
 RFProxy >> beforeAssignmentTo: aVariable do: aBlock [
 
 	^ metaObject beforeAssignmentTo: aVariable do: aBlock
@@ -90,6 +108,12 @@ RFProxy >> beforeAssignmentTo: aVariable do: aBlock [
 RFProxy >> beforeMessageSendTo:  aMethod do: aBlock [
 
 	^ metaObject beforeMessageSendTo: aMethod do: aBlock
+]
+
+{ #category : #setting }
+RFProxy >> beforeVariableRead: aVariable do: aBlock [
+
+	^ metaObject beforeVariableRead: aVariable do: aBlock
 ]
 
 { #category : #'reflective operations' }
@@ -117,6 +141,12 @@ RFProxy >> insteadAnyMessageSendDo: aBlock [
 ]
 
 { #category : #setting }
+RFProxy >> insteadAnyVariableReadDo: aBlock [
+
+	^ metaObject insteadAnyVariableReadDo: aBlock
+]
+
+{ #category : #setting }
 RFProxy >> insteadAssignmentTo: aVariable do: aBlock [
 
 	^ metaObject insteadAssignmentTo: aVariable do: aBlock
@@ -126,4 +156,10 @@ RFProxy >> insteadAssignmentTo: aVariable do: aBlock [
 RFProxy >> insteadMessageSendTo: aMethod do: aBlock [
 
 	^ metaObject insteadMessageSendTo: aMethod do: aBlock
+]
+
+{ #category : #setting }
+RFProxy >> insteadVariableRead: aVariable do: aBlock [
+
+	^ metaObject insteadVariableRead: aVariable do: aBlock
 ]

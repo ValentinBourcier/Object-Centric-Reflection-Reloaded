@@ -94,6 +94,8 @@ RFMessageSendTest >> testMessageSendOtherObjects [
 		afterMessageSendTo: #add:
 		do: [ aMethodTest result: aMethodTest result + 1 ].
 	aMethodTest messageSendOtherObjects.
+	self assert: aMethodTest var1 equals: 3.
+	self assert: aMethodTest collection size equals: 2.
 	self assert: aMethodTest result equals: 4
 ]
 
@@ -112,18 +114,18 @@ RFMessageSendTest >> testMessageSendStoringDictionary [
 		do: [ 'This is result' crTrace ].
 
 	self assert:
-		(metaobject messagesStoring valuesStored includesKey: #var1).
+		(metaobject messageSendStoring valuesStored includesKey: #var1).
 	self assert:
-		(metaobject messagesStoring valuesStored includesKey: #var2).
+		(metaobject messageSendStoring valuesStored includesKey: #var2).
 	self assert:
-		(metaobject messagesStoring valuesStored includesKey: #result).
+		(metaobject messageSendStoring valuesStored includesKey: #result).
 	self
 		assert:
-			((metaobject messagesStoring valuesStored at: #var1) before at: 1)
+			((metaobject messageSendStoring valuesStored at: #var1) before at: 1)
 				asText
 		equals: [ 'This is A' crTrace ] asText.
 	self
 		assert:
-		(metaobject messagesStoring valuesStored at: #var2) instead asText
+		(metaobject messageSendStoring valuesStored at: #var2) instead asText
 		equals: [ 'This is B' crTrace ] asText
 ]

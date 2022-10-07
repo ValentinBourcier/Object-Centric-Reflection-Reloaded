@@ -233,6 +233,6 @@ TestClass >> variablesReadandAssignment [
 TestClass >> variablesReadandAssignmentToOneVariable [
 
 	result := var1.
-	self var1.
+	self var2.
 	^ var1
 ]
