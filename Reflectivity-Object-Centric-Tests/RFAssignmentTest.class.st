@@ -84,9 +84,9 @@ RFAssignmentTest >> testAssignmentInstead [
 
 	aAssignmentTestClass
 		insteadAssignmentTo: #var1
-		do: [ aAssignmentTestClass var1: 2 ].
+		do: [ aAssignmentTestClass var1: 8 ].
 	aAssignmentTestClass onlyAssignment.
-	self assert: aAssignmentTestClass var1 equals: 2
+	self assert: aAssignmentTestClass var1 equals: 8
 ]
 
 { #category : #tests }

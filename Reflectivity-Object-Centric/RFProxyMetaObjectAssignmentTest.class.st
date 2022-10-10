@@ -11,25 +11,25 @@ Class {
 }
 
 { #category : #'message passing' }
-RFProxyMetaObjectAssignmentTest >> linkAfterAssignment: operation [
+RFProxyMetaObjectAssignmentTest >> linkAfterAssignment: aName withValue: aValue [
 
 	logger := RFAssignmentMetaObjectInterceptor new.
-	logger variable: operation variable name.
-	logger newValue: operation assignedValue.
-	logger oldValue: (operation variable read: operation object).
+	logger variable: aName.
+	logger newValue: aValue.
+	logger oldValue: aValue.
 
-	super linkAfterAssignment: operation
+	super linkAfterAssignment: aName withValue: aValue
 ]
 
 { #category : #'message passing' }
-RFProxyMetaObjectAssignmentTest >> linkBeforeAssignment: operation [
+RFProxyMetaObjectAssignmentTest >> linkBeforeAssignment: aName withValue: aValue [
 
 	logger := RFAssignmentMetaObjectInterceptor new.
-	logger variable: operation variable name.
-	logger newValue: operation assignedValue.
-	logger oldValue: (operation variable read: operation object).
+	logger variable: aName.
+	logger newValue: aValue.
+	logger oldValue: aValue.
 
-	super linkBeforeAssignment: operation
+	super linkBeforeAssignment: aName withValue: aValue
 ]
 
 { #category : #'message passing' }
@@ -41,6 +41,17 @@ RFProxyMetaObjectAssignmentTest >> linkInsteadAssignment: operation [
 	logger oldValue: (operation variable read: operation object).
 
 	super linkInsteadAssignment: operation
+]
+
+{ #category : #'message passing' }
+RFProxyMetaObjectAssignmentTest >> linkInsteadAssignment: aName withValue: aValue [
+
+	logger := RFAssignmentMetaObjectInterceptor new.
+	logger variable: aName.
+	logger newValue: aValue.
+	logger oldValue: aValue.
+
+	super linkInsteadAssignment: aName withValue: aValue
 ]
 
 { #category : #accessing }

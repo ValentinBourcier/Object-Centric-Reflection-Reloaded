@@ -224,9 +224,9 @@ RFProxyInstrumenter >> newAfterLinkForAssignments [
 	| link |
 	link := MetaLink new.
 	link control: #after.
-	link metaObject: metaObject .
-	link selector: #linkAfterAssignment: .
-	link arguments: #( operation ).
+	link metaObject: metaObject.
+	link selector: #linkAfterAssignment:withValue:.
+	link arguments: #( name newValue ).
 	link optionCompileOnLinkInstallation: true.
 	^ link
 ]
@@ -238,8 +238,8 @@ RFProxyInstrumenter >> newAfterLinkForMessagesSend [
 	link := MetaLink new.
 	link control: #after.
 	link metaObject: metaObject.
-	link selector: #linkAfterMessageSend:.
-	link arguments: #( operation ).
+	link selector: #linkAfterMessageSend:withArguments:withReceiver:.
+	link arguments: #( selector arguments receiver ).
 	link optionCompileOnLinkInstallation: true.
 	^ link
 ]
@@ -252,7 +252,7 @@ RFProxyInstrumenter >> newAfterLinkForVariableRead [
 	link control: #after.
 	link metaObject: metaObject .
 	link selector: #linkAfterVariableRead:.
-	link arguments: #( operation ).
+	link arguments: #( name ).
 	link optionCompileOnLinkInstallation: true.	
 	^ link
 ]
@@ -264,8 +264,8 @@ RFProxyInstrumenter >> newBeforeLinkForAssignments [
 	link := MetaLink new.
 	link control: #before.
 	link metaObject: metaObject .
-	link selector: #linkBeforeAssignment:.
-	link arguments: #( operation ).
+	link selector: #linkBeforeAssignment:withValue:.
+	link arguments: #( name newValue ).
 	link optionCompileOnLinkInstallation: true.
 	^ link
 ]
@@ -273,13 +273,13 @@ RFProxyInstrumenter >> newBeforeLinkForAssignments [
 { #category : #links }
 RFProxyInstrumenter >> newBeforeLinkForMessagesSend [
 
-	| link  |
+	| link |
 	link := MetaLink new.
 	link control: #before.
-	link metaObject: metaObject .
-	link selector: #linkBeforeMessageSend:.
-	link arguments: #( operation ).
-	link optionCompileOnLinkInstallation: true.	
+	link metaObject: metaObject.
+	link selector: #'linkBeforeMessageSend:withArguments:'.
+	link arguments: #( selector arguments ).
+	link optionCompileOnLinkInstallation: true.
 	^ link
 ]
 
@@ -291,7 +291,7 @@ RFProxyInstrumenter >> newBeforeLinkForVariableRead [
 	link control: #before.
 	link metaObject: metaObject .
 	link selector: #linkBeforeVariableRead:.
-	link arguments: #( operation ).
+	link arguments: #( name ).
 	link optionCompileOnLinkInstallation: true.	
 	^ link
 ]
@@ -305,6 +305,8 @@ RFProxyInstrumenter >> newInsteadLinkForAssignments [
 	link metaObject: metaObject.
 	link selector: #linkInsteadAssignment:.
 	link arguments: #( operation ).
+"	link selector: #linkInsteadAssignment:withValue:.
+	link arguments: #( name value )."
 	link optionCompileOnLinkInstallation: true.
 	^ link
 ]
@@ -316,8 +318,8 @@ RFProxyInstrumenter >> newInsteadLinkForMessagesSend [
 	link := MetaLink new.
 	link control: #instead.
 	link metaObject: metaObject.
-	link selector: #linkInsteadMessageSend:.
-	link arguments: #( operation ).
+	link selector: #linkInsteadMessageSend:withArguments:withReceiver:.
+	link arguments: #( selector arguments receiver ).
 	link optionCompileOnLinkInstallation: true.
 	^ link
 ]
@@ -330,7 +332,7 @@ RFProxyInstrumenter >> newInsteadLinkForVariableRead [
 	link control: #instead.
 	link metaObject: metaObject .
 	link selector: #linkInsteadVariableRead:.
-	link arguments: #( operation ).
+	link arguments: #( name ).
 	link optionCompileOnLinkInstallation: true.	
 	^ link
 ]
@@ -370,7 +372,7 @@ RFProxyInstrumenter >> redirectMessagesSendIn: ast [
 	messageSendNode := ast sendNodes reject: [ :node | node isBinary ].
 	messageSendNode do: [ :node | 
 		node link: self newBeforeLinkForMessagesSend.
-		node link: self newAfterLinkForMessagesSend
+		node link: self newAfterLinkForMessagesSend.
 		"node link: self newInsteadLinkForMessagesSend"
 		"self
 			instrumentSelector: node selector value
