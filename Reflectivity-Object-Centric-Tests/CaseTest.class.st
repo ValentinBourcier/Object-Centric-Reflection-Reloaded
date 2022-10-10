@@ -124,8 +124,9 @@ CaseTest >> testSpecificAssignmentAfterCounter [
 { #category : #initialization }
 CaseTest >> testSpecificAssignmentBeforeCounter [
 
-	package beforeAssignmentTo: #packagePrice do:  [ 
-		package counter: package counter + 1 ].
+	package
+		beforeAssignmentTo: #packagePrice
+		do: [ package counter: package counter + 1 ].
 	package clearPackage.
 	self assert: package counter equals: 1
 ]
@@ -133,8 +134,9 @@ CaseTest >> testSpecificAssignmentBeforeCounter [
 { #category : #initialization }
 CaseTest >> testSpecificAssignmentInsteadCounter [
 
-	package insteadAssignmentTo: #packagePrice do:  [ 
-		package counter: package counter + 1 ].
+	package
+		insteadAssignmentTo: #packagePrice
+		do: [ package counter: package counter + 1 ].
 	package clearPackage.
 	self assert: package counter equals: 1
 ]

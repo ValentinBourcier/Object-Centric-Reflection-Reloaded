@@ -137,10 +137,11 @@ RFProxyInstrumenter >> instrumentMethod: method selector: selector [
 		newMethod := instrumentedClass >> cs.
 		ast := newMethod ast.
 		"self redirectSelfArgsIn: ast."
+		self redirectSelfSendsIn: ast.
 		self redirectSelfReturnsIn: ast.
 		self redirectVariableWritingIn: ast.
 		self redirectMessagesSendIn: ast.
-		self redirectVariableReadingIn: ast.
+		"self redirectVariableReadingIn: ast."
 		self compiledSelectorsMap
 			at: cs
 			ifPresent: [ :redirectionSelector | 
@@ -366,19 +367,14 @@ RFProxyInstrumenter >> originalClass [
 RFProxyInstrumenter >> redirectMessagesSendIn: ast [
 
 	| messageSendNode |
-	"I should comment the selfVariable to intercept all MessageSend"
-
-	messageSendNode := ast sendNodes reject: [ :node | 
-		                   node isBinary or: [ node receiver value isNumber ] ].
-	"select: [ :node | node receiver isVariable isSelfVariable]."
-	"reject: [ :node | node parent isAssignment  ].	"
+	messageSendNode := ast sendNodes reject: [ :node | node isBinary ].
 	messageSendNode do: [ :node | 
 		node link: self newBeforeLinkForMessagesSend.
-		node link: self newAfterLinkForMessagesSend.
-		node link: self newInsteadLinkForMessagesSend.
-		self
+		node link: self newAfterLinkForMessagesSend
+		"node link: self newInsteadLinkForMessagesSend"
+		"self
 			instrumentSelector: node selector value
-			withArgs: node arguments ]
+			withArgs: node arguments" ]
 ]
 
 { #category : #instrumentation }

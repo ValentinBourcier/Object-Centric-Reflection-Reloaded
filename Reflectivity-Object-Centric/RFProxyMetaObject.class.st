@@ -412,9 +412,9 @@ RFProxyMetaObject >> linkAfterMessageSend: operation [
 RFProxyMetaObject >> linkAfterVariableRead: operation [
 
 	| timeObject afterColl |
-	self class log: 'METAOBJECT BEFORE receive Variable: '
+	"self class log: 'METAOBJECT BEFORE receive Variable: '
 		, operation variable name , ' Value: '
-		, operation value asString.
+		, operation value asString."
 	self metaLevel ifTrue: [ ^ self ]. "self o operation value"
 	[ self variableReadStoring  valuesStored at: operation variable name ]
 		on: KeyNotFound
@@ -481,9 +481,9 @@ RFProxyMetaObject >> linkBeforeMessageSend: operation [
 RFProxyMetaObject >> linkBeforeVariableRead: operation [
 
 	| timeObject beforeColl |
-	self class log: 'METAOBJECT BEFORE receive Variable: '
+	"self class log: 'METAOBJECT BEFORE receive Variable: '
 		, operation variable name , ' Value: '
-		, operation value asString.
+		, operation value asString."
 	self metaLevel ifTrue: [ ^ self ]. "self o operation value"
 	[ self variableReadStoring  valuesStored at: operation variable name ]
 		on: KeyNotFound
@@ -526,12 +526,13 @@ RFProxyMetaObject >> linkInsteadAssignment: operation [
 RFProxyMetaObject >> linkInsteadMessageSend: operation [
 
 	| timeObject insteadBlock |
-	"self class log:
-		'METAOBJECT INSTEAD MessageSend: ' , operation selector."
-	self metaLevel ifTrue: [ 
-		^ proxy
+		self class log:
+		'METAOBJECT INSTEAD MessageSend: ' , operation receiver asString.
+
+	self metaLevel ifTrue: [ ^ operation receiver
 			  perform: operation selector
-			  withArguments: operation arguments ].
+			  withArguments: operation arguments 
+		"^ operation value" ].
 	[ self messageSendStoring valuesStored at: operation selector ]
 		on: KeyNotFound
 		do: [ 
@@ -543,10 +544,7 @@ RFProxyMetaObject >> linkInsteadMessageSend: operation [
 	timeObject := self messageSendStoring valuesStored at:
 		              operation selector.
 	insteadBlock := timeObject instead.
-	insteadBlock ifNil: [ 
-		^ proxy
-			  perform: operation selector
-			  withArguments: operation arguments ].
+	insteadBlock ifNil: [ ^ operation value ].
 	self metaLevel: true.
 	insteadBlock value.
 	self metaLevel: false
@@ -556,9 +554,9 @@ RFProxyMetaObject >> linkInsteadMessageSend: operation [
 RFProxyMetaObject >> linkInsteadVariableRead: operation [
 
 	| timeObject insteadColl |
-	self class log: 'METAOBJECT BEFORE receive Variable: '
+	"self class log: 'METAOBJECT BEFORE receive Variable: '
 		, operation variable name , ' Value: '
-		, operation value asString.
+		, operation value asString."
 	self metaLevel ifTrue: [ ^ operation value ]. "self o operation value"
 	[ self variableReadStoring  valuesStored at: operation variable name ]
 		on: KeyNotFound

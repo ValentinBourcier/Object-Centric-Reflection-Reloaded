@@ -176,7 +176,7 @@ TestClass >> sendingMethods [
 
 	result := var1.
 	self var1SimpleAsssignment.
-	self var2SimpleAsssignment
+	self var1SimpleAsssignment
 ]
 
 { #category : #accessing }

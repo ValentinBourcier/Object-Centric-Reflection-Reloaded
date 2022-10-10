@@ -23,8 +23,9 @@ RFMessageSendTest >> testAllMessageSendAfter [
 
 	aMethodTest afterAnyMessageSendDo: [ 
 		aMethodTest var2: aMethodTest var2 + 1 ].
+
 	aMethodTest sendingMethods.
-	self assert: aMethodTest var2 equals: 7
+	self assert: aMethodTest var2 equals: 4
 ]
 
 { #category : #tests }
@@ -33,7 +34,7 @@ RFMessageSendTest >> testAllMessageSendBefore [
 	aMethodTest beforeAnyMessageSendDo: [ 
 		aMethodTest var2: aMethodTest var2 + 1 ].
 	aMethodTest sendingMethods.
-	self assert: aMethodTest var2 equals: 10
+	self assert: aMethodTest var2 equals: 4
 ]
 
 { #category : #tests }
@@ -49,27 +50,67 @@ RFMessageSendTest >> testAllMessageSendInstead [
 RFMessageSendTest >> testMessageSendAfter [
 
 	aMethodTest
+		afterMessageSendTo: #var1SimpleAsssignment
+		do: [ aMethodTest var2: aMethodTest var2 + 1 ].
+	aMethodTest sendingMethods.
+	self assert: aMethodTest var2 equals: 4
+]
+
+{ #category : #tests }
+RFMessageSendTest >> testMessageSendAfterNoMethod [
+
+	aMethodTest
 		afterMessageSendTo: #var2SimpleAsssignment
 		do: [ aMethodTest var2: aMethodTest var2 + 1 ].
 	aMethodTest sendingMethods.
-	self assert: aMethodTest var2 equals: 5
+	self assert: aMethodTest var2 equals: 2
 ]
 
 { #category : #tests }
 RFMessageSendTest >> testMessageSendBefore [
 
 	aMethodTest
-		beforeMessageSendTo: #var2SimpleAsssignment
+		beforeMessageSendTo: #var1SimpleAsssignment
 		do: [ aMethodTest var2: aMethodTest var2 + 1 ].
 	aMethodTest sendingMethods.
-	self assert: aMethodTest var2 equals: 6
+	self assert: aMethodTest var2 equals: 4
 ]
 
 { #category : #tests }
-RFMessageSendTest >> testMessageSendInAssignment [
+RFMessageSendTest >> testMessageSendBeforeNoMethod [
+
+	aMethodTest
+		beforeMessageSendTo: #var2SimpleAsssignment
+		do: [ aMethodTest var2: aMethodTest var2 + 1 ].
+	aMethodTest sendingMethods.
+	self assert: aMethodTest var2 equals: 2
+]
+
+{ #category : #tests }
+RFMessageSendTest >> testMessageSendInAssignmentAfter [
+
+	aMethodTest result: 0.
+	aMethodTest afterAnyMessageSendDo: [ 
+		aMethodTest result: aMethodTest result + 1 ].
+	aMethodTest assigningValues.
+	self assert: aMethodTest result equals: 4
+]
+
+{ #category : #tests }
+RFMessageSendTest >> testMessageSendInAssignmentBefore [
 
 	aMethodTest result: 0.
 	aMethodTest beforeAnyMessageSendDo: [ 
+		aMethodTest result: aMethodTest result + 1 ].
+	aMethodTest assigningValues.
+	self assert: aMethodTest result equals: 4
+]
+
+{ #category : #tests }
+RFMessageSendTest >> testMessageSendInAssignmentInstead [
+
+	aMethodTest result: 0.
+	aMethodTest insteadAnyMessageSendDo: [ 
 		aMethodTest result: aMethodTest result + 1 ].
 	aMethodTest assigningValues.
 	self assert: aMethodTest result equals: 4
@@ -82,7 +123,7 @@ RFMessageSendTest >> testMessageSendInstead [
 		insteadMessageSendTo: #var1SimpleAsssignment
 		do: [ aMethodTest var1: aMethodTest var1 + 3 ].
 	aMethodTest sendingMethods.
-	self assert: aMethodTest var1 equals: 4
+	self assert: aMethodTest var1 equals: 7
 ]
 
 { #category : #tests }
