@@ -2,9 +2,9 @@ Class {
 	#name : #RFMessageSendTest,
 	#superclass : #TestCase,
 	#instVars : [
-		'aMethodTest',
 		'proxy',
-		'metaobject'
+		'metaobject',
+		'aClassTest'
 	],
 	#category : #'Reflectivity-Object-Centric-Tests'
 }
@@ -12,145 +12,144 @@ Class {
 { #category : #tests }
 RFMessageSendTest >> setUp [
 
-	aMethodTest := TestClass new.
-	aMethodTest var1: 1.
-	aMethodTest var2: 2.
+	aClassTest := TestClass new.
+	aClassTest var1: 1.
+	aClassTest var2: 2.
 	Transcript clear
 ]
 
-{ #category : #tests }
+{ #category : #'tests - after' }
 RFMessageSendTest >> testAllMessageSendAfter [
 
-	aMethodTest afterAnyMessageSendDo: [ 
-		aMethodTest var2: aMethodTest var2 + 1 ].
-
-	aMethodTest sendingMethods.
-	self assert: aMethodTest var2 equals: 4
+	aClassTest afterAnyMessageSendDo: [ 
+		aClassTest var2: aClassTest var2 + 1 ].
+	aClassTest sendingMethods.
+	self assert: aClassTest var2 equals: 4
 ]
 
-{ #category : #tests }
+{ #category : #'tests - before' }
 RFMessageSendTest >> testAllMessageSendBefore [
 
-	aMethodTest beforeAnyMessageSendDo: [ 
-		aMethodTest var2: aMethodTest var2 + 1 ].
-	aMethodTest sendingMethods.
-	self assert: aMethodTest var2 equals: 4
+	aClassTest beforeAnyMessageSendDo: [ 
+		aClassTest var2: aClassTest var2 + 1 ].
+	aClassTest sendingMethods.
+	self assert: aClassTest var2 equals: 4
 ]
 
-{ #category : #tests }
+{ #category : #'tests - instead' }
 RFMessageSendTest >> testAllMessageSendInstead [
 
-	aMethodTest insteadAnyMessageSendDo: [ 
-		aMethodTest var2: aMethodTest var2 + 1 ].
-	aMethodTest sendingMethods.
-	self assert: aMethodTest var2 equals: 4
+	aClassTest insteadAnyMessageSendDo: [ 
+		aClassTest var2: aClassTest var2 + 1 ].
+	aClassTest sendingMethods.
+	self assert: aClassTest var2 equals: 4
 ]
 
-{ #category : #tests }
+{ #category : #'tests - after' }
 RFMessageSendTest >> testMessageSendAfter [
 
-	aMethodTest
+	aClassTest
 		afterMessageSendTo: #var1SimpleAsssignment
-		do: [ aMethodTest var2: aMethodTest var2 + 1 ].
-	aMethodTest sendingMethods.
-	self assert: aMethodTest var2 equals: 4
+		do: [ aClassTest var2: aClassTest var2 + 1 ].
+	aClassTest sendingMethods.
+	self assert: aClassTest var2 equals: 4
 ]
 
-{ #category : #tests }
+{ #category : #'tests - after' }
 RFMessageSendTest >> testMessageSendAfterNoMethod [
 
-	aMethodTest
+	aClassTest
 		afterMessageSendTo: #var2SimpleAsssignment
-		do: [ aMethodTest var2: aMethodTest var2 + 1 ].
-	aMethodTest sendingMethods.
-	self assert: aMethodTest var2 equals: 2
+		do: [ aClassTest var2: aClassTest var2 + 1 ].
+	aClassTest sendingMethods.
+	self assert: aClassTest var2 equals: 2
 ]
 
-{ #category : #tests }
+{ #category : #'tests - before' }
 RFMessageSendTest >> testMessageSendBefore [
 
-	aMethodTest
+	aClassTest
 		beforeMessageSendTo: #var1SimpleAsssignment
-		do: [ aMethodTest var2: aMethodTest var2 + 1 ].
-	aMethodTest sendingMethods.
-	self assert: aMethodTest var2 equals: 4
+		do: [ aClassTest var2: aClassTest var2 + 1 ].
+	aClassTest sendingMethods.
+	self assert: aClassTest var2 equals: 4
 ]
 
-{ #category : #tests }
+{ #category : #'tests - before' }
 RFMessageSendTest >> testMessageSendBeforeNoMethod [
 
-	aMethodTest
+	aClassTest
 		beforeMessageSendTo: #var2SimpleAsssignment
-		do: [ aMethodTest var2: aMethodTest var2 + 1 ].
-	aMethodTest sendingMethods.
-	self assert: aMethodTest var2 equals: 2
+		do: [ aClassTest var2: aClassTest var2 + 1 ].
+	aClassTest sendingMethods.
+	self assert: aClassTest var2 equals: 2
 ]
 
-{ #category : #tests }
+{ #category : #'tests - after' }
 RFMessageSendTest >> testMessageSendInAssignmentAfter [
 
-	aMethodTest result: 0.
-	aMethodTest afterAnyMessageSendDo: [ 
-		aMethodTest result: aMethodTest result + 1 ].
-	aMethodTest assigningValues.
-	self assert: aMethodTest result equals: 4
+	aClassTest result: 0.
+	aClassTest afterAnyMessageSendDo: [ 
+		aClassTest result: aClassTest result + 1 ].
+	aClassTest assigningValues.
+	self assert: aClassTest result equals: 4
 ]
 
-{ #category : #tests }
+{ #category : #'tests - before' }
 RFMessageSendTest >> testMessageSendInAssignmentBefore [
 
-	aMethodTest result: 0.
-	aMethodTest beforeAnyMessageSendDo: [ 
-		aMethodTest result: aMethodTest result + 1 ].
-	aMethodTest assigningValues.
-	self assert: aMethodTest result equals: 4
+	aClassTest result: 0.
+	aClassTest beforeAnyMessageSendDo: [ 
+		aClassTest result: aClassTest result + 1 ].
+	aClassTest assigningValues.
+	self assert: aClassTest result equals: 4
 ]
 
-{ #category : #tests }
+{ #category : #'tests - instead' }
 RFMessageSendTest >> testMessageSendInAssignmentInstead [
 
-	aMethodTest result: 0.
-	aMethodTest insteadAnyMessageSendDo: [ 
-		aMethodTest result: aMethodTest result + 1 ].
-	aMethodTest assigningValues.
-	self assert: aMethodTest result equals: 4
+	aClassTest result: 0.
+	aClassTest insteadAnyMessageSendDo: [ 
+		aClassTest result: aClassTest result + 1 ].
+	aClassTest assigningValues.
+	self assert: aClassTest result equals: 4
 ]
 
-{ #category : #tests }
+{ #category : #'tests - instead' }
 RFMessageSendTest >> testMessageSendInstead [
 
-	aMethodTest
+	aClassTest
 		insteadMessageSendTo: #var1SimpleAsssignment
-		do: [ aMethodTest var1: aMethodTest var1 + 3 ].
-	aMethodTest sendingMethods.
-	self assert: aMethodTest var1 equals: 7
+		do: [ aClassTest var2: aClassTest var2 + 1 ].
+	aClassTest sendingMethods.
+	self assert: aClassTest var2 equals: 4
 ]
 
-{ #category : #tests }
+{ #category : #'tests - after' }
 RFMessageSendTest >> testMessageSendOtherObjects [
 
-	aMethodTest collection: OrderedCollection new.
-	aMethodTest result: 0.
-	aMethodTest
+	aClassTest collection: OrderedCollection new.
+	aClassTest result: 0.
+	aClassTest
 		afterMessageSendTo: #add:
-		do: [ aMethodTest result: aMethodTest result + 1 ].
-	aMethodTest messageSendOtherObjects.
-	self assert: aMethodTest var1 equals: 3.
-	self assert: aMethodTest collection size equals: 2.
-	self assert: aMethodTest result equals: 4
+		do: [ aClassTest result: aClassTest result + 1 ].
+	aClassTest messageSendOtherObjects.
+	self assert: aClassTest var1 equals: 3.
+	self assert: aClassTest collection size equals: 2.
+	self assert: aClassTest result equals: 4
 ]
 
 { #category : #tests }
 RFMessageSendTest >> testMessageSendStoringDictionary [
 
-	self assert: aMethodTest var1 equals: 1.
+	self assert: aClassTest var1 equals: 1.
 
-	proxy := aMethodTest proxifyWithMetaObject:
+	proxy := aClassTest proxifyWithMetaObject:
 		         RFProxyMetaObjectAssignmentTest.
 	metaobject := proxy metaObject.
-	aMethodTest beforeMessageSendTo: #var1 do: [ 'This is A' crTrace ].
-	aMethodTest insteadMessageSendTo: #var2 do: [ 'This is B' crTrace ].
-	aMethodTest
+	aClassTest beforeMessageSendTo: #var1 do: [ 'This is A' crTrace ].
+	aClassTest insteadMessageSendTo: #var2 do: [ 'This is B' crTrace ].
+	aClassTest
 		afterMessageSendTo: #result
 		do: [ 'This is result' crTrace ].
 

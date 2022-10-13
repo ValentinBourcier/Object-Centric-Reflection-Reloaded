@@ -46,7 +46,7 @@ CaseTest >> testAnyAssignmentInsteadCounter [
 	package insteadAnyAssignmentDo: [ 
 		package counter: package counter + 1 ].
 	package calculatePackageTax.
-	self assert: package counter equals: 2
+	self assert: package counter equals: 2 
 ]
 
 { #category : #initialization }

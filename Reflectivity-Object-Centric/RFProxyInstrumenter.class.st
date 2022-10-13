@@ -133,15 +133,17 @@ RFProxyInstrumenter >> instrumentMethod: method selector: selector [
 
 	compiledSelectors do: [ :cs | 
 		| ast |
+		"self haltOnce."
 		RFProxyMetaObject log: 'Instrumenting: ' , cs printString.
 		newMethod := instrumentedClass >> cs.
 		ast := newMethod ast.
 		"self redirectSelfArgsIn: ast."
 		self redirectSelfSendsIn: ast.
 		self redirectSelfReturnsIn: ast.
+		self redirectVariableReadingIn: ast.
 		self redirectVariableWritingIn: ast.
 		self redirectMessagesSendIn: ast.
-		"self redirectVariableReadingIn: ast."
+
 		self compiledSelectorsMap
 			at: cs
 			ifPresent: [ :redirectionSelector | 
@@ -163,6 +165,7 @@ RFProxyInstrumenter >> instrumentSelector: selector withArgs: args [
 		method primitive = 188 ifTrue: [ 			
 			method := args second.
 			RFProxyMetaObject log: 'Primitive ' , method printString.
+			self halt.
 			self instrumentMethod: method selector: method selector.
 			args removeLast.
 			args addLast: (instrumentedClass lookupSelector: method selector)  ].
@@ -238,8 +241,8 @@ RFProxyInstrumenter >> newAfterLinkForMessagesSend [
 	link := MetaLink new.
 	link control: #after.
 	link metaObject: metaObject.
-	link selector: #linkAfterMessageSend:withArguments:withReceiver:.
-	link arguments: #( selector arguments receiver ).
+	link selector: #linkAfterMessageSend:withValue:.
+	link arguments: #( selector  value ).
 	link optionCompileOnLinkInstallation: true.
 	^ link
 ]
@@ -277,8 +280,8 @@ RFProxyInstrumenter >> newBeforeLinkForMessagesSend [
 	link := MetaLink new.
 	link control: #before.
 	link metaObject: metaObject.
-	link selector: #'linkBeforeMessageSend:withArguments:'.
-	link arguments: #( selector arguments ).
+	link selector: #'linkBeforeMessageSend:'.
+	link arguments: #( selector ).
 	link optionCompileOnLinkInstallation: true.
 	^ link
 ]
@@ -306,7 +309,7 @@ RFProxyInstrumenter >> newInsteadLinkForAssignments [
 	link selector: #linkInsteadAssignment:.
 	link arguments: #( operation ).
 "	link selector: #linkInsteadAssignment:withValue:.
-	link arguments: #( name value )."
+	link arguments: #( name newValue )."
 	link optionCompileOnLinkInstallation: true.
 	^ link
 ]
@@ -318,8 +321,8 @@ RFProxyInstrumenter >> newInsteadLinkForMessagesSend [
 	link := MetaLink new.
 	link control: #instead.
 	link metaObject: metaObject.
-	link selector: #linkInsteadMessageSend:withArguments:withReceiver:.
-	link arguments: #( selector arguments receiver ).
+	link selector: #linkInsteadMessageSend:withValue:.
+	link arguments: #( selector value ).
 	link optionCompileOnLinkInstallation: true.
 	^ link
 ]
@@ -331,8 +334,8 @@ RFProxyInstrumenter >> newInsteadLinkForVariableRead [
 	link := MetaLink new.
 	link control: #instead.
 	link metaObject: metaObject .
-	link selector: #linkInsteadVariableRead:.
-	link arguments: #( name ).
+	link selector: #linkInsteadVariableRead:withValue:.
+	link arguments: #( name value).
 	link optionCompileOnLinkInstallation: true.	
 	^ link
 ]
@@ -373,10 +376,7 @@ RFProxyInstrumenter >> redirectMessagesSendIn: ast [
 	messageSendNode do: [ :node | 
 		node link: self newBeforeLinkForMessagesSend.
 		node link: self newAfterLinkForMessagesSend.
-		"node link: self newInsteadLinkForMessagesSend"
-		"self
-			instrumentSelector: node selector value
-			withArgs: node arguments" ]
+		"node link: self newInsteadLinkForMessagesSend" ]
 ]
 
 { #category : #instrumentation }
@@ -438,7 +438,6 @@ RFProxyInstrumenter >> redirectVariableReadingIn: ast [
 			                     node isSuperVariable or: [ 
 				                     node isThisContextVariable ] ] ].
 	variableReadNodes do: [ :node | 
-	
 		node link: self newBeforeLinkForVariableRead.
 		node link: self newAfterLinkForVariableRead.
 		node link: self newInsteadLinkForVariableRead  ]

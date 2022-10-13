@@ -162,14 +162,3 @@ RFAssignmentTest >> testBeforeAllAssignmentSelfAssignment [
 	self assert: aAssignmentTestClass var2 equals: 2.
 	self assert: aAssignmentTestClass result equals: 4
 ]
-
-{ #category : #tests }
-RFAssignmentTest >> testVariableRead [
-
-	"I have to implement an API for variable READ"
-	aAssignmentTestClass
-		afterAssignmentTo: #var1
-		do: [ aAssignmentTestClass var2: aAssignmentTestClass var2 + 1 ].
-	aAssignmentTestClass variablesReadandAssignmentToOneVariable.
-	self assert: aAssignmentTestClass var2 equals: 3.
-]

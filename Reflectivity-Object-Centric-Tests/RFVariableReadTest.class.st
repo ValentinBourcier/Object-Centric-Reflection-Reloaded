@@ -21,7 +21,7 @@ RFVariableReadTest >> setUp [
 	Transcript clear
 ]
 
-{ #category : #initialization }
+{ #category : #'tests - after' }
 RFVariableReadTest >> testAfterAnyVariableRead [
 
 	aTestClass afterAnyVariableReadDo: [ 
@@ -30,11 +30,10 @@ RFVariableReadTest >> testAfterAnyVariableRead [
 	self assert: aTestClass var1 equals: 0.
 	self assert: aTestClass var2 equals: 0.
 	self assert: aTestClass result equals: 0.
-	"is 6 or 5 should i considere assignment as access"
 	self assert: aTestClass counter equals: 2.
 ]
 
-{ #category : #initialization }
+{ #category : #'tests - after' }
 RFVariableReadTest >> testAfterAnyVariableReadOneVar [
 
 	aTestClass afterAnyVariableReadDo: [ 
@@ -44,7 +43,7 @@ RFVariableReadTest >> testAfterAnyVariableReadOneVar [
 	self assert: aTestClass counter equals: 2.
 ]
 
-{ #category : #initialization }
+{ #category : #'tests - after' }
 RFVariableReadTest >> testAfterVariableRead [
 
 	aTestClass afterVariableRead: #var1 do: [ 
@@ -54,7 +53,17 @@ RFVariableReadTest >> testAfterVariableRead [
 	self assert: aTestClass counter equals: 2.
 ]
 
-{ #category : #initialization }
+{ #category : #'tests - after' }
+RFVariableReadTest >> testAfterVariableRead2Var [
+
+	aTestClass afterVariableRead: #var1 do: [ 
+		aTestClass counter: aTestClass counter + 1 ].
+	aTestClass variablesReadandAssignment.
+	self assert: aTestClass var1 equals: 0.
+	self assert: aTestClass counter equals: 1.
+]
+
+{ #category : #'tests - before' }
 RFVariableReadTest >> testBeforeAnyVariableRead [
 
 	aTestClass beforeAnyVariableReadDo: [ 
@@ -66,7 +75,7 @@ RFVariableReadTest >> testBeforeAnyVariableRead [
 	self assert: aTestClass counter equals: 2.
 ]
 
-{ #category : #initialization }
+{ #category : #'tests - before' }
 RFVariableReadTest >> testBeforeAnyVariableReadOneVar [
 
 	aTestClass beforeAnyVariableReadDo: [ 
@@ -76,7 +85,7 @@ RFVariableReadTest >> testBeforeAnyVariableReadOneVar [
 	self assert: aTestClass counter equals: 2.
 ]
 
-{ #category : #initialization }
+{ #category : #'tests - before' }
 RFVariableReadTest >> testBeforeVariableRead [
 
 	aTestClass beforeVariableRead: #var1 do: [ 
@@ -86,9 +95,8 @@ RFVariableReadTest >> testBeforeVariableRead [
 	self assert: aTestClass counter equals: 2.
 ]
 
-{ #category : #initialization }
+{ #category : #'tests - before' }
 RFVariableReadTest >> testBeforeVariableRead2Var [
-
 	aTestClass beforeVariableRead: #var1 do: [ 
 		aTestClass counter: aTestClass counter + 1 ].
 	aTestClass variablesReadandAssignment.
@@ -96,7 +104,7 @@ RFVariableReadTest >> testBeforeVariableRead2Var [
 	self assert: aTestClass counter equals: 1.
 ]
 
-{ #category : #initialization }
+{ #category : #'tests - instead' }
 RFVariableReadTest >> testInsteadAnyVariableRead [
 
 	aTestClass insteadAnyVariableReadDo: [ 
@@ -105,11 +113,10 @@ RFVariableReadTest >> testInsteadAnyVariableRead [
 	self assert: aTestClass var1 equals: 0.
 	self assert: aTestClass var2 equals: 0.
 	self assert: aTestClass result equals: 0.
-	"is 6 or 5 should i considere assignment as access"
-	self assert: aTestClass counter equals: 6.
+	self assert: aTestClass counter equals: 2.
 ]
 
-{ #category : #initialization }
+{ #category : #'tests - instead' }
 RFVariableReadTest >> testInsteadAnyVariableReadOneVar [
 
 	aTestClass insteadAnyVariableReadDo: [ 
@@ -119,7 +126,7 @@ RFVariableReadTest >> testInsteadAnyVariableReadOneVar [
 	self assert: aTestClass counter equals: 2.
 ]
 
-{ #category : #initialization }
+{ #category : #'tests - instead' }
 RFVariableReadTest >> testInsteadVariableRead [
 
 	aTestClass insteadVariableRead: #var1 do: [ 
@@ -129,7 +136,7 @@ RFVariableReadTest >> testInsteadVariableRead [
 	self assert: aTestClass counter equals: 2.
 ]
 
-{ #category : #initialization }
+{ #category : #'tests - instead' }
 RFVariableReadTest >> testInsteadVariableRead2Var [
 
 	aTestClass insteadVariableRead: #var1 do: [ 
@@ -139,7 +146,7 @@ RFVariableReadTest >> testInsteadVariableRead2Var [
 	self assert: aTestClass counter equals: 1.
 ]
 
-{ #category : #initialization }
+{ #category : #'tests - after' }
 RFVariableReadTest >> testSimpleVariableReading [
 
 	aTestClass afterAnyVariableReadDo: [ 
@@ -151,7 +158,7 @@ RFVariableReadTest >> testSimpleVariableReading [
 	self assert: aTestClass counter equals: 2.
 ]
 
-{ #category : #initialization }
+{ #category : #'creation tests' }
 RFVariableReadTest >> testVariableReadStoringDictionary [
 
 	self assert: aTestClass var1 equals: 0.
