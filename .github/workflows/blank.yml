@@ -31,7 +31,7 @@ jobs:
       - name: Setup smalltalkCI
         uses: hpi-swa/setup-smalltalkCI@v1
         with:
-          smalltalk-version: Pharo64-11
+          smalltalk-image: Pharo64-11
       - name: Load Image and Run Tests
-        run: smalltalkci Pharo64-11 .smalltalk.ston
+        run: smalltalkci -s Pharo64-11 .smalltalk.ston
         timeout-minutes: 15
