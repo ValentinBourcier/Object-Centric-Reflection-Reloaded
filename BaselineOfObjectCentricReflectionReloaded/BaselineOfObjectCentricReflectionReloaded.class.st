@@ -18,7 +18,8 @@ BaselineOfObjectCentricReflectionReloaded >> baseline: spec [
 
 
 		spec
-			group: 'default' with: #( 'Reflectivity-Object-Centric' );
-			group: 'tests'
-			with: #( 'default' 'Reflectivity-Object-Centric-Tests' ) ]
+			group: 'default'
+			with:
+				#( 'Reflectivity-Object-Centric' 'Reflectivity-Object-Centric-Tests'
+				   'Reflectivity-Object-Centric-Visualization' ) ]
 ]
