@@ -573,21 +573,20 @@ RFProxyMetaObject >> linkInsteadVariableRead: name [
 ]
 
 { #category : #'declaration accessing' }
-RFProxyMetaObject >> linkInsteadVariableRead: name withValue: value [
+RFProxyMetaObject >> linkInsteadVariableRead: name withValue: aValue [
 
 	| timeObject insteadColl |
-	self metaLevel ifTrue: [ ^ value ]. "self o operation value"
+	self metaLevel ifTrue: [ ^ aValue ]. "self o operation value"
 	[ self variableReadStoring valuesStored at: name ]
 		on: KeyNotFound
 		do: [ 
 			self variableReadStoring valuesStored
 				at: name
 				put: RFControlStoreObject new.
-			self variableReadStoring addAllValuesStored: name.
-			1haltOnce ].
+			self variableReadStoring addAllValuesStored: name ].
 	timeObject := self variableReadStoring valuesStored at: name.
 	insteadColl := timeObject instead.
-	insteadColl ifNil: [ ^ value ].
+	insteadColl ifNil: [ ^ aValue ].
 	self metaLevel: true.
 	insteadColl value.
 	self metaLevel: false

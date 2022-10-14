@@ -133,12 +133,11 @@ RFProxyInstrumenter >> instrumentMethod: method selector: selector [
 
 	compiledSelectors do: [ :cs | 
 		| ast |
-		"self haltOnce."
 		RFProxyMetaObject log: 'Instrumenting: ' , cs printString.
 		newMethod := instrumentedClass >> cs.
 		ast := newMethod ast.
 		"self redirectSelfArgsIn: ast."
-		self redirectSelfSendsIn: ast.
+		"self redirectSelfSendsIn: ast."
 		self redirectSelfReturnsIn: ast.
 		self redirectVariableReadingIn: ast.
 		self redirectVariableWritingIn: ast.
@@ -437,6 +436,7 @@ RFProxyInstrumenter >> redirectVariableReadingIn: ast [
 		                     node isSelfVariable or: [ 
 			                     node isSuperVariable or: [ 
 				                     node isThisContextVariable ] ] ].
+
 	variableReadNodes do: [ :node | 
 		node link: self newBeforeLinkForVariableRead.
 		node link: self newAfterLinkForVariableRead.

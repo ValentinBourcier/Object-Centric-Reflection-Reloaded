@@ -108,12 +108,14 @@ RFVariableReadTest >> testBeforeVariableRead2Var [
 RFVariableReadTest >> testInsteadAnyVariableRead [
 
 	aTestClass insteadAnyVariableReadDo: [ 
+		
 		aTestClass counter: aTestClass counter + 1 ].
+	
 	aTestClass variablesReadandAssignment.
 	self assert: aTestClass var1 equals: 0.
 	self assert: aTestClass var2 equals: 0.
 	self assert: aTestClass result equals: 0.
-	self assert: aTestClass counter equals: 2.
+	self assert: aTestClass counter equals: 2
 ]
 
 { #category : #'tests - instead' }
