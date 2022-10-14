@@ -1,0 +1,15 @@
+SmalltalkCISpec {
+  #loading : [
+    SCIMetacelloLoadSpec {
+      #baseline : 'Object-Centric-Reflection-Reloaded',
+      #directory : '',
+      #load : 'default',
+      #onConflict : #useIncoming,
+      #onUpgrade : #useIncoming,
+      #ignoreImage : true
+    }
+  ],
+  #testing : { 
+  	#packages: [ 'Reflectivity-Object-Centric-Tests' ]
+  }
+}
