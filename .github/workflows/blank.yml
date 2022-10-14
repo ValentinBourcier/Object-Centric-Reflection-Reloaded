@@ -33,5 +33,5 @@ jobs:
         with:
           smalltalk-version: Pharo64-11
       - name: Load Image and Run Tests
-        run: smalltalkci .smalltalk.ston
+        run: smalltalkci Pharo64-11 .smalltalk.ston
         timeout-minutes: 15
