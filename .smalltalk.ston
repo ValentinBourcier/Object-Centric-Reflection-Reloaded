@@ -1,7 +1,7 @@
 SmalltalkCISpec {
   #loading : [
     SCIMetacelloLoadSpec {
-      #baseline : 'Object-Centric-Reflection-Reloaded/',
+      #baseline : '',
       #directory : '',
       #load : 'default',
       #onConflict : #useIncoming,
