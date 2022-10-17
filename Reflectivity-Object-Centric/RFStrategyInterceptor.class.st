@@ -9,6 +9,12 @@ Class {
 }
 
 { #category : #execution }
+RFStrategyInterceptor >> execute: aOperation [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #execution }
 RFStrategyInterceptor >> execute: aName withValue: aValue [
 
 	^ self subclassResponsibility

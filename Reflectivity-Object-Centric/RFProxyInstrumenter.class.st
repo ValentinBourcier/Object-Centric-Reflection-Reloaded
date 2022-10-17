@@ -221,22 +221,6 @@ RFProxyInstrumenter >> metaObject: anObject [
 ]
 
 { #category : #links }
-RFProxyInstrumenter >> newAfterLinkForAssignments [
-
-	| link interceptor |
-	link := MetaLink new.
-	link control: #after.
-"	interceptor := RFVariableWriteInterceptor new.
-	interceptor metaObject: metaObject."
-	link metaObject: "interceptor" metaObject .
-	link selector: #linkAfterAssignment:withValue:.
-	"link selector: #execute:withValue:."
-	link arguments: #( name newValue ).
-	link optionCompileOnLinkInstallation: true.
-	^ link
-]
-
-{ #category : #links }
 RFProxyInstrumenter >> newAfterLinkForMessagesSend [
 
 	| link |
@@ -245,32 +229,6 @@ RFProxyInstrumenter >> newAfterLinkForMessagesSend [
 	link metaObject: metaObject.
 	link selector: #linkAfterMessageSend:withValue:.
 	link arguments: #( selector  value ).
-	link optionCompileOnLinkInstallation: true.
-	^ link
-]
-
-{ #category : #links }
-RFProxyInstrumenter >> newAfterLinkForVariableRead [
-
-	| link  |
-	link := MetaLink new.
-	link control: #after.
-	link metaObject: metaObject .
-	link selector: #linkAfterVariableRead:.
-	link arguments: #( name ).
-	link optionCompileOnLinkInstallation: true.	
-	^ link
-]
-
-{ #category : #links }
-RFProxyInstrumenter >> newBeforeLinkForAssignments [
-
-	| link |
-	link := MetaLink new.
-	link control: #before.
-	link metaObject: metaObject .
-	link selector: #linkBeforeAssignment:withValue:.
-	link arguments: #( name newValue ).
 	link optionCompileOnLinkInstallation: true.
 	^ link
 ]
@@ -289,28 +247,19 @@ RFProxyInstrumenter >> newBeforeLinkForMessagesSend [
 ]
 
 { #category : #links }
-RFProxyInstrumenter >> newBeforeLinkForVariableRead [
-
-	| link  |
-	link := MetaLink new.
-	link control: #before.
-	link metaObject: metaObject .
-	link selector: #linkBeforeVariableRead:.
-	link arguments: #( name ).
-	link optionCompileOnLinkInstallation: true.	
-	^ link
-]
-
-{ #category : #links }
 RFProxyInstrumenter >> newInsteadLinkForAssignments [
 
-	| link |
+	| link interceptor |
 	link := MetaLink new.
 	link control: #instead.
-	link metaObject: metaObject.
-	link selector: #linkInsteadAssignment:.
+
+	interceptor := RFVariableWriteInterceptor new.
+	interceptor metaObject: metaObject.
+
+	link metaObject: interceptor.
+	link selector: #execute:.
 	link arguments: #( operation ).
-"	link selector: #linkInsteadAssignment:withValue:.
+	"link selector: #execute:withValue:.
 	link arguments: #( name newValue )."
 	link optionCompileOnLinkInstallation: true.
 	^ link
@@ -334,11 +283,17 @@ RFProxyInstrumenter >> newInsteadLinkForMessagesSend [
 { #category : #links }
 RFProxyInstrumenter >> newInsteadLinkForVariableRead [
 
-	| link  |
+	| link  interceptor|
 	link := MetaLink new.
 	link control: #instead.
-	link metaObject: metaObject .
-	link selector: #linkInsteadVariableRead:withValue:.
+	
+	interceptor := RFVariableReadInterceptor new.
+	interceptor metaObject: metaObject.
+
+	link metaObject: interceptor  .
+	"link selector: #execute.
+	link arguments: #( operation)."
+	link selector: #execute:withValue:.
 	link arguments: #( name value).
 	link optionCompileOnLinkInstallation: true.	
 	^ link
@@ -441,10 +396,7 @@ RFProxyInstrumenter >> redirectVariableReadingIn: ast [
 		                     node isSelfVariable or: [ 
 			                     node isSuperVariable or: [ 
 				                     node isThisContextVariable ] ] ].
-
 	variableReadNodes do: [ :node | 
-		node link: self newBeforeLinkForVariableRead.
-		node link: self newAfterLinkForVariableRead.
 		node link: self newInsteadLinkForVariableRead]
 ]
 
@@ -454,7 +406,5 @@ RFProxyInstrumenter >> redirectVariableWritingIn: ast [
 	| assignmentNodes |
 	assignmentNodes := ast assignmentNodes.
 	assignmentNodes do: [ :node | 
-		node link: self newBeforeLinkForAssignments.
-		node link: self newAfterLinkForAssignments.
 		node link: self newInsteadLinkForAssignments ]
 ]

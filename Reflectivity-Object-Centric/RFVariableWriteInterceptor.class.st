@@ -4,6 +4,12 @@ Class {
 	#category : #'Reflectivity-Object-Centric'
 }
 
+{ #category : #execution }
+RFVariableWriteInterceptor >> execute: aOperation [
+
+	^ metaObject linkInsteadAssignment: aOperation
+]
+
 { #category : #override }
 RFVariableWriteInterceptor >> execute: aName withValue: aValue [
 

@@ -5,5 +5,9 @@ Class {
 }
 
 { #category : #override }
+RFMessageSendInterceptor >> execute: aOperation [
+]
+
+{ #category : #override }
 RFMessageSendInterceptor >> execute: aName withValue: aValue [
 ]
