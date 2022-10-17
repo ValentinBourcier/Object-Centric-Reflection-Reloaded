@@ -86,6 +86,7 @@ RFAssignmentTest >> testAssignmentInstead [
 		insteadAssignmentTo: #var1
 		do: [ aAssignmentTestClass var1: 8 ].
 	aAssignmentTestClass onlyAssignment.
+	self assert: aAssignmentTestClass var2 equals: 2.
 	self assert: aAssignmentTestClass var1 equals: 8
 ]
 

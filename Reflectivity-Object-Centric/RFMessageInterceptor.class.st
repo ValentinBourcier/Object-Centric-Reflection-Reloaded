@@ -24,7 +24,10 @@ RFMessageInterceptor >> execute [
 RFMessageInterceptor >> executeWithArgs: args [
 
 	<debuggerCompleteToSender>
+	"receive all sends filter by self if the receiver is the object who insrument if yes propagate and then call my method to do reflective part"
 	^ metaObject receive: selector withArgs: args
+	"linkInsteadMessageSend:withValue:"
+	
 ]
 
 { #category : #accessing }

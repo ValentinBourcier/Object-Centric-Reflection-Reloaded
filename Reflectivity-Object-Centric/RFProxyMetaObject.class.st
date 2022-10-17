@@ -524,16 +524,18 @@ RFProxyMetaObject >> linkInsteadAssignment: aName withValue: aValue [
 	insteadBlock ifNil: [ ^ aValue ].
 	self metaLevel: true.
 	insteadBlock value.
-	self metaLevel: false
+	self metaLevel: false.
+	^ aValue
 ]
 
 { #category : #'declaration accessing' }
-RFProxyMetaObject >> linkInsteadMessageSend: selector withValue: value [
+RFProxyMetaObject >> linkInsteadMessageSend: selector withValue: aValue [
 
 	| timeObject insteadBlock |
-	self metaLevel ifTrue: [ 
-		"^ receiver perform: selector withArguments: arguments ""check receiver"
-		^ value ].
+	"BEOFRE"
+	
+	self metaLevel ifTrue: [ "^ receiver perform: selector withArguments: arguments ""check receiver" 
+		^ aValue ].
 	[ self messageSendStoring valuesStored at: selector ]
 		on: KeyNotFound
 		do: [ 
@@ -542,40 +544,53 @@ RFProxyMetaObject >> linkInsteadMessageSend: selector withValue: value [
 				put: RFControlStoreObject new.
 			self messageSendStoring addAllValuesStored: selector.
 			"^ receiver perform: selector withArguments: arguments"
-			^ value ].
+			^ aValue ].
 	timeObject := self messageSendStoring valuesStored at: selector.
 	insteadBlock := timeObject instead.
 	insteadBlock ifNil: [ "^ receiver perform: selector withArguments: arguments" 
-		^ self ].
+		^ aValue  ].
 	self metaLevel: true.
 	insteadBlock value.
-	self metaLevel: false
+	self metaLevel: false.
+	^ aValue
+	
+	"AFTER"
+	"RETURN VALUE"
 ]
 
 { #category : #'declaration accessing' }
-RFProxyMetaObject >> linkInsteadVariableRead: name [
+RFProxyMetaObject >> linkInsteadMessageSend: selector withValue: aValue withReceiver: receiver withArgs: arguments [
 
-	| timeObject insteadColl |
-	self metaLevel ifTrue: [ ^ self ]. "self o operation value"
-	[ self variableReadStoring valuesStored at: name ]
+	| timeObject insteadBlock |
+	self metaLevel ifTrue: [ "^ receiver perform: selector withArguments: arguments ""check receiver" 
+		^ aValue ].
+	[ self messageSendStoring valuesStored at: selector ]
 		on: KeyNotFound
 		do: [ 
-			self variableReadStoring valuesStored
-				at: name
+			self messageSendStoring valuesStored
+				at: selector
 				put: RFControlStoreObject new.
-			self variableReadStoring addAllValuesStored: name ].
-	timeObject := self variableReadStoring valuesStored at: name.
-	insteadColl := timeObject instead.
-	insteadColl ifNil: [ ^ self ].
+			self messageSendStoring addAllValuesStored: selector.
+			"^ receiver perform: selector withArguments: arguments"
+			^ aValue ].
+	timeObject := self messageSendStoring valuesStored at: selector.
+	insteadBlock := timeObject instead.
+	insteadBlock ifNil: [ 
+		^ receiver perform: selector withArguments: arguments
+		"^ aValue" ].
 	self metaLevel: true.
-	insteadColl value.
-	self metaLevel: false
+	insteadBlock value.
+	self metaLevel: false.
+	^ receiver perform: selector withArguments: arguments
 ]
 
 { #category : #'declaration accessing' }
 RFProxyMetaObject >> linkInsteadVariableRead: name withValue: aValue [
 
-	| timeObject insteadColl |
+	| timeObject insteadColl result |
+	self class log:
+		'METAOBJECT INSTEAD VARIABLE READ  :  ' , name asString
+		, '   withValue:  ' , aValue printString.
 	self metaLevel ifTrue: [ ^ aValue ]. "self o operation value"
 	[ self variableReadStoring valuesStored at: name ]
 		on: KeyNotFound
@@ -588,8 +603,10 @@ RFProxyMetaObject >> linkInsteadVariableRead: name withValue: aValue [
 	insteadColl := timeObject instead.
 	insteadColl ifNil: [ ^ aValue ].
 	self metaLevel: true.
+	"result :="
 	insteadColl value.
-	self metaLevel: false
+	self metaLevel: false.
+	^ aValue "result"
 ]
 
 { #category : #deprecated }
@@ -689,7 +706,6 @@ RFProxyMetaObject >> send: selector withArgs: args to: target [
 	<debuggerCompleteToSender>
 	| arguments |
 	arguments := args asOrderedCollection.
-
 "	self executeReflectiveOperationsFor: target uponReceptionOf: selector."
 	self instrumenter instrumentSelector: selector withArgs: arguments.
 

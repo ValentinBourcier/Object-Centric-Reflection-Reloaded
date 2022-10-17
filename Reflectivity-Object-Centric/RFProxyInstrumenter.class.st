@@ -137,7 +137,7 @@ RFProxyInstrumenter >> instrumentMethod: method selector: selector [
 		newMethod := instrumentedClass >> cs.
 		ast := newMethod ast.
 		"self redirectSelfArgsIn: ast."
-		"self redirectSelfSendsIn: ast."
+		self redirectSelfSendsIn: ast.
 		self redirectSelfReturnsIn: ast.
 		self redirectVariableReadingIn: ast.
 		self redirectVariableWritingIn: ast.
@@ -223,11 +223,14 @@ RFProxyInstrumenter >> metaObject: anObject [
 { #category : #links }
 RFProxyInstrumenter >> newAfterLinkForAssignments [
 
-	| link |
+	| link interceptor |
 	link := MetaLink new.
 	link control: #after.
-	link metaObject: metaObject.
+"	interceptor := RFVariableWriteInterceptor new.
+	interceptor metaObject: metaObject."
+	link metaObject: "interceptor" metaObject .
 	link selector: #linkAfterAssignment:withValue:.
+	"link selector: #execute:withValue:."
 	link arguments: #( name newValue ).
 	link optionCompileOnLinkInstallation: true.
 	^ link
@@ -320,6 +323,8 @@ RFProxyInstrumenter >> newInsteadLinkForMessagesSend [
 	link := MetaLink new.
 	link control: #instead.
 	link metaObject: metaObject.
+	"link selector: #linkInsteadMessageSend:withValue:withReceiver:withArgs:.
+	link arguments: #( selector value receiver arguments)."
 	link selector: #linkInsteadMessageSend:withValue:.
 	link arguments: #( selector value ).
 	link optionCompileOnLinkInstallation: true.
@@ -375,7 +380,7 @@ RFProxyInstrumenter >> redirectMessagesSendIn: ast [
 	messageSendNode do: [ :node | 
 		node link: self newBeforeLinkForMessagesSend.
 		node link: self newAfterLinkForMessagesSend.
-		"node link: self newInsteadLinkForMessagesSend" ]
+		"node link: self newInsteadLinkForMessagesSend "]
 ]
 
 { #category : #instrumentation }
@@ -440,7 +445,7 @@ RFProxyInstrumenter >> redirectVariableReadingIn: ast [
 	variableReadNodes do: [ :node | 
 		node link: self newBeforeLinkForVariableRead.
 		node link: self newAfterLinkForVariableRead.
-		node link: self newInsteadLinkForVariableRead  ]
+		node link: self newInsteadLinkForVariableRead]
 ]
 
 { #category : #instrumentation }
