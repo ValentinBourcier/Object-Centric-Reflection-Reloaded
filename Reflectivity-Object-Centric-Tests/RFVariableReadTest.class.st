@@ -6,7 +6,7 @@ Class {
 		'proxy',
 		'metaobject'
 	],
-	#category : #'Reflectivity-Object-Centric-Tests'
+	#category : #'Reflectivity-Object-Centric-Tests-tests'
 }
 
 { #category : #initialization }

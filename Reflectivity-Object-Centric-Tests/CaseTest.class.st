@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'package'
 	],
-	#category : #'Reflectivity-Object-Centric-Tests'
+	#category : #'Reflectivity-Object-Centric-Tests-tests'
 }
 
 { #category : #initialization }

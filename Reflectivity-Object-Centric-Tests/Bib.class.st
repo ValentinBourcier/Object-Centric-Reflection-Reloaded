@@ -1,7 +1,7 @@
 Class {
 	#name : #Bib,
 	#superclass : #Bob,
-	#category : #'Reflectivity-Object-Centric-Tests'
+	#category : #'Reflectivity-Object-Centric-Tests-utils'
 }
 
 { #category : #'as yet unclassified' }

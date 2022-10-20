@@ -5,7 +5,7 @@ Class {
 		'caseWeight',
 		'caseMaterial'
 	],
-	#category : #'Reflectivity-Object-Centric-Tests'
+	#category : #'Reflectivity-Object-Centric-Tests-utils'
 }
 
 { #category : #accessing }

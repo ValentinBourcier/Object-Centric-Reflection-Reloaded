@@ -5,7 +5,7 @@ Class {
 		'interceptor',
 		'tag'
 	],
-	#category : #'Reflectivity-Object-Centric-Tests'
+	#category : #'Reflectivity-Object-Centric-Tests-tests'
 }
 
 { #category : #helpers }

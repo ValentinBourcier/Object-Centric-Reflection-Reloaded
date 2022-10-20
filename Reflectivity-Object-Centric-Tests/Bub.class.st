@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'var1'
 	],
-	#category : #'Reflectivity-Object-Centric-Tests'
+	#category : #'Reflectivity-Object-Centric-Tests-utils'
 }
 
 { #category : #assignments }

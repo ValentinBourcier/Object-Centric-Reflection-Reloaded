@@ -1,7 +1,7 @@
 Class {
 	#name : #OCDMessageSendTest,
 	#superclass : #TestCase,
-	#category : #'Reflectivity-Object-Centric-Tests'
+	#category : #'Reflectivity-Object-Centric-Tests-tests'
 }
 
 { #category : #tests }
