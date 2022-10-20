@@ -155,34 +155,3 @@ ROCMessageSendTest >> testMessageSendOtherObjects [
 	self assert: aClassTest collection size equals: 2.
 	self assert: aClassTest result equals: 4
 ]
-
-{ #category : #tests }
-ROCMessageSendTest >> testMessageSendStoringDictionary [
-
-	self assert: aClassTest var1 equals: 1.
-
-	proxy := aClassTest proxifyWithMetaObject:
-		         RFProxyMetaObjectAssignmentTest.
-	metaobject := proxy metaObject.
-	aClassTest beforeMessageSendTo: #var1 do: [ 'This is A' crTrace ].
-	aClassTest insteadMessageSendTo: #var2 do: [ 'This is B' crTrace ].
-	aClassTest
-		afterMessageSendTo: #result
-		do: [ 'This is result' crTrace ].
-
-	self assert:
-		(metaobject messageSendStoring valuesStored includesKey: #var1).
-	self assert:
-		(metaobject messageSendStoring valuesStored includesKey: #var2).
-	self assert:
-		(metaobject messageSendStoring valuesStored includesKey: #result).
-	self
-		assert:
-			((metaobject messageSendStoring valuesStored at: #var1) before at: 1)
-				asText
-		equals: [ 'This is A' crTrace ] asText.
-	self
-		assert:
-		(metaobject messageSendStoring valuesStored at: #var2) instead asText
-		equals: [ 'This is B' crTrace ] asText
-]
