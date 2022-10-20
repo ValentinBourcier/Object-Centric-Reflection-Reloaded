@@ -1,27 +1,27 @@
 Class {
-	#name : #RFMessageInterceptorTest,
+	#name : #ROCMessageInterceptorTest,
 	#superclass : #TestCase,
 	#instVars : [
 		'interceptor',
 		'tag'
 	],
-	#category : #'Reflectivity-Object-Centric-Tests'
+	#category : #'Reflectivity-Object-Centric-Tests-tests'
 }
 
 { #category : #helpers }
-RFMessageInterceptorTest >> receive: selector [
+ROCMessageInterceptorTest >> receive: selector [
 
 	tag := selector
 ]
 
 { #category : #helpers }
-RFMessageInterceptorTest >> receive: selector withArgs: args [
+ROCMessageInterceptorTest >> receive: selector withArgs: args [
 	
 	tag := { selector. args }
 ]
 
 { #category : #tests }
-RFMessageInterceptorTest >> setUp [
+ROCMessageInterceptorTest >> setUp [
 	super setUp.
 	interceptor := RFMessageInterceptor new.
 	interceptor selector: #yourself.
@@ -29,14 +29,14 @@ RFMessageInterceptorTest >> setUp [
 ]
 
 { #category : #tests }
-RFMessageInterceptorTest >> testExecute [
+ROCMessageInterceptorTest >> testExecute [
 	interceptor execute.
 
 	self assert: tag equals: #yourself
 ]
 
 { #category : #tests }
-RFMessageInterceptorTest >> testExecuteWithArgs [
+ROCMessageInterceptorTest >> testExecuteWithArgs [
 	|array|
 	array := {Object new}.
 	interceptor executeWithArgs: array.

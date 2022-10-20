@@ -1,18 +1,18 @@
 Class {
-	#name : #RFVariableReadTest,
+	#name : #ROCVariableReadTest,
 	#superclass : #TestCase,
 	#instVars : [
 		'aTestClass',
 		'proxy',
 		'metaobject'
 	],
-	#category : #'Reflectivity-Object-Centric-Tests'
+	#category : #'Reflectivity-Object-Centric-Tests-tests'
 }
 
 { #category : #initialization }
-RFVariableReadTest >> setUp [
+ROCVariableReadTest >> setUp [
 
-	aTestClass := TestClass new.
+	aTestClass := ROCTestClass new.
 	aTestClass
 		var1: 0;
 		var2: 0;
@@ -22,7 +22,7 @@ RFVariableReadTest >> setUp [
 ]
 
 { #category : #'tests - after' }
-RFVariableReadTest >> testAfterAnyVariableRead [
+ROCVariableReadTest >> testAfterAnyVariableRead [
 
 	aTestClass afterAnyVariableReadDo: [ 
 		aTestClass counter: aTestClass counter + 1 ].
@@ -34,7 +34,7 @@ RFVariableReadTest >> testAfterAnyVariableRead [
 ]
 
 { #category : #'tests - after' }
-RFVariableReadTest >> testAfterAnyVariableReadOneVar [
+ROCVariableReadTest >> testAfterAnyVariableReadOneVar [
 
 	aTestClass afterAnyVariableReadDo: [ 
 		aTestClass counter: aTestClass counter + 1 ].
@@ -44,7 +44,7 @@ RFVariableReadTest >> testAfterAnyVariableReadOneVar [
 ]
 
 { #category : #'tests - after' }
-RFVariableReadTest >> testAfterVariableRead [
+ROCVariableReadTest >> testAfterVariableRead [
 
 	aTestClass afterVariableRead: #var1 do: [ 
 		aTestClass counter: aTestClass counter + 1 ].
@@ -54,7 +54,7 @@ RFVariableReadTest >> testAfterVariableRead [
 ]
 
 { #category : #'tests - after' }
-RFVariableReadTest >> testAfterVariableRead2Var [
+ROCVariableReadTest >> testAfterVariableRead2Var [
 
 	aTestClass afterVariableRead: #var1 do: [ 
 		aTestClass counter: aTestClass counter + 1 ].
@@ -64,7 +64,7 @@ RFVariableReadTest >> testAfterVariableRead2Var [
 ]
 
 { #category : #'tests - before' }
-RFVariableReadTest >> testBeforeAnyVariableRead [
+ROCVariableReadTest >> testBeforeAnyVariableRead [
 
 	aTestClass beforeAnyVariableReadDo: [ 
 		aTestClass counter: aTestClass counter + 1 ].
@@ -76,7 +76,7 @@ RFVariableReadTest >> testBeforeAnyVariableRead [
 ]
 
 { #category : #'tests - before' }
-RFVariableReadTest >> testBeforeAnyVariableReadOneVar [
+ROCVariableReadTest >> testBeforeAnyVariableReadOneVar [
 
 	aTestClass beforeAnyVariableReadDo: [ 
 		aTestClass counter: aTestClass counter + 1 ].
@@ -86,7 +86,7 @@ RFVariableReadTest >> testBeforeAnyVariableReadOneVar [
 ]
 
 { #category : #'tests - before' }
-RFVariableReadTest >> testBeforeVariableRead [
+ROCVariableReadTest >> testBeforeVariableRead [
 
 	aTestClass beforeVariableRead: #var1 do: [ 
 		aTestClass counter: aTestClass counter + 1 ].
@@ -96,7 +96,7 @@ RFVariableReadTest >> testBeforeVariableRead [
 ]
 
 { #category : #'tests - before' }
-RFVariableReadTest >> testBeforeVariableRead2Var [
+ROCVariableReadTest >> testBeforeVariableRead2Var [
 	aTestClass beforeVariableRead: #var1 do: [ 
 		aTestClass counter: aTestClass counter + 1 ].
 	aTestClass variablesReadandAssignment.
@@ -105,7 +105,7 @@ RFVariableReadTest >> testBeforeVariableRead2Var [
 ]
 
 { #category : #'tests - instead' }
-RFVariableReadTest >> testInsteadAnyVariableRead [
+ROCVariableReadTest >> testInsteadAnyVariableRead [
 
 	aTestClass insteadAnyVariableReadDo: [ 
 		
@@ -120,7 +120,7 @@ RFVariableReadTest >> testInsteadAnyVariableRead [
 ]
 
 { #category : #'tests - instead' }
-RFVariableReadTest >> testInsteadAnyVariableReadOneVar [
+ROCVariableReadTest >> testInsteadAnyVariableReadOneVar [
 
 	aTestClass insteadAnyVariableReadDo: [ 
 		aTestClass counter: aTestClass counter + 1 ].
@@ -130,7 +130,7 @@ RFVariableReadTest >> testInsteadAnyVariableReadOneVar [
 ]
 
 { #category : #'tests - instead' }
-RFVariableReadTest >> testInsteadVariableRead [
+ROCVariableReadTest >> testInsteadVariableRead [
 
 	aTestClass insteadVariableRead: #var1 do: [ 
 		aTestClass counter: aTestClass counter + 1 ].
@@ -140,7 +140,7 @@ RFVariableReadTest >> testInsteadVariableRead [
 ]
 
 { #category : #'tests - instead' }
-RFVariableReadTest >> testInsteadVariableRead2Var [
+ROCVariableReadTest >> testInsteadVariableRead2Var [
 
 	aTestClass insteadVariableRead: #var1 do: [ 
 		aTestClass counter: aTestClass counter + 1 .
@@ -151,7 +151,7 @@ RFVariableReadTest >> testInsteadVariableRead2Var [
 ]
 
 { #category : #'tests - after' }
-RFVariableReadTest >> testSimpleVariableReading [
+ROCVariableReadTest >> testSimpleVariableReading [
 
 	aTestClass afterAnyVariableReadDo: [ 
 		aTestClass counter: aTestClass counter + 1 ].
@@ -163,7 +163,7 @@ RFVariableReadTest >> testSimpleVariableReading [
 ]
 
 { #category : #'creation tests' }
-RFVariableReadTest >> testVariableReadStoringDictionary [
+ROCVariableReadTest >> testVariableReadStoringDictionary [
 
 	self assert: aTestClass var1 equals: 0.
 	proxy := aTestClass proxifyWithMetaObject:

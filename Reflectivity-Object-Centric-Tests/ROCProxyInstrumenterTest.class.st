@@ -1,27 +1,27 @@
 Class {
-	#name : #RFProxyInstrumenterTest,
+	#name : #ROCProxyInstrumenterTest,
 	#superclass : #TestCase,
 	#instVars : [
 		'instrumenter',
 		'testObject'
 	],
-	#category : #'Reflectivity-Object-Centric-Tests'
+	#category : #'Reflectivity-Object-Centric-Tests-tests'
 }
 
 { #category : #helpers }
-RFProxyInstrumenterTest >> receive: selector [
+ROCProxyInstrumenterTest >> receive: selector [
 	^testObject perform: selector
 ]
 
 { #category : #tests }
-RFProxyInstrumenterTest >> setUp [
+ROCProxyInstrumenterTest >> setUp [
 	super setUp.
 	instrumenter := RFProxyInstrumenter for: self.
 	testObject := Object new
 ]
 
 { #category : #tests }
-RFProxyInstrumenterTest >> testBeForObject [
+ROCProxyInstrumenterTest >> testBeForObject [
 	
 	instrumenter beForObject: testObject.
 	self assert: instrumenter instrumentedObject identicalTo: testObject.
@@ -31,29 +31,29 @@ RFProxyInstrumenterTest >> testBeForObject [
 ]
 
 { #category : #'tests - method flattening' }
-RFProxyInstrumenterTest >> testBuildSuperSendsChainFromSourceMethodToHighestMethodInClassHierarchy [
+ROCProxyInstrumenterTest >> testBuildSuperSendsChainFromSourceMethodToHighestMethodInClassHierarchy [
 
 	|sourceMethod targetMethod chain lastFoundMethod|
-	sourceMethod := Bub >> #mWithSuper.
-	targetMethod := Bob >> #mWithSuper.
+	sourceMethod := ROCBottom >> #mWithSuper.
+	targetMethod := ROCTop >> #mWithSuper.
 	chain := OrderedCollection new.
 	
 	lastFoundMethod := instrumenter buildSuperSendsChainFrom: sourceMethod upTo: nil in: chain.	
 	
 	self assert: chain size equals: 2.
 	self assert: chain first identicalTo: sourceMethod.
-	self assert: chain last identicalTo: (Bib >> #mWithSuper).
+	self assert: chain last identicalTo: (ROCMiddle >> #mWithSuper).
 	self assert: lastFoundMethod identicalTo: targetMethod
 
 	
 ]
 
 { #category : #'tests - method flattening' }
-RFProxyInstrumenterTest >> testBuildSuperSendsChainFromSourceMethodToTargetMethod [
+ROCProxyInstrumenterTest >> testBuildSuperSendsChainFromSourceMethodToTargetMethod [
 
 	|sourceMethod targetMethod chain lastFoundMethod|
-	sourceMethod := Bub >> #mWithSuper.
-	targetMethod := Bib >> #mWithSuper.
+	sourceMethod := ROCBottom >> #mWithSuper.
+	targetMethod := ROCMiddle >> #mWithSuper.
 	chain := OrderedCollection new.
 	
 	lastFoundMethod := instrumenter buildSuperSendsChainFrom: sourceMethod upTo: targetMethod in: chain.	
@@ -66,11 +66,11 @@ RFProxyInstrumenterTest >> testBuildSuperSendsChainFromSourceMethodToTargetMetho
 ]
 
 { #category : #'tests - method flattening' }
-RFProxyInstrumenterTest >> testBuildSuperSendsChainFromSourceMethodToTargetMethodFailure [
+ROCProxyInstrumenterTest >> testBuildSuperSendsChainFromSourceMethodToTargetMethodFailure [
 
 	|sourceMethod targetMethod chain lastFoundMethod|
-	sourceMethod := Bub >> #superUpToMiddleHierarchy.
-	targetMethod := Bob >> #superUpToMiddleHierarchy.
+	sourceMethod := ROCBottom >> #superUpToMiddleHierarchy.
+	targetMethod := ROCTop >> #superUpToMiddleHierarchy.
 	chain := OrderedCollection new.
 	
 	lastFoundMethod := instrumenter buildSuperSendsChainFrom: sourceMethod upTo: targetMethod in: chain.	
@@ -80,19 +80,19 @@ RFProxyInstrumenterTest >> testBuildSuperSendsChainFromSourceMethodToTargetMetho
 ]
 
 { #category : #'tests - method flattening' }
-RFProxyInstrumenterTest >> testCompileEmptySuperSendChain [
+ROCProxyInstrumenterTest >> testCompileEmptySuperSendChain [
 
 	self assertEmpty: (instrumenter compileSuperSendChain: #(  ))
 ]
 
 { #category : #'tests - method flattening' }
-RFProxyInstrumenterTest >> testCompileSuperSendChain [
+ROCProxyInstrumenterTest >> testCompileSuperSendChain [
 
 	|chain compiledSelectors|
-	testObject := Bub new.
+	testObject := ROCBottom new.
 	instrumenter beForObject: testObject.
 	 
-	chain := {Bub >> #mWithSuper. Bib >> #mWithSuper. Bob >> #mWithSuper  }.
+	chain := {ROCBottom >> #mWithSuper. ROCMiddle >> #mWithSuper. ROCTop >> #mWithSuper  }.
 	compiledSelectors := instrumenter compileSuperSendChain: chain.
 	
 	self assert: compiledSelectors size equals: chain size.
@@ -104,19 +104,19 @@ RFProxyInstrumenterTest >> testCompileSuperSendChain [
 	self assert: (instrumenter compiledSelectorsMap at: compiledSelectors second) equals: compiledSelectors third.
 	self should: [(instrumenter compiledSelectorsMap at: compiledSelectors third)] raise: KeyNotFound.
 	
-	self assert: (testObject class >> compiledSelectors first) ast body sourceCode equals: (Bub >> #mWithSuper) ast body sourceCode.
-	self assert: (testObject class >> compiledSelectors second) ast body sourceCode equals: (Bib >> #mWithSuper) ast body sourceCode.
-	self assert: (testObject class >> compiledSelectors third) ast body sourceCode equals: (Bob >> #mWithSuper) ast body sourceCode.
+	self assert: (testObject class >> compiledSelectors first) ast body sourceCode equals: (ROCBottom >> #mWithSuper) ast body sourceCode.
+	self assert: (testObject class >> compiledSelectors second) ast body sourceCode equals: (ROCMiddle >> #mWithSuper) ast body sourceCode.
+	self assert: (testObject class >> compiledSelectors third) ast body sourceCode equals: (ROCTop >> #mWithSuper) ast body sourceCode.
 ]
 
 { #category : #'tests - method flattening' }
-RFProxyInstrumenterTest >> testCompileSuperSendChainWithoutSuper [
+ROCProxyInstrumenterTest >> testCompileSuperSendChainWithoutSuper [
 
 	|chain compiledSelectors|
-	testObject := Bub new.
+	testObject := ROCBottom new.
 	instrumenter beForObject: testObject.
 	 
-	chain := {Bub >> #mWithSuper}.
+	chain := {ROCBottom >> #mWithSuper}.
 	compiledSelectors := instrumenter compileSuperSendChain: chain.
 	
 	self assert: compiledSelectors size equals: chain size.
@@ -124,65 +124,65 @@ RFProxyInstrumenterTest >> testCompileSuperSendChainWithoutSuper [
 	
 	self assertEmpty: (instrumenter compiledSelectorsMap).
 	
-	self assert: (testObject class >> compiledSelectors first) sourceCode equals: (Bub >> #mWithSuper) sourceCode
+	self assert: (testObject class >> compiledSelectors first) sourceCode equals: (ROCBottom >> #mWithSuper) sourceCode
 ]
 
 { #category : #'tests - method flattening' }
-RFProxyInstrumenterTest >> testFindEmptySuperSendsChainFor [
+ROCProxyInstrumenterTest >> testFindEmptySuperSendsChainFor [
 
 	|method chain|	
 	"Case 1: the method is not reachable from Bib instances"
-	instrumenter beForObject: Bib new.
-	method := Bub >> #mWithSuper.
+	instrumenter beForObject: ROCMiddle new.
+	method := ROCBottom >> #mWithSuper.
 	chain := instrumenter findSuperSendsChainFor: method.	
 	self assertEmpty: chain.
 	
 	"Case 2: the method is not reachable from Bub instances"
-	instrumenter beForObject: Bub new.
-	method := Bib >> #redefineNoSuper.
+	instrumenter beForObject: ROCBottom new.
+	method := ROCMiddle >> #redefineNoSuper.
 	chain := instrumenter findSuperSendsChainFor: method.	
 	self assertEmpty: chain
 ]
 
 { #category : #'tests - method flattening' }
-RFProxyInstrumenterTest >> testFindSuperSendsChainFor [
+ROCProxyInstrumenterTest >> testFindSuperSendsChainFor [
 
 	|method chain|	
 	
-	instrumenter beForObject: Bub new.
+	instrumenter beForObject: ROCBottom new.
 	
 	"Case 1: the method is reachable from Bub instances but has no super calls"
-	method := Bib >> #superUpToMiddleHierarchy.
+	method := ROCMiddle >> #superUpToMiddleHierarchy.
 	chain := instrumenter findSuperSendsChainFor: method.	
 	self assert: chain size equals: 2.
-	self assert: chain first identicalTo: (Bub >> #superUpToMiddleHierarchy).
-	self assert: chain last identicalTo: (Bib >> #superUpToMiddleHierarchy).
+	self assert: chain first identicalTo: (ROCBottom >> #superUpToMiddleHierarchy).
+	self assert: chain last identicalTo: (ROCMiddle >> #superUpToMiddleHierarchy).
 	
 	"Case 2: the method is reachable from Bub instances and calls super up to Object"
-	method := Bib >> #mWithSuper.
+	method := ROCMiddle >> #mWithSuper.
 	chain := instrumenter findSuperSendsChainFor: method.	
 	self assert: chain size equals: 3.
-	self assert: chain first identicalTo: (Bub >> #mWithSuper).
-	self assert: chain second identicalTo: (Bib >> #mWithSuper).
-	self assert: chain last identicalTo: (Bob >> #mWithSuper).
+	self assert: chain first identicalTo: (ROCBottom >> #mWithSuper).
+	self assert: chain second identicalTo: (ROCMiddle >> #mWithSuper).
+	self assert: chain last identicalTo: (ROCTop >> #mWithSuper).
 	
 	"Case 2 variant"
-	method := Bub >> #mWithSuper.
+	method := ROCBottom >> #mWithSuper.
 	chain := instrumenter findSuperSendsChainFor: method.	
 	self assert: chain size equals: 3.
-	self assert: chain first identicalTo: (Bub >> #mWithSuper).
-	self assert: chain second identicalTo: (Bib >> #mWithSuper).
-	self assert: chain last identicalTo: (Bob >> #mWithSuper).
+	self assert: chain first identicalTo: (ROCBottom >> #mWithSuper).
+	self assert: chain second identicalTo: (ROCMiddle >> #mWithSuper).
+	self assert: chain last identicalTo: (ROCTop >> #mWithSuper).
 ]
 
 { #category : #tests }
-RFProxyInstrumenterTest >> testInstantiation [
+ROCProxyInstrumenterTest >> testInstantiation [
 
 	self assert: instrumenter metaObject identicalTo: self
 ]
 
 { #category : #tests }
-RFProxyInstrumenterTest >> testInstrumentedClass [
+ROCProxyInstrumenterTest >> testInstrumentedClass [
 
 	instrumenter beForObject: testObject.
 	self
@@ -191,7 +191,7 @@ RFProxyInstrumenterTest >> testInstrumentedClass [
 ]
 
 { #category : #tests }
-RFProxyInstrumenterTest >> testInstrumentedMessages [
+ROCProxyInstrumenterTest >> testInstrumentedMessages [
 	|im|
 	im := instrumenter instrumentedMessages .
 	self assert: im size equals: 1.
@@ -199,16 +199,16 @@ RFProxyInstrumenterTest >> testInstrumentedMessages [
 ]
 
 { #category : #'tests - method flattening' }
-RFProxyInstrumenterTest >> testIsMethodReachableInHierarchy [
+ROCProxyInstrumenterTest >> testIsMethodReachableInHierarchy [
 	
 	|method|
-	instrumenter beForObject: Bib new.
-	self assert: (instrumenter isClassReachableInHierarchy: Bib).
+	instrumenter beForObject: ROCMiddle new.
+	self assert: (instrumenter isClassReachableInHierarchy: ROCMiddle).
 	
-	method := Bub >> #mWithSuper.	
+	method := ROCBottom >> #mWithSuper.	
 	self deny: (instrumenter isClassReachableInHierarchy: method methodClass).
 	
-	method := Bob >> #mWithSuper.
+	method := ROCTop >> #mWithSuper.
 	self assert: (instrumenter isClassReachableInHierarchy: method methodClass).
 	
 
@@ -216,7 +216,7 @@ RFProxyInstrumenterTest >> testIsMethodReachableInHierarchy [
 ]
 
 { #category : #tests }
-RFProxyInstrumenterTest >> testNewLinkForSelector [
+ROCProxyInstrumenterTest >> testNewLinkForSelector [
 	|link interceptor|
 	link := instrumenter newLinkForSelector: #selector.	
 	self assert: link control equals: #instead.
@@ -243,19 +243,19 @@ RFProxyInstrumenterTest >> testNewLinkForSelector [
 ]
 
 { #category : #tests }
-RFProxyInstrumenterTest >> testOriginalClass [
+ROCProxyInstrumenterTest >> testOriginalClass [
 
 	instrumenter beForObject: testObject.
 	self assert: instrumenter originalClass identicalTo: Object
 ]
 
 { #category : #'tests - instrumentation' }
-RFProxyInstrumenterTest >> testRedirectSuperSendsInToSelector [
+ROCProxyInstrumenterTest >> testRedirectSuperSendsInToSelector [
 	|ast superSendNode result|
 
-	testObject := Bub new.
+	testObject := ROCBottom new.
 	instrumenter beForObject: testObject.
-	testObject class compile: (Bub>>#mWithSuper) sourceCode.
+	testObject class compile: (ROCBottom>>#mWithSuper) sourceCode.
 	testObject class compile: 'testSelector x := 42. ^x'.
 	ast := (testObject class>>#mWithSuper) ast.
 	superSendNode := (ast sendNodes select: [ :node | node receiver isSuperVariable ]) first.

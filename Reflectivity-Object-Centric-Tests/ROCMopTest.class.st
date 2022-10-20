@@ -1,16 +1,16 @@
 Class {
-	#name : #CaseTest,
+	#name : #ROCMopTest,
 	#superclass : #TestCase,
 	#instVars : [
 		'package'
 	],
-	#category : #'Reflectivity-Object-Centric-Tests'
+	#category : #'Reflectivity-Object-Centric-Tests-tests'
 }
 
 { #category : #initialization }
-CaseTest >> setUp [ 
+ROCMopTest >> setUp [ 
 	super setUp.
-	package :=Package new.
+	package :=ROCPackage new.
 	package counter: 0.
 	package caseMaterial: 3.
 	package calculateCaseWeight.
@@ -24,7 +24,7 @@ CaseTest >> setUp [
 ]
 
 { #category : #initialization }
-CaseTest >> testAnyAssignmentAfterCounter [
+ROCMopTest >> testAnyAssignmentAfterCounter [
 
 	package afterAnyAssignmentDo: [ package counter: package counter + 1 ].
 	package calculatePackageTax.
@@ -32,7 +32,7 @@ CaseTest >> testAnyAssignmentAfterCounter [
 ]
 
 { #category : #initialization }
-CaseTest >> testAnyAssignmentBeforeCounter [
+ROCMopTest >> testAnyAssignmentBeforeCounter [
 
 	package beforeAnyAssignmentDo: [ 
 		package counter: package counter + 1 ].
@@ -41,7 +41,7 @@ CaseTest >> testAnyAssignmentBeforeCounter [
 ]
 
 { #category : #initialization }
-CaseTest >> testAnyAssignmentInsteadCounter [
+ROCMopTest >> testAnyAssignmentInsteadCounter [
 
 	package insteadAnyAssignmentDo: [ 
 		package counter: package counter + 1 ].
@@ -50,7 +50,7 @@ CaseTest >> testAnyAssignmentInsteadCounter [
 ]
 
 { #category : #initialization }
-CaseTest >> testAnyMessageSendAfterCounter [
+ROCMopTest >> testAnyMessageSendAfterCounter [
 
 	package afterAnyMessageSendDo: [ 
 		package counter: package counter + 1 ].
@@ -59,7 +59,7 @@ CaseTest >> testAnyMessageSendAfterCounter [
 ]
 
 { #category : #initialization }
-CaseTest >> testAnyMessageSendBeforeCounter [
+ROCMopTest >> testAnyMessageSendBeforeCounter [
 
 	package beforeAnyMessageSendDo: [ 
 		package counter: package counter + 1 ].
@@ -68,7 +68,7 @@ CaseTest >> testAnyMessageSendBeforeCounter [
 ]
 
 { #category : #initialization }
-CaseTest >> testAnyMessageSendInsteadCounter [
+ROCMopTest >> testAnyMessageSendInsteadCounter [
 
 	package insteadAnyMessageSendDo: [ 
 		package counter: package counter + 1 ].
@@ -77,7 +77,7 @@ CaseTest >> testAnyMessageSendInsteadCounter [
 ]
 
 { #category : #initialization }
-CaseTest >> testInsideMessageSendBeforeCounter [
+ROCMopTest >> testInsideMessageSendBeforeCounter [
 
 	package beforeMessageSendTo:  #m1 do:  [ 
 		package counter: package counter + 1 ].
@@ -86,7 +86,7 @@ CaseTest >> testInsideMessageSendBeforeCounter [
 ]
 
 { #category : #initialization }
-CaseTest >> testInsideMessageSendBeforeCounterSelfMessage [
+ROCMopTest >> testInsideMessageSendBeforeCounterSelfMessage [
 
 	package
 		beforeMessageSendTo: #m1
@@ -97,7 +97,7 @@ CaseTest >> testInsideMessageSendBeforeCounterSelfMessage [
 ]
 
 { #category : #initialization }
-CaseTest >> testMessageSendAfterFirstInstruction [
+ROCMopTest >> testMessageSendAfterFirstInstruction [
 
 	package
 		afterMessageSendTo: #setPackagePrice:andTax:
@@ -110,7 +110,7 @@ CaseTest >> testMessageSendAfterFirstInstruction [
 ]
 
 { #category : #initialization }
-CaseTest >> testSpecificAssignmentAfterCounter [
+ROCMopTest >> testSpecificAssignmentAfterCounter [
 
 	package
 		afterAssignmentTo: #packagePrice
@@ -122,7 +122,7 @@ CaseTest >> testSpecificAssignmentAfterCounter [
 ]
 
 { #category : #initialization }
-CaseTest >> testSpecificAssignmentBeforeCounter [
+ROCMopTest >> testSpecificAssignmentBeforeCounter [
 
 	package
 		beforeAssignmentTo: #packagePrice
@@ -132,7 +132,7 @@ CaseTest >> testSpecificAssignmentBeforeCounter [
 ]
 
 { #category : #initialization }
-CaseTest >> testSpecificAssignmentInsteadCounter [
+ROCMopTest >> testSpecificAssignmentInsteadCounter [
 
 	package
 		insteadAssignmentTo: #packagePrice
@@ -142,7 +142,7 @@ CaseTest >> testSpecificAssignmentInsteadCounter [
 ]
 
 { #category : #initialization }
-CaseTest >> testSpecificMessageSendAfterCounter [
+ROCMopTest >> testSpecificMessageSendAfterCounter [
 
 	package afterMessageSendTo:  #clearTaxes do:  [ 
 		package counter: package counter + 1 ].
@@ -151,7 +151,7 @@ CaseTest >> testSpecificMessageSendAfterCounter [
 ]
 
 { #category : #initialization }
-CaseTest >> testSpecificMessageSendBeforeCounter [
+ROCMopTest >> testSpecificMessageSendBeforeCounter [
 
 	package beforeMessageSendTo:  #clearTaxes do:  [ 
 		package counter: package counter + 1 ].
@@ -160,7 +160,7 @@ CaseTest >> testSpecificMessageSendBeforeCounter [
 ]
 
 { #category : #initialization }
-CaseTest >> testSpecificMessageSendInsteadCounter [
+ROCMopTest >> testSpecificMessageSendInsteadCounter [
 
 	package insteadMessageSendTo: #clearTaxes do:  [ 
 		package counter: package counter + 1 ].
@@ -169,10 +169,10 @@ CaseTest >> testSpecificMessageSendInsteadCounter [
 ]
 
 { #category : #initialization }
-CaseTest >> testTwoObjectsMessageSendAfterChangingValueEachOther [
+ROCMopTest >> testTwoObjectsMessageSendAfterChangingValueEachOther [
 
 	| opackage |
-	opackage := Package new.
+	opackage := ROCPackage new.
 	opackage counter: 0.
 	opackage caseMaterial: 3.
 	opackage calculateCaseWeight.
@@ -197,10 +197,10 @@ CaseTest >> testTwoObjectsMessageSendAfterChangingValueEachOther [
 ]
 
 { #category : #initialization }
-CaseTest >> testTwoObjectsMessageSendBeforeChangingValueEachOther [
+ROCMopTest >> testTwoObjectsMessageSendBeforeChangingValueEachOther [
 
 	| opackage |
-	opackage := Package new.
+	opackage := ROCPackage new.
 	opackage counter: 0.
 	opackage caseMaterial: 3.
 	opackage calculateCaseWeight.
@@ -225,10 +225,10 @@ CaseTest >> testTwoObjectsMessageSendBeforeChangingValueEachOther [
 ]
 
 { #category : #initialization }
-CaseTest >> testTwoObjectsMessageSendInstead [
+ROCMopTest >> testTwoObjectsMessageSendInstead [
 
 	| opackage |
-	opackage := Package new.
+	opackage := ROCPackage new.
 	opackage counter: 0.
 	opackage caseMaterial: 3.
 	opackage calculateCaseWeight.
@@ -252,10 +252,10 @@ CaseTest >> testTwoObjectsMessageSendInstead [
 ]
 
 { #category : #initialization }
-CaseTest >> testTwoObjectsMessageSendInsteadChangingValueEachOther [
+ROCMopTest >> testTwoObjectsMessageSendInsteadChangingValueEachOther [
 
 	| opackage |
-	opackage := Package new.
+	opackage := ROCPackage new.
 	opackage counter: 0.
 	opackage caseMaterial: 3.
 	opackage calculateCaseWeight.
