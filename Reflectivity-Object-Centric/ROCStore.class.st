@@ -34,7 +34,7 @@ Internal Representation and Key Implementation Points.
     Implementation Points
 "
 Class {
-	#name : #RFStore,
+	#name : #ROCStore,
 	#superclass : #Object,
 	#instVars : [
 		'valuesStored',
@@ -42,23 +42,23 @@ Class {
 		'allValuesInstead',
 		'allValuesBefore'
 	],
-	#category : #'Reflectivity-Object-Centric'
+	#category : #'Reflectivity-Object-Centric-metaobjects'
 }
 
 { #category : #adding }
-RFStore >> addAllValuesAfter: aBlock [
+ROCStore >> addAllValuesAfter: aBlock [
 
 	self allValuesAfter add: aBlock.
 ]
 
 { #category : #adding }
-RFStore >> addAllValuesBefore: aBlock [
+ROCStore >> addAllValuesBefore: aBlock [
 
 	self allValuesBefore add: aBlock.
 ]
 
 { #category : #adding }
-RFStore >> addAllValuesStored: aVariable [
+ROCStore >> addAllValuesStored: aVariable [
 
 	| aTimeObject |
 	aTimeObject := valuesStored at: aVariable.
@@ -69,37 +69,37 @@ RFStore >> addAllValuesStored: aVariable [
 ]
 
 { #category : #accessing }
-RFStore >> allValuesAfter [
+ROCStore >> allValuesAfter [
 
 	^ allValuesAfter  ifNil: [ allValuesAfter := LinkedList   new ]
 ]
 
 { #category : #accessing }
-RFStore >> allValuesBefore [
+ROCStore >> allValuesBefore [
 
 	^ allValuesBefore  ifNil: [ allValuesBefore := LinkedList  new ] 
 ]
 
 { #category : #accessing }
-RFStore >> allValuesInstead [
+ROCStore >> allValuesInstead [
 
 	^ allValuesInstead
 ]
 
 { #category : #accessing }
-RFStore >> allValuesInstead: anObject [
+ROCStore >> allValuesInstead: anObject [
 
 	allValuesInstead := anObject
 ]
 
 { #category : #accessing }
-RFStore >> valuesStored [
+ROCStore >> valuesStored [
 
 	^ valuesStored ifNil: [ valuesStored := (Dictionary new)  ]
 ]
 
 { #category : #accessing }
-RFStore >> valuesStored: anObject [
+ROCStore >> valuesStored: anObject [
 
 	valuesStored := anObject
 ]

@@ -23,7 +23,7 @@ ROCMessageInterceptorTest >> receive: selector withArgs: args [
 { #category : #tests }
 ROCMessageInterceptorTest >> setUp [
 	super setUp.
-	interceptor := RFMessageInterceptor new.
+	interceptor := ROCMessageInterceptor new.
 	interceptor selector: #yourself.
 	interceptor metaObject: self
 ]

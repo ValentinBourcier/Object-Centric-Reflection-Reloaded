@@ -4,24 +4,24 @@ My job is to intercept a message send corresponding to a specific selector, and 
 I am designed to be instantiated for a unique metalink that will execute me when firing at runtime.
 "
 Class {
-	#name : #RFMessageInterceptor,
+	#name : #ROCMessageInterceptor,
 	#superclass : #Object,
 	#instVars : [
 		'selector',
 		'metaObject'
 	],
-	#category : #'Reflectivity-Object-Centric'
+	#category : #'Reflectivity-Object-Centric-interceptors'
 }
 
 { #category : #execution }
-RFMessageInterceptor >> execute [
+ROCMessageInterceptor >> execute [
 
 	<debuggerCompleteToSender>
 	^ metaObject receive: selector
 ]
 
 { #category : #execution }
-RFMessageInterceptor >> executeWithArgs: args [
+ROCMessageInterceptor >> executeWithArgs: args [
 
 	<debuggerCompleteToSender>
 	"receive all sends filter by self if the receiver is the object who insrument if yes propagate and then call my method to do reflective part"
@@ -30,14 +30,24 @@ RFMessageInterceptor >> executeWithArgs: args [
 	
 ]
 
+{ #category : #'as yet unclassified' }
+ROCMessageInterceptor >> metaObject [
+	^ metaObject
+]
+
 { #category : #accessing }
-RFMessageInterceptor >> metaObject: anObject [
+ROCMessageInterceptor >> metaObject: anObject [
 
 	metaObject := anObject
 ]
 
+{ #category : #'as yet unclassified' }
+ROCMessageInterceptor >> selector [
+	^ selector
+]
+
 { #category : #accessing }
-RFMessageInterceptor >> selector: anObject [
+ROCMessageInterceptor >> selector: anObject [
 
 	selector := anObject
 ]

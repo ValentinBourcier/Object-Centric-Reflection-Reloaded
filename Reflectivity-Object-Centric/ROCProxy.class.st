@@ -5,23 +5,23 @@ I proxify an object:
 - I forward every single message to that meta-object, with the exception of the DNU message
 "
 Class {
-	#name : #RFProxy,
+	#name : #ROCProxy,
 	#superclass : #nil,
 	#instVars : [
 		'target',
 		'metaObject'
 	],
-	#category : #'Reflectivity-Object-Centric'
+	#category : #'Reflectivity-Object-Centric-instrumentation'
 }
 
 { #category : #proxy }
-RFProxy class >> becomeTarget: anObject [
+ROCProxy class >> becomeTarget: anObject [
 	| proxy metaObject|
 	proxy := self basicNew.
 	anObject become: proxy.
 	
 	"After the become, proxy and anObject have been swapped"	
-	metaObject := RFProxyMetaObject forObject: proxy proxy: anObject.
+	metaObject := ROCMetaObject forObject: proxy proxy: anObject.
 	MirrorPrimitives fixedFieldOf: anObject at: (self slotNamed: #target) index put: proxy.
 	MirrorPrimitives fixedFieldOf: anObject at: (self slotNamed: #metaObject) index put: metaObject.
 	
@@ -29,11 +29,11 @@ RFProxy class >> becomeTarget: anObject [
 ]
 
 { #category : #proxy }
-RFProxy class >> becomeTarget: anObject  withMetaObject: mo [
+ROCProxy class >> becomeTarget: anObject  withMetaObject: mo [
 	| proxy metaObject newMetaObject|
 	proxy := self basicNew.
 	anObject become: proxy.
-	metaObject  := RFMetaObjectAndOriginalObject new.
+	metaObject  := ROCMetaObjectAndOriginalObject new.
 	"After the become, proxy and anObject have been swapped"	
 	newMetaObject := mo forObject: proxy proxy: anObject.
 	metaObject metaObject: newMetaObject .
@@ -45,79 +45,79 @@ RFProxy class >> becomeTarget: anObject  withMetaObject: mo [
 ]
 
 { #category : #setting }
-RFProxy >> afterAnyAssignmentDo: aBlock [
+ROCProxy >> afterAnyAssignmentDo: aBlock [
 
 	^ metaObject afterAnyAssignmentDo: aBlock
 ]
 
 { #category : #setting }
-RFProxy >> afterAnyMessageSendDo: aBlock [
+ROCProxy >> afterAnyMessageSendDo: aBlock [
 
 	^ metaObject afterAnyMessageSendDo: aBlock
 ]
 
 { #category : #setting }
-RFProxy >> afterAnyVariableReadDo: aBlock [
+ROCProxy >> afterAnyVariableReadDo: aBlock [
 
 	^ metaObject afterAnyVariableReadDo: aBlock
 ]
 
 { #category : #setting }
-RFProxy >> afterAssignmentTo: aVariable do: aBlock [
+ROCProxy >> afterAssignmentTo: aVariable do: aBlock [
 
 	^ metaObject afterAssignmentTo: aVariable do: aBlock
 ]
 
 { #category : #setting }
-RFProxy >> afterMessageSendTo: aMethod do: aBlock [
+ROCProxy >> afterMessageSendTo: aMethod do: aBlock [
 
 	^ metaObject afterMessageSendTo: aMethod do: aBlock
 ]
 
 { #category : #setting }
-RFProxy >> afterVariableRead: aVariable do: aBlock [
+ROCProxy >> afterVariableRead: aVariable do: aBlock [
 
 	^ metaObject afterVariableRead: aVariable do: aBlock
 ]
 
 { #category : #setting }
-RFProxy >> beforeAnyAssignmentDo: aBlock [
+ROCProxy >> beforeAnyAssignmentDo: aBlock [
 
 	^ metaObject beforeAnyAssignmentDo: aBlock
 ]
 
 { #category : #setting }
-RFProxy >> beforeAnyMessageSendDo: aBlock [
+ROCProxy >> beforeAnyMessageSendDo: aBlock [
 
 	^ metaObject beforeAnyMessageSendDo: aBlock
 ]
 
 { #category : #setting }
-RFProxy >> beforeAnyVariableReadDo: aBlock [
+ROCProxy >> beforeAnyVariableReadDo: aBlock [
 
 	^ metaObject beforeAnyVariableReadDo: aBlock
 ]
 
 { #category : #setting }
-RFProxy >> beforeAssignmentTo: aVariable do: aBlock [
+ROCProxy >> beforeAssignmentTo: aVariable do: aBlock [
 
 	^ metaObject beforeAssignmentTo: aVariable do: aBlock
 ]
 
 { #category : #setting }
-RFProxy >> beforeMessageSendTo:  aMethod do: aBlock [
+ROCProxy >> beforeMessageSendTo:  aMethod do: aBlock [
 
 	^ metaObject beforeMessageSendTo: aMethod do: aBlock
 ]
 
 { #category : #setting }
-RFProxy >> beforeVariableRead: aVariable do: aBlock [
+ROCProxy >> beforeVariableRead: aVariable do: aBlock [
 
 	^ metaObject beforeVariableRead: aVariable do: aBlock
 ]
 
 { #category : #'reflective operations' }
-RFProxy >> doesNotUnderstand: aMessage [
+ROCProxy >> doesNotUnderstand: aMessage [
 
 	<debuggerCompleteToSender>
 	'Proxy receiving: ' crTrace.
@@ -129,37 +129,37 @@ RFProxy >> doesNotUnderstand: aMessage [
 ]
 
 { #category : #setting }
-RFProxy >> insteadAnyAssignmentDo: aBlock [
+ROCProxy >> insteadAnyAssignmentDo: aBlock [
 
 	^ metaObject insteadAnyAssignmentDo: aBlock
 ]
 
 { #category : #setting }
-RFProxy >> insteadAnyMessageSendDo: aBlock [
+ROCProxy >> insteadAnyMessageSendDo: aBlock [
 
 	^ metaObject insteadAnyMessageSendDo: aBlock
 ]
 
 { #category : #setting }
-RFProxy >> insteadAnyVariableReadDo: aBlock [
+ROCProxy >> insteadAnyVariableReadDo: aBlock [
 
 	^ metaObject insteadAnyVariableReadDo: aBlock
 ]
 
 { #category : #setting }
-RFProxy >> insteadAssignmentTo: aVariable do: aBlock [
+ROCProxy >> insteadAssignmentTo: aVariable do: aBlock [
 
 	^ metaObject insteadAssignmentTo: aVariable do: aBlock
 ]
 
 { #category : #setting }
-RFProxy >> insteadMessageSendTo: aMethod do: aBlock [
+ROCProxy >> insteadMessageSendTo: aMethod do: aBlock [
 
 	^ metaObject insteadMessageSendTo: aMethod do: aBlock
 ]
 
 { #category : #setting }
-RFProxy >> insteadVariableRead: aVariable do: aBlock [
+ROCProxy >> insteadVariableRead: aVariable do: aBlock [
 
 	^ metaObject insteadVariableRead: aVariable do: aBlock
 ]

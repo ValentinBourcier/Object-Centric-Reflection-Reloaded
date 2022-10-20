@@ -1,32 +1,32 @@
 Class {
-	#name : #RFStrategyInterceptor,
+	#name : #ROCAbstractInterceptor,
 	#superclass : #Object,
 	#instVars : [
 		'metaObject'
 	],
-	#category : #'Reflectivity-Object-Centric'
+	#category : #'Reflectivity-Object-Centric-interceptors'
 }
 
 { #category : #execution }
-RFStrategyInterceptor >> execute: aOperation [
+ROCAbstractInterceptor >> execute: aOperation [
 
 	^ self subclassResponsibility
 ]
 
 { #category : #execution }
-RFStrategyInterceptor >> execute: aName withValue: aValue [
+ROCAbstractInterceptor >> execute: aName withValue: aValue [
 
 	^ self subclassResponsibility
 ]
 
 { #category : #accessing }
-RFStrategyInterceptor >> metaObject [
+ROCAbstractInterceptor >> metaObject [
 
 	^ metaObject
 ]
 
 { #category : #accessing }
-RFStrategyInterceptor >> metaObject: anObject [
+ROCAbstractInterceptor >> metaObject: anObject [
 
 	metaObject := anObject
 ]

@@ -8,7 +8,7 @@ If the message is received through the proxy (either directly or because I sent 
 To instrument methods, I use an instance of RFProxyInstrumenter.
 "
 Class {
-	#name : #RFProxyMetaObject,
+	#name : #ROCMetaObject,
 	#superclass : #Object,
 	#instVars : [
 		'proxy',
@@ -21,17 +21,17 @@ Class {
 	#classInstVars : [
 		'str'
 	],
-	#category : #'Reflectivity-Object-Centric'
+	#category : #'Reflectivity-Object-Centric-metaobjects'
 }
 
 { #category : #'instance creation' }
-RFProxyMetaObject class >> forObject: anObject proxy: aProxy [
+ROCMetaObject class >> forObject: anObject proxy: aProxy [
 
 	^ self new forObject: anObject proxy: aProxy
 ]
 
 { #category : #logging }
-RFProxyMetaObject class >> log: info [
+ROCMetaObject class >> log: info [
 
 	| stream |
 	info crTrace.
@@ -44,7 +44,7 @@ RFProxyMetaObject class >> log: info [
 ]
 
 { #category : #'declaration accessing' }
-RFProxyMetaObject >> afterAnyAssignmentDo: aBlock [
+ROCMetaObject >> afterAnyAssignmentDo: aBlock [
 
 	self assignmentsStoring valuesStored valuesDo: [ :eachValue | 
 		eachValue addAfter: aBlock ].
@@ -52,7 +52,7 @@ RFProxyMetaObject >> afterAnyAssignmentDo: aBlock [
 ]
 
 { #category : #'declaration accessing' }
-RFProxyMetaObject >> afterAnyMessageSendDo: aBlock [
+ROCMetaObject >> afterAnyMessageSendDo: aBlock [
 
 	self messageSendStoring valuesStored valuesDo: [ :eachValue | 
 		eachValue addAfter: aBlock ].
@@ -60,7 +60,7 @@ RFProxyMetaObject >> afterAnyMessageSendDo: aBlock [
 ]
 
 { #category : #'declaration accessing' }
-RFProxyMetaObject >> afterAnyVariableReadDo: aBlock [
+ROCMetaObject >> afterAnyVariableReadDo: aBlock [
 
 	self variableReadStoring valuesStored valuesDo: [ :eachValue | 
 		eachValue addAfter: aBlock ].
@@ -68,7 +68,7 @@ RFProxyMetaObject >> afterAnyVariableReadDo: aBlock [
 ]
 
 { #category : #'declaration accessing' }
-RFProxyMetaObject >> afterAssignmentTo: aVariable do: aBlock [
+ROCMetaObject >> afterAssignmentTo: aVariable do: aBlock [
 
 	| variableToStore |
 	(self assignmentsStoring valuesStored includesKey: aVariable) 
@@ -79,7 +79,7 @@ RFProxyMetaObject >> afterAssignmentTo: aVariable do: aBlock [
 			^ aTimeObject ].
 	self assignmentsStoring valuesStored
 		at: aVariable
-		put: RFControlStoreObject new.
+		put: ROCControlStoreObject new.
 	variableToStore := self assignmentsStoring valuesStored at: aVariable.
 	assignmentsStoring allValuesBefore do: [ :each | 
 		variableToStore addBefore: each ].
@@ -91,7 +91,7 @@ RFProxyMetaObject >> afterAssignmentTo: aVariable do: aBlock [
 ]
 
 { #category : #'declaration accessing' }
-RFProxyMetaObject >> afterMessageSendTo: aMethod do: aBlock [
+ROCMetaObject >> afterMessageSendTo: aMethod do: aBlock [
 
 	| messageToStore |
 	(self messageSendStoring valuesStored includesKey: aMethod) ifTrue: [ 
@@ -101,7 +101,7 @@ RFProxyMetaObject >> afterMessageSendTo: aMethod do: aBlock [
 		^ aTimeObject ].
 	self messageSendStoring valuesStored
 		at: aMethod
-		put: RFControlStoreObject new.
+		put: ROCControlStoreObject new.
 	messageToStore := self messageSendStoring valuesStored at: aMethod.
 	messageSendStoring allValuesBefore do: [ :each | 
 		messageToStore addBefore: each ].
@@ -113,7 +113,7 @@ RFProxyMetaObject >> afterMessageSendTo: aMethod do: aBlock [
 ]
 
 { #category : #'declaration accessing' }
-RFProxyMetaObject >> afterVariableRead: aVariable do: aBlock [
+ROCMetaObject >> afterVariableRead: aVariable do: aBlock [
 
 	| variableToStore |
 	(self variableReadStoring valuesStored includesKey: aVariable) 
@@ -124,7 +124,7 @@ RFProxyMetaObject >> afterVariableRead: aVariable do: aBlock [
 			^ aTimeObject ].
 	self variableReadStoring valuesStored
 		at: aVariable
-		put: RFControlStoreObject new.
+		put: ROCControlStoreObject new.
 	variableToStore := self variableReadStoring valuesStored at: aVariable.
 	variableReadStoring allValuesBefore do: [ :each | 
 		variableToStore addBefore: each ].
@@ -136,19 +136,19 @@ RFProxyMetaObject >> afterVariableRead: aVariable do: aBlock [
 ]
 
 { #category : #accessing }
-RFProxyMetaObject >> assignmentsStoring [
+ROCMetaObject >> assignmentsStoring [
 
-	^ assignmentsStoring ifNil: [ assignmentsStoring:= (RFStore new)  ]
+	^ assignmentsStoring ifNil: [ assignmentsStoring:= (ROCStore new)  ]
 ]
 
 { #category : #accessing }
-RFProxyMetaObject >> assignmentsStoring: anObject [
+ROCMetaObject >> assignmentsStoring: anObject [
 
 	assignmentsStoring := anObject
 ]
 
 { #category : #'declaration accessing' }
-RFProxyMetaObject >> beforeAnyAssignmentDo: aBlock [
+ROCMetaObject >> beforeAnyAssignmentDo: aBlock [
 
 	self assignmentsStoring valuesStored valuesDo: [ :eachValue | 
 		eachValue addBefore: aBlock ].
@@ -156,7 +156,7 @@ RFProxyMetaObject >> beforeAnyAssignmentDo: aBlock [
 ]
 
 { #category : #'declaration accessing' }
-RFProxyMetaObject >> beforeAnyMessageSendDo: aBlock [
+ROCMetaObject >> beforeAnyMessageSendDo: aBlock [
 
 	self messageSendStoring  valuesStored valuesDo: [ :eachValue | 
 		eachValue addBefore: aBlock ].
@@ -164,7 +164,7 @@ RFProxyMetaObject >> beforeAnyMessageSendDo: aBlock [
 ]
 
 { #category : #'declaration accessing' }
-RFProxyMetaObject >> beforeAnyVariableReadDo: aBlock [
+ROCMetaObject >> beforeAnyVariableReadDo: aBlock [
 
 	self variableReadStoring  valuesStored valuesDo: [ :eachValue | 
 		eachValue addBefore: aBlock ].
@@ -172,7 +172,7 @@ RFProxyMetaObject >> beforeAnyVariableReadDo: aBlock [
 ]
 
 { #category : #'declaration accessing' }
-RFProxyMetaObject >> beforeAssignmentTo: aVariable do: aBlock [
+ROCMetaObject >> beforeAssignmentTo: aVariable do: aBlock [
 
 	| variableToStore |
 	(self assignmentsStoring valuesStored includesKey: aVariable) 
@@ -181,7 +181,7 @@ RFProxyMetaObject >> beforeAssignmentTo: aVariable do: aBlock [
 				  aBlock ].
 	self assignmentsStoring valuesStored
 		at: aVariable
-		put: RFControlStoreObject new.
+		put: ROCControlStoreObject new.
 	variableToStore := self assignmentsStoring valuesStored at: aVariable.
 	assignmentsStoring allValuesBefore do: [ :each | 
 		variableToStore addBefore: each ].
@@ -193,7 +193,7 @@ RFProxyMetaObject >> beforeAssignmentTo: aVariable do: aBlock [
 ]
 
 { #category : #'declaration accessing' }
-RFProxyMetaObject >> beforeMessageSendTo: aMethod do: aBlock [
+ROCMetaObject >> beforeMessageSendTo: aMethod do: aBlock [
 
 	| messageToStore |
 	
@@ -202,7 +202,7 @@ RFProxyMetaObject >> beforeMessageSendTo: aMethod do: aBlock [
 		aTimeObject := self messageSendStoring valuesStored at: aMethod.
 		aTimeObject addAfter: aBlock.
 		^ aTimeObject ].
-	self messageSendStoring valuesStored at: aMethod put: RFControlStoreObject new.
+	self messageSendStoring valuesStored at: aMethod put: ROCControlStoreObject new.
 	messageToStore := self messageSendStoring valuesStored at: aMethod.
 	messageSendStoring allValuesBefore do: [ :each | 
 		messageToStore addBefore: each ].
@@ -214,7 +214,7 @@ RFProxyMetaObject >> beforeMessageSendTo: aMethod do: aBlock [
 ]
 
 { #category : #'declaration accessing' }
-RFProxyMetaObject >> beforeVariableRead: aVariable do: aBlock [
+ROCMetaObject >> beforeVariableRead: aVariable do: aBlock [
 
 	| variableToStore |
 	(self variableReadStoring valuesStored includesKey: aVariable) 
@@ -223,7 +223,7 @@ RFProxyMetaObject >> beforeVariableRead: aVariable do: aBlock [
 				  aBlock ].
 	self variableReadStoring valuesStored
 		at: aVariable
-		put: RFControlStoreObject new.
+		put: ROCControlStoreObject new.
 	variableToStore := self variableReadStoring valuesStored at:
 		                   aVariable.
 	variableReadStoring allValuesBefore do: [ :each | 
@@ -236,7 +236,7 @@ RFProxyMetaObject >> beforeVariableRead: aVariable do: aBlock [
 ]
 
 { #category : #'reflective api' }
-RFProxyMetaObject >> executeReflectiveOperationsFor: target uponReceptionOf: selector [
+ROCMetaObject >> executeReflectiveOperationsFor: target uponReceptionOf: selector [
 
 	<debuggerCompleteToSender>
 	(String streamContents: [ :stream | 
@@ -250,24 +250,24 @@ RFProxyMetaObject >> executeReflectiveOperationsFor: target uponReceptionOf: sel
 ]
 
 { #category : #private }
-RFProxyMetaObject >> forObject: anObject [
+ROCMetaObject >> forObject: anObject [
 
 	self instrumenter beForObject: anObject
 ]
 
 { #category : #initialization }
-RFProxyMetaObject >> forObject: anObject proxy: aProxy [
+ROCMetaObject >> forObject: anObject proxy: aProxy [
 
 	self forObject: anObject.
 	self proxy: aProxy
 ]
 
 { #category : #deprecated }
-RFProxyMetaObject >> instVarAccess: anInstVarAccess [
+ROCMetaObject >> instVarAccess: anInstVarAccess [
 ]
 
 { #category : #'declaration accessing' }
-RFProxyMetaObject >> insteadAnyAssignmentDo: aBlock [
+ROCMetaObject >> insteadAnyAssignmentDo: aBlock [
 
 	self assignmentsStoring valuesStored valuesDo: [ :eachValue | 
 		eachValue instead: aBlock ].
@@ -275,7 +275,7 @@ RFProxyMetaObject >> insteadAnyAssignmentDo: aBlock [
 ]
 
 { #category : #'declaration accessing' }
-RFProxyMetaObject >> insteadAnyMessageSendDo: aBlock [
+ROCMetaObject >> insteadAnyMessageSendDo: aBlock [
 
 	self messageSendStoring valuesStored valuesDo: [ :eachValue | 
 		eachValue instead: aBlock ].
@@ -283,7 +283,7 @@ RFProxyMetaObject >> insteadAnyMessageSendDo: aBlock [
 ]
 
 { #category : #'declaration accessing' }
-RFProxyMetaObject >> insteadAnyVariableReadDo: aBlock [
+ROCMetaObject >> insteadAnyVariableReadDo: aBlock [
 
 	self variableReadStoring valuesStored valuesDo: [ :eachValue | 
 		eachValue instead: aBlock ].
@@ -291,7 +291,7 @@ RFProxyMetaObject >> insteadAnyVariableReadDo: aBlock [
 ]
 
 { #category : #'declaration accessing' }
-RFProxyMetaObject >> insteadAssignmentTo: aVariable do: aBlock [
+ROCMetaObject >> insteadAssignmentTo: aVariable do: aBlock [
 
 	| variableToStore |
 	(self assignmentsStoring valuesStored includesKey: aVariable) ifTrue: [ 
@@ -301,7 +301,7 @@ RFProxyMetaObject >> insteadAssignmentTo: aVariable do: aBlock [
 		^ aTimeObject ].
 	variableToStore := self assignmentsStoring valuesStored
 		                   at: aVariable
-		                   put: RFControlStoreObject new.
+		                   put: ROCControlStoreObject new.
 	variableToStore := self assignmentsStoring valuesStored at: aVariable.
 	assignmentsStoring allValuesBefore do: [ :each | 
 		variableToStore addBefore: each ].
@@ -311,7 +311,7 @@ RFProxyMetaObject >> insteadAssignmentTo: aVariable do: aBlock [
 ]
 
 { #category : #'declaration accessing' }
-RFProxyMetaObject >> insteadMessageSendTo: aMethod do: aBlock [
+ROCMetaObject >> insteadMessageSendTo: aMethod do: aBlock [
 
 	| messageToStore |
 	(self messageSendStoring valuesStored includesKey: aMethod) ifTrue: [ 
@@ -321,7 +321,7 @@ RFProxyMetaObject >> insteadMessageSendTo: aMethod do: aBlock [
 		^ aTimeObject ].
 	messageToStore := self messageSendStoring valuesStored
 		                   at: aMethod
-		                   put: RFControlStoreObject new.
+		                   put: ROCControlStoreObject new.
 	messageToStore := self messageSendStoring valuesStored at: aMethod.
 	messageSendStoring allValuesBefore do: [ :each | 
 		messageToStore addBefore: each ].
@@ -331,7 +331,7 @@ RFProxyMetaObject >> insteadMessageSendTo: aMethod do: aBlock [
 ]
 
 { #category : #'declaration accessing' }
-RFProxyMetaObject >> insteadVariableRead: aVariable do: aBlock [
+ROCMetaObject >> insteadVariableRead: aVariable do: aBlock [
 
 	| variableToStore |
 	(self variableReadStoring valuesStored includesKey: aVariable) ifTrue: [ 
@@ -341,7 +341,7 @@ RFProxyMetaObject >> insteadVariableRead: aVariable do: aBlock [
 		^ aTimeObject ].
 	variableToStore := self variableReadStoring valuesStored
 		                   at: aVariable
-		                   put: RFControlStoreObject new.
+		                   put: ROCControlStoreObject new.
 	variableToStore := self variableReadStoring valuesStored at: aVariable.
 	variableReadStoring allValuesBefore do: [ :each | 
 		variableToStore addBefore: each ].
@@ -351,19 +351,19 @@ RFProxyMetaObject >> insteadVariableRead: aVariable do: aBlock [
 ]
 
 { #category : #accessing }
-RFProxyMetaObject >> instrumenter [
+ROCMetaObject >> instrumenter [
 
-	^ instrumenter ifNil: [ instrumenter := RFProxyInstrumenter for: self ]
+	^ instrumenter ifNil: [ instrumenter := ROCProxyInstrumenter for: self ]
 ]
 
 { #category : #accessing }
-RFProxyMetaObject >> instrumenter: anObject [
+ROCMetaObject >> instrumenter: anObject [
 
 	instrumenter := anObject
 ]
 
 { #category : #'declaration accessing' }
-RFProxyMetaObject >> linkInsteadAssignment: operation [
+ROCMetaObject >> linkInsteadAssignment: operation [
 
 	| timeObject insteadBlock |
 	self metaLevel ifTrue: [ ^ operation value ].
@@ -372,7 +372,7 @@ RFProxyMetaObject >> linkInsteadAssignment: operation [
 		do: [ 
 			self assignmentsStoring valuesStored
 				at: operation variable name
-				put: RFControlStoreObject new.
+				put: ROCControlStoreObject new.
 			self assignmentsStoring addAllValuesStored: operation variable name ].
 	timeObject := self assignmentsStoring valuesStored at:
 		              operation variable name.
@@ -389,7 +389,7 @@ RFProxyMetaObject >> linkInsteadAssignment: operation [
 ]
 
 { #category : #'declaration accessing' }
-RFProxyMetaObject >> linkInsteadAssignment: aName withValue: aValue [
+ROCMetaObject >> linkInsteadAssignment: aName withValue: aValue [
 
 	| timeObject insteadBlock |
 	self metaLevel ifTrue: [ ^ aValue ].
@@ -398,7 +398,7 @@ RFProxyMetaObject >> linkInsteadAssignment: aName withValue: aValue [
 		do: [ 
 			self assignmentsStoring valuesStored
 				at: aName
-				put: RFControlStoreObject new.
+				put: ROCControlStoreObject new.
 			self assignmentsStoring addAllValuesStored: aName ].
 	timeObject := self assignmentsStoring valuesStored at: aName.
 	self metaLevel: true.
@@ -414,7 +414,7 @@ RFProxyMetaObject >> linkInsteadAssignment: aName withValue: aValue [
 ]
 
 { #category : #'declaration accessing' }
-RFProxyMetaObject >> linkInsteadMessageSend: aOperation [
+ROCMetaObject >> linkInsteadMessageSend: aOperation [
 
 	| timeObject insteadBlock |
 	self metaLevel ifTrue: [ ^ aOperation value ].
@@ -423,7 +423,7 @@ RFProxyMetaObject >> linkInsteadMessageSend: aOperation [
 		do: [ 
 			self messageSendStoring valuesStored
 				at: aOperation selector
-				put: RFControlStoreObject new.
+				put: ROCControlStoreObject new.
 			self messageSendStoring addAllValuesStored: aOperation selector ].
 	timeObject := self messageSendStoring valuesStored at:
 		              aOperation selector.
@@ -440,7 +440,7 @@ RFProxyMetaObject >> linkInsteadMessageSend: aOperation [
 ]
 
 { #category : #'declaration accessing' }
-RFProxyMetaObject >> linkInsteadVariableRead: name withValue: aValue [
+ROCMetaObject >> linkInsteadVariableRead: name withValue: aValue [
 
 	| timeObject insteadBlock |
 	self metaLevel ifTrue: [ ^ aValue ].
@@ -449,7 +449,7 @@ RFProxyMetaObject >> linkInsteadVariableRead: name withValue: aValue [
 		do: [ 
 			self variableReadStoring valuesStored
 				at: name
-				put: RFControlStoreObject new.
+				put: ROCControlStoreObject new.
 			self variableReadStoring addAllValuesStored: name ].
 	timeObject := self variableReadStoring valuesStored at: name.
 	self metaLevel: true.
@@ -470,47 +470,47 @@ RFProxyMetaObject >> linkInsteadVariableRead: name withValue: aValue [
 ]
 
 { #category : #deprecated }
-RFProxyMetaObject >> messageReceived: aReflectiveMessageReceive [
+ROCMetaObject >> messageReceived: aReflectiveMessageReceive [
 ]
 
 { #category : #accessing }
-RFProxyMetaObject >> messageSendStoring [
+ROCMetaObject >> messageSendStoring [
 
-	^ messageSendStoring  ifNil: [ messageSendStoring:= (RFStore new)  ]
+	^ messageSendStoring  ifNil: [ messageSendStoring:= (ROCStore new)  ]
 ]
 
 { #category : #accessing }
-RFProxyMetaObject >> messageSendStoring: anObject [
+ROCMetaObject >> messageSendStoring: anObject [
 
 	messageSendStoring := anObject
 ]
 
 { #category : #accessing }
-RFProxyMetaObject >> metaLevel [
+ROCMetaObject >> metaLevel [
 
 	^ metaLevel ifNil: [ metaLevel := false ]
 ]
 
 { #category : #accessing }
-RFProxyMetaObject >> metaLevel: anObject [
+ROCMetaObject >> metaLevel: anObject [
 
 	^ metaLevel := anObject
 ]
 
 { #category : #accessing }
-RFProxyMetaObject >> proxy [
+ROCMetaObject >> proxy [
 
 	^ proxy
 ]
 
 { #category : #accessing }
-RFProxyMetaObject >> proxy: anObject [
+ROCMetaObject >> proxy: anObject [
 
 	proxy := anObject
 ]
 
 { #category : #'message passing' }
-RFProxyMetaObject >> receive: aSelector [
+ROCMetaObject >> receive: aSelector [
 	<debuggerCompleteToSender>
 	self class log: 'receive: ' , aSelector printString.
 	aSelector = #class ifTrue: [ 
@@ -524,7 +524,7 @@ RFProxyMetaObject >> receive: aSelector [
 ]
 
 { #category : #'message passing' }
-RFProxyMetaObject >> receive: aSelector withArgs: args [
+ROCMetaObject >> receive: aSelector withArgs: args [
 
 	self class log: 'receive w/args: ' , aSelector printString, ' args: ', args printString.
 	^ self
@@ -534,7 +534,7 @@ RFProxyMetaObject >> receive: aSelector withArgs: args [
 ]
 
 { #category : #deprecated }
-RFProxyMetaObject >> receiveAssignment: aVariable withOldValue: aOldValue withValue: aValue [
+ROCMetaObject >> receiveAssignment: aVariable withOldValue: aOldValue withValue: aValue [
 
 	<debuggerCompleteToSender>
 	self class log:
@@ -544,12 +544,12 @@ RFProxyMetaObject >> receiveAssignment: aVariable withOldValue: aOldValue withVa
 ]
 
 { #category : #deprecated }
-RFProxyMetaObject >> reflectiveEvent: aReflectiveEvent [
+ROCMetaObject >> reflectiveEvent: aReflectiveEvent [
 	^aReflectiveEvent reflectOn: self
 ]
 
 { #category : #deprecated }
-RFProxyMetaObject >> send: aMessage to: target [
+ROCMetaObject >> send: aMessage to: target [
 
 	
 	self class log: 'sendNA: ' , aMessage printString.
@@ -561,7 +561,7 @@ RFProxyMetaObject >> send: aMessage to: target [
 ]
 
 { #category : #'message passing' }
-RFProxyMetaObject >> send: selector withArgs: args to: target [
+ROCMetaObject >> send: selector withArgs: args to: target [
 
 	<debuggerCompleteToSender>
 	| arguments |
@@ -576,13 +576,13 @@ RFProxyMetaObject >> send: selector withArgs: args to: target [
 ]
 
 { #category : #accessing }
-RFProxyMetaObject >> variableReadStoring [
+ROCMetaObject >> variableReadStoring [
 
-	^ variableReadStoring ifNil: [ variableReadStoring := RFStore new ]
+	^ variableReadStoring ifNil: [ variableReadStoring := ROCStore new ]
 ]
 
 { #category : #accessing }
-RFProxyMetaObject >> variableReadStoring: anObject [
+ROCMetaObject >> variableReadStoring: anObject [
 
 	variableReadStoring := anObject
 ]
