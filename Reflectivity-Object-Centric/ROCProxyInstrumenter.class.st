@@ -8,7 +8,7 @@ Currently, I am not in a final shape, for instance:
 - I should be composeable depending on the object-centric instrumentation that is required (_e.g._, if two object-centric operations of different nature are demanded) 
 "
 Class {
-	#name : #RFProxyInstrumenter,
+	#name : #ROCProxyInstrumenter,
 	#superclass : #Object,
 	#instVars : [
 		'metaObject',
@@ -17,11 +17,11 @@ Class {
 		'instrumentedClass',
 		'compiledSelectorsMap'
 	],
-	#category : #'Reflectivity-Object-Centric'
+	#category : #'Reflectivity-Object-Centric-instrumentation'
 }
 
 { #category : #'instance creation' }
-RFProxyInstrumenter class >> for: aRFProxyMetaObject [
+ROCProxyInstrumenter class >> for: aRFProxyMetaObject [
 
 	^ self new
 		  metaObject: aRFProxyMetaObject;
@@ -29,7 +29,7 @@ RFProxyInstrumenter class >> for: aRFProxyMetaObject [
 ]
 
 { #category : #instrumentation }
-RFProxyInstrumenter >> beForObject: anObject [
+ROCProxyInstrumenter >> beForObject: anObject [
 
 	anObject class isAnonymous ifFalse: [ 
 		anObject class newAnonymousSubclass adoptInstance: anObject ].
@@ -38,7 +38,7 @@ RFProxyInstrumenter >> beForObject: anObject [
 ]
 
 { #category : #instrumentation }
-RFProxyInstrumenter >> buildSuperSendsChainFrom: method upTo: targetMethod in: methodChain [
+ROCProxyInstrumenter >> buildSuperSendsChainFrom: method upTo: targetMethod in: methodChain [
 	
 	| selector nextMethod |
 	selector := method selector.
@@ -54,7 +54,7 @@ RFProxyInstrumenter >> buildSuperSendsChainFrom: method upTo: targetMethod in: m
 ]
 
 { #category : #instrumentation }
-RFProxyInstrumenter >> compileSuperSendChain: methodsToInstrument [
+ROCProxyInstrumenter >> compileSuperSendChain: methodsToInstrument [
 
 	| newSelectors originalSelector lastSelector |
 	newSelectors := OrderedCollection new.
@@ -86,13 +86,13 @@ RFProxyInstrumenter >> compileSuperSendChain: methodsToInstrument [
 ]
 
 { #category : #accessing }
-RFProxyInstrumenter >> compiledSelectorsMap [
+ROCProxyInstrumenter >> compiledSelectorsMap [
 
 	^ compiledSelectorsMap ifNil:[compiledSelectorsMap := Dictionary new]
 ]
 
 { #category : #instrumentation }
-RFProxyInstrumenter >> findSuperSendsChainFor: aMethod [
+ROCProxyInstrumenter >> findSuperSendsChainFor: aMethod [
 
 	| selector nextMethod methodChain |
 	(self isClassReachableInHierarchy: aMethod methodClass) ifFalse: [ 
@@ -120,7 +120,7 @@ RFProxyInstrumenter >> findSuperSendsChainFor: aMethod [
 ]
 
 { #category : #instrumentation }
-RFProxyInstrumenter >> instrumentMethod: method selector: selector [
+ROCProxyInstrumenter >> instrumentMethod: method selector: selector [
 
 	| newMethod methodsToInstrument compiledSelectors |
 	methodsToInstrument := self findSuperSendsChainFor: method.
@@ -133,7 +133,7 @@ RFProxyInstrumenter >> instrumentMethod: method selector: selector [
 
 	compiledSelectors do: [ :cs | 
 		| ast |
-		RFProxyMetaObject log: 'Instrumenting: ' , cs printString.
+		ROCMetaObject log: 'Instrumenting: ' , cs printString.
 		newMethod := instrumentedClass >> cs.
 		ast := newMethod ast.
 		"self redirectSelfArgsIn: ast."  "link for selector instead with Nil"
@@ -149,11 +149,11 @@ RFProxyInstrumenter >> instrumentMethod: method selector: selector [
 ]
 
 { #category : #instrumentation }
-RFProxyInstrumenter >> instrumentSelector: selector withArgs: args [
+ROCProxyInstrumenter >> instrumentSelector: selector withArgs: args [
 
 	| method |
 	(self instrumentedMessages includes: selector) ifTrue: [ 
-		RFProxyMetaObject log:
+		ROCMetaObject log:
 			'selector already instrumented: ' , selector printString.
 		self flag:
 			'Later we should compose instrumentation: inst var accesses, object-interaction, etc.'.
@@ -162,7 +162,7 @@ RFProxyInstrumenter >> instrumentSelector: selector withArgs: args [
 	method isPrimitive ifTrue: [ 
 		method primitive = 188 ifTrue: [ 			
 			method := args second.
-			RFProxyMetaObject log: 'Primitive ' , method printString.
+			ROCMetaObject log: 'Primitive ' , method printString.
 			self halt.
 			self instrumentMethod: method selector: method selector.
 			args removeLast.
@@ -173,13 +173,13 @@ RFProxyInstrumenter >> instrumentSelector: selector withArgs: args [
 ]
 
 { #category : #accessing }
-RFProxyInstrumenter >> instrumentedClass [
+ROCProxyInstrumenter >> instrumentedClass [
 
 	^ instrumentedClass
 ]
 
 { #category : #accessing }
-RFProxyInstrumenter >> instrumentedMessages [
+ROCProxyInstrumenter >> instrumentedMessages [
 	self flag: 'Temporary hack in waiting a nicer solution'.
 	^ instrumentedMessages ifNil: [ 
 		  instrumentedMessages := OrderedCollection new
@@ -191,42 +191,47 @@ RFProxyInstrumenter >> instrumentedMessages [
 ]
 
 { #category : #accessing }
-RFProxyInstrumenter >> instrumentedObject [
+ROCProxyInstrumenter >> instrumentedObject [
 
 	^ instrumentedObject
 ]
 
 { #category : #testing }
-RFProxyInstrumenter >> isClassReachableInHierarchy: aClass [
+ROCProxyInstrumenter >> isClassReachableInHierarchy: aClass [
 
 	^ self originalClass == aClass or: [ 
 		  self originalClass allSuperclasses includes: aClass ]
 ]
 
 { #category : #logging }
-RFProxyInstrumenter >> log: array [
+ROCProxyInstrumenter >> log: array [
 
 	| log |
 	log := WriteStream on: String new.
 	array do: [ :s | log << s ].
 
-	RFProxyMetaObject log: log contents
+	ROCMetaObject log: log contents
+]
+
+{ #category : #'as yet unclassified' }
+ROCProxyInstrumenter >> metaObject [
+	^ metaObject
 ]
 
 { #category : #accessing }
-RFProxyInstrumenter >> metaObject: anObject [
+ROCProxyInstrumenter >> metaObject: anObject [
 
 	metaObject := anObject
 ]
 
 { #category : #links }
-RFProxyInstrumenter >> newInsteadLinkForAssignments [
+ROCProxyInstrumenter >> newInsteadLinkForAssignments [
 
 	| link interceptor |
 	link := MetaLink new.
 	link control: #instead.
 
-	interceptor := RFVariableWriteInterceptor new.
+	interceptor := ROCVariableWriteInterceptor new.
 	interceptor metaObject: metaObject.
 
 	link metaObject: interceptor.
@@ -239,13 +244,13 @@ RFProxyInstrumenter >> newInsteadLinkForAssignments [
 ]
 
 { #category : #links }
-RFProxyInstrumenter >> newInsteadLinkForMessagesSend [
+ROCProxyInstrumenter >> newInsteadLinkForMessagesSend [
 
 	| link interceptor |
 	link := MetaLink new.
 	link control: #instead.
 	
-	interceptor := RFMessageSendInterceptor  new.
+	interceptor := ROCMessageSendInterceptor  new.
 	interceptor metaObject: metaObject.
 	interceptor receiver: instrumentedObject.
 	
@@ -259,13 +264,13 @@ RFProxyInstrumenter >> newInsteadLinkForMessagesSend [
 ]
 
 { #category : #links }
-RFProxyInstrumenter >> newInsteadLinkForVariableRead [
+ROCProxyInstrumenter >> newInsteadLinkForVariableRead [
 
 	| link  interceptor|
 	link := MetaLink new.
 	link control: #instead.
 	
-	interceptor := RFVariableReadInterceptor new.
+	interceptor := ROCVariableReadInterceptor new.
 	interceptor metaObject: metaObject.
 
 	link metaObject: interceptor  .
@@ -278,13 +283,13 @@ RFProxyInstrumenter >> newInsteadLinkForVariableRead [
 ]
 
 { #category : #links }
-RFProxyInstrumenter >> newLinkForSelector: selector [
+ROCProxyInstrumenter >> newLinkForSelector: selector [
 
 	| link interceptor |
 	link := MetaLink new.
 	link control: #instead.
 	
-	interceptor := RFMessageInterceptor new.
+	interceptor := ROCMessageInterceptor new.
 	interceptor selector: selector.
 	interceptor metaObject: metaObject.
 	
@@ -301,12 +306,12 @@ RFProxyInstrumenter >> newLinkForSelector: selector [
 ]
 
 { #category : #accessing }
-RFProxyInstrumenter >> originalClass [
+ROCProxyInstrumenter >> originalClass [
 	^instrumentedClass superclass
 ]
 
 { #category : #instrumentation }
-RFProxyInstrumenter >> redirectMessagesSendIn: ast [
+ROCProxyInstrumenter >> redirectMessagesSendIn: ast [
 
 	| messageSendNode |
 	messageSendNode := ast sendNodes reject: [ :node | node isBinary ].
@@ -315,7 +320,7 @@ RFProxyInstrumenter >> redirectMessagesSendIn: ast [
 ]
 
 { #category : #instrumentation }
-RFProxyInstrumenter >> redirectSelfArgsIn: ast [
+ROCProxyInstrumenter >> redirectSelfArgsIn: ast [
 	
 	| methodName nodes  |
 	methodName := ast methodNode method name .
@@ -329,7 +334,7 @@ RFProxyInstrumenter >> redirectSelfArgsIn: ast [
 ]
 
 { #category : #instrumentation }
-RFProxyInstrumenter >> redirectSelfReturnsIn: ast [
+ROCProxyInstrumenter >> redirectSelfReturnsIn: ast [
 
 	| returnNodes |
 	returnNodes := ast allChildren select: [ :node | 
@@ -343,7 +348,7 @@ RFProxyInstrumenter >> redirectSelfReturnsIn: ast [
 ]
 
 { #category : #instrumentation }
-RFProxyInstrumenter >> redirectSelfSendsIn: ast [
+ROCProxyInstrumenter >> redirectSelfSendsIn: ast [
 	
 	| methodName nodes  |
 	methodName := ast methodNode method name.
@@ -354,7 +359,7 @@ RFProxyInstrumenter >> redirectSelfSendsIn: ast [
 ]
 
 { #category : #instrumentation }
-RFProxyInstrumenter >> redirectSuperSendsIn: ast toSelector: aSelector [
+ROCProxyInstrumenter >> redirectSuperSendsIn: ast toSelector: aSelector [
 	
 	| methodName nodes  |
 	methodName := ast methodNode method name.
@@ -364,7 +369,7 @@ RFProxyInstrumenter >> redirectSuperSendsIn: ast toSelector: aSelector [
 ]
 
 { #category : #instrumentation }
-RFProxyInstrumenter >> redirectVariableReadingIn: ast [
+ROCProxyInstrumenter >> redirectVariableReadingIn: ast [
 
 	| variableReadNodes |
 	variableReadNodes := ast variableReadNodes.
@@ -377,7 +382,7 @@ RFProxyInstrumenter >> redirectVariableReadingIn: ast [
 ]
 
 { #category : #instrumentation }
-RFProxyInstrumenter >> redirectVariableWritingIn: ast [
+ROCProxyInstrumenter >> redirectVariableWritingIn: ast [
 
 	| assignmentNodes |
 	assignmentNodes := ast assignmentNodes.

@@ -34,48 +34,48 @@ Internal Representation and Key Implementation Points.
     Implementation Points
 "
 Class {
-	#name : #RFControlStoreObject,
+	#name : #ROCControlStoreObject,
 	#superclass : #Object,
 	#instVars : [
 		'before',
 		'after',
 		'instead'
 	],
-	#category : #'Reflectivity-Object-Centric'
+	#category : #'Reflectivity-Object-Centric-metaobjects'
 }
 
 { #category : #accessing }
-RFControlStoreObject >> addAfter: aBlock [
+ROCControlStoreObject >> addAfter: aBlock [
 
 	self after add: aBlock.
 ]
 
 { #category : #accessing }
-RFControlStoreObject >> addBefore: aBlock [
+ROCControlStoreObject >> addBefore: aBlock [
 
 	self before  add: aBlock
 ]
 
 { #category : #accessing }
-RFControlStoreObject >> after [
+ROCControlStoreObject >> after [
 
 	^ after ifNil: [ after := (LinkedList new)  ]
 ]
 
 { #category : #accessing }
-RFControlStoreObject >> before [
+ROCControlStoreObject >> before [
 
 	^ before ifNil: [ before := (LinkedList new)  ]
 ]
 
 { #category : #accessing }
-RFControlStoreObject >> instead [
+ROCControlStoreObject >> instead [
 
 	^ instead
 ]
 
 { #category : #accessing }
-RFControlStoreObject >> instead: anObject [
+ROCControlStoreObject >> instead: anObject [
 
 	instead := anObject
 ]

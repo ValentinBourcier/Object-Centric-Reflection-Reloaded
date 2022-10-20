@@ -16,7 +16,7 @@ ROCProxyInstrumenterTest >> receive: selector [
 { #category : #tests }
 ROCProxyInstrumenterTest >> setUp [
 	super setUp.
-	instrumenter := RFProxyInstrumenter for: self.
+	instrumenter := ROCProxyInstrumenter for: self.
 	testObject := Object new
 ]
 

@@ -1,16 +1,16 @@
 Class {
-	#name : #StObjectCentricDebugger,
+	#name : #ROCDebuggerPresenter,
 	#superclass : #StDebugger,
 	#traits : 'TDebugger',
 	#classTraits : 'TDebugger classTrait',
 	#instVars : [
 		'metaObject'
 	],
-	#category : #'Reflectivity-Object-Centric'
+	#category : #'Reflectivity-Object-Centric-presenters'
 }
 
 { #category : #'instance creation' }
-StObjectCentricDebugger class >> debugSession: aDebugSession [
+ROCDebuggerPresenter class >> debugSession: aDebugSession [
 	| debugger metaObject |
 	metaObject := aDebugSession exception metaObject.
 	metaObject metaLevel: true.
@@ -24,7 +24,7 @@ StObjectCentricDebugger class >> debugSession: aDebugSession [
 ]
 
 { #category : #'instance creation' }
-StObjectCentricDebugger class >> newApplication: anApplication model: aModel metaObject: aMetaObject [
+ROCDebuggerPresenter class >> newApplication: anApplication model: aModel metaObject: aMetaObject [
 
 	^ self basicNew
 		metaObject: aMetaObject;
@@ -35,25 +35,25 @@ StObjectCentricDebugger class >> newApplication: anApplication model: aModel met
 ]
 
 { #category : #accessing }
-StObjectCentricDebugger >> metaObject [
+ROCDebuggerPresenter >> metaObject [
 
 	^ metaObject
 ]
 
 { #category : #accessing }
-StObjectCentricDebugger >> metaObject: anObject [
+ROCDebuggerPresenter >> metaObject: anObject [
 
 	metaObject := anObject
 ]
 
 { #category : #actions }
-StObjectCentricDebugger >> proceedDebugSession [
+ROCDebuggerPresenter >> proceedDebugSession [
 	metaObject metaLevel: false.
 	super proceedDebugSession
 ]
 
 { #category : #actions }
-StObjectCentricDebugger >> stepOver [
+ROCDebuggerPresenter >> stepOver [
 
 	metaObject metaLevel: false.
 	super stepOver

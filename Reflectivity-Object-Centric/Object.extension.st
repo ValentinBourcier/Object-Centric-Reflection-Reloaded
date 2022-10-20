@@ -90,7 +90,7 @@ Object >> beforeVariableRead: aVariable do: aBlock [
 { #category : #'*Reflectivity-Object-Centric' }
 Object >> haltOnCall [
 
-	^ RFProxy becomeTarget: self
+	^ ROCProxy becomeTarget: self
 ]
 
 { #category : #'*Reflectivity-Object-Centric' }
@@ -140,13 +140,13 @@ Object >> insteadVariableRead: aVariableName do: aBlock [
 { #category : #'*Reflectivity-Object-Centric' }
 Object >> proxify [
 
-	^ RFProxy becomeTarget: self
+	^ ROCProxy becomeTarget: self
 ]
 
 { #category : #'*Reflectivity-Object-Centric' }
 Object >> proxifyWithMetaObject: mo [
 
-	^ RFProxy becomeTarget: self withMetaObject: mo
+	^ ROCProxy becomeTarget: self withMetaObject: mo
 ]
 
 { #category : #'*Reflectivity-Object-Centric' }

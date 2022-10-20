@@ -1,14 +1,14 @@
 Class {
-	#name : #RFMessageSendInterceptor,
-	#superclass : #RFStrategyInterceptor,
+	#name : #ROCMessageSendInterceptor,
+	#superclass : #ROCAbstractInterceptor,
 	#instVars : [
 		'receiver'
 	],
-	#category : #'Reflectivity-Object-Centric'
+	#category : #'Reflectivity-Object-Centric-interceptors'
 }
 
 { #category : #execution }
-RFMessageSendInterceptor >> execute: aOperation [
+ROCMessageSendInterceptor >> execute: aOperation [
 
 	"receive all sends filter by self if the receiver is the object who insrument if yes propagate and then call my method to do reflective part"
 
@@ -22,17 +22,17 @@ RFMessageSendInterceptor >> execute: aOperation [
 ]
 
 { #category : #override }
-RFMessageSendInterceptor >> execute: aName withValue: aValue [
+ROCMessageSendInterceptor >> execute: aName withValue: aValue [
 ]
 
 { #category : #accessing }
-RFMessageSendInterceptor >> receiver [
+ROCMessageSendInterceptor >> receiver [
 
 	^ receiver
 ]
 
 { #category : #accessing }
-RFMessageSendInterceptor >> receiver: anObject [
+ROCMessageSendInterceptor >> receiver: anObject [
 
 	receiver := anObject
 ]
