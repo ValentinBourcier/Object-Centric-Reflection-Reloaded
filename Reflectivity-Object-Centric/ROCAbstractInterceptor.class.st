@@ -30,3 +30,8 @@ ROCAbstractInterceptor >> metaObject: anObject [
 
 	metaObject := anObject
 ]
+
+{ #category : #accessing }
+ROCAbstractInterceptor >> receiver [
+	 ^metaObject receiver
+]

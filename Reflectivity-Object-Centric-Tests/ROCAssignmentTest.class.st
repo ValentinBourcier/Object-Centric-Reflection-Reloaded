@@ -117,44 +117,6 @@ ROCAssignmentTest >> testAssignmentInsteadWithAssignment [
 ]
 
 { #category : #tests }
-ROCAssignmentTest >> testAssignmentStoringDictionary [
-
-	self assert: aAssignmentTestClass var1 equals: 1.
-	proxy := aAssignmentTestClass proxifyWithMetaObject:
-		         RFProxyMetaObjectAssignmentTest.
-	metaobject := proxy metaObject.
-
-	aAssignmentTestClass
-		beforeAssignmentTo: #var1
-		do: [ 'This is A' crTrace ].
-	aAssignmentTestClass
-		afterAssignmentTo: #var2
-		do: [ 'This is B' crTrace ].
-	aAssignmentTestClass
-		beforeAssignmentTo: #c
-		do: [ 'This is C' crTrace ].
-	aAssignmentTestClass
-		insteadAssignmentTo: #d
-		do: [ 'This is D' crTrace ].
-
-	self assert:
-		(metaobject assignmentsStoring valuesStored includesKey: #var2).
-	self assert:
-		(metaobject assignmentsStoring valuesStored includesKey: #c).
-	self assert:
-		(metaobject assignmentsStoring valuesStored includesKey: #d).
-	self
-		assert:
-			((metaobject assignmentsStoring valuesStored at: #var1) before at:
-				 1) asText
-		equals: [ 'This is A' crTrace ] asText.
-	self
-		assert:
-		(metaobject assignmentsStoring valuesStored at: #d) instead asText
-		equals: [ 'This is D' crTrace ] asText
-]
-
-{ #category : #tests }
 ROCAssignmentTest >> testBeforeAllAssignmentSelfAssignment [
 
 	"The assignment is executed after doing the operations"

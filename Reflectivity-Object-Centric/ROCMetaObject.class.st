@@ -543,6 +543,12 @@ ROCMetaObject >> receiveAssignment: aVariable withOldValue: aOldValue withValue:
 		, aOldValue printString
 ]
 
+{ #category : #accessing }
+ROCMetaObject >> receiver [
+
+	^ instrumenter instrumentedObject
+]
+
 { #category : #deprecated }
 ROCMetaObject >> reflectiveEvent: aReflectiveEvent [
 	^aReflectiveEvent reflectOn: self
