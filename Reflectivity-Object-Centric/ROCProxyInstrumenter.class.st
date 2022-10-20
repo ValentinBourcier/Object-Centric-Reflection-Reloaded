@@ -252,13 +252,12 @@ ROCProxyInstrumenter >> newInsteadLinkForMessagesSend [
 	
 	interceptor := ROCMessageSendInterceptor  new.
 	interceptor metaObject: metaObject.
-	interceptor receiver: instrumentedObject.
 	
 	link metaObject: interceptor .
-	"link selector: #linkInsteadMessageSend:withValue:withReceiver:withArgs:.
-	link arguments: #( selector value receiver arguments)."
+	link arguments: #(selector receiver arguments).
 	link selector: #execute:.
-	link arguments: #( operation ).
+	link arguments: #( selector receiver arguments ).
+	link optionArgsAsArray: true.
 	link optionCompileOnLinkInstallation: true.
 	^ link
 ]
