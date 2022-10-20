@@ -1,14 +1,14 @@
 Class {
-	#name : #RFAssignmentsAndBlocksTest,
+	#name : #ROCAssignmentsAndBlocksTest,
 	#superclass : #TestCase,
 	#category : #'Reflectivity-Object-Centric-Tests-tests'
 }
 
 { #category : #tests }
-RFAssignmentsAndBlocksTest >> testAssignmentDictionaryCreation [
+ROCAssignmentsAndBlocksTest >> testAssignmentDictionaryCreation [
 
 	| b proxy metaobject |
-	b := TestClass new.
+	b := ROCTestClass new.
 	proxy := b proxifyWithMetaObject: RFProxyMetaObjectAssignmentTest.
 	metaobject := proxy metaObject.
 	Transcript clear.
@@ -40,10 +40,10 @@ RFAssignmentsAndBlocksTest >> testAssignmentDictionaryCreation [
 ]
 
 { #category : #tests }
-RFAssignmentsAndBlocksTest >> testAssignmentDictionaryCreationOverride [
+ROCAssignmentsAndBlocksTest >> testAssignmentDictionaryCreationOverride [
 
 	| b proxy metaobject |
-	b := TestClass  new.
+	b := ROCTestClass  new.
 	proxy := b proxifyWithMetaObject: RFProxyMetaObjectAssignmentTest.
 	metaobject := proxy metaObject.
 	Transcript clear.
@@ -59,10 +59,10 @@ RFAssignmentsAndBlocksTest >> testAssignmentDictionaryCreationOverride [
 ]
 
 { #category : #tests }
-RFAssignmentsAndBlocksTest >> testAssignmentDictionaryCreationWithMoreThanOneCall [
+ROCAssignmentsAndBlocksTest >> testAssignmentDictionaryCreationWithMoreThanOneCall [
 
 	| b proxy metaobject |
-	b := TestClass  new.
+	b := ROCTestClass  new.
 	proxy := b proxifyWithMetaObject: RFProxyMetaObjectAssignmentTest.
 	metaobject := proxy metaObject.
 	Transcript clear.

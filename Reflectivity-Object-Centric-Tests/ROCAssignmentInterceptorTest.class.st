@@ -1,14 +1,14 @@
 Class {
-	#name : #RFAssignmentInterceptorTest,
+	#name : #ROCAssignmentInterceptorTest,
 	#superclass : #TestCase,
 	#category : #'Reflectivity-Object-Centric-Tests-tests'
 }
 
 { #category : #tests }
-RFAssignmentInterceptorTest >> testExecute [
+ROCAssignmentInterceptorTest >> testExecute [
 
 	| b proxy metaobject  |
-	b := Bub new.
+	b := ROCBottom new.
 	proxy := b proxifyWithMetaObject: RFProxyMetaObjectAssignmentTest.
 	metaobject := proxy metaObject.
 	Transcript clear.
@@ -19,10 +19,10 @@ RFAssignmentInterceptorTest >> testExecute [
 ]
 
 { #category : #'as yet unclassified' }
-RFAssignmentInterceptorTest >> testExecuteAssignmentsWithMethods [
+ROCAssignmentInterceptorTest >> testExecuteAssignmentsWithMethods [
 
 	| b proxy metaobject  |
-	b := TestClass  new.
+	b := ROCTestClass  new.
 	proxy := b proxifyWithMetaObject: RFProxyMetaObjectAssignmentTest.
 	metaobject := proxy metaObject.
 	Transcript clear.
@@ -33,10 +33,10 @@ RFAssignmentInterceptorTest >> testExecuteAssignmentsWithMethods [
 ]
 
 { #category : #tests }
-RFAssignmentInterceptorTest >> testExecuteReAssignmentVariable [
+ROCAssignmentInterceptorTest >> testExecuteReAssignmentVariable [
 
 	| b proxy metaobject  |
-	b := TestClass  new.
+	b := ROCTestClass  new.
 	proxy := b proxifyWithMetaObject: RFProxyMetaObjectAssignmentTest.
 	metaobject := proxy metaObject.
 	Transcript clear.
@@ -47,10 +47,10 @@ RFAssignmentInterceptorTest >> testExecuteReAssignmentVariable [
 ]
 
 { #category : #tests }
-RFAssignmentInterceptorTest >> testExecuteVariousAssignments [
+ROCAssignmentInterceptorTest >> testExecuteVariousAssignments [
 
 	| b proxy metaobject  |
-	b := TestClass  new.
+	b := ROCTestClass  new.
 	proxy := b proxifyWithMetaObject: RFProxyMetaObjectAssignmentTest.
 	metaobject := proxy metaObject.
 	Transcript clear.

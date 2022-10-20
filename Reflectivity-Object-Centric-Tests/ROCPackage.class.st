@@ -1,6 +1,6 @@
 Class {
-	#name : #Package,
-	#superclass : #Box,
+	#name : #ROCPackage,
+	#superclass : #ROCBox,
 	#instVars : [
 		'packageWeight',
 		'totalWeight',
@@ -13,44 +13,44 @@ Class {
 }
 
 { #category : #accessing }
-Package >> calculatePackageTax [
+ROCPackage >> calculatePackageTax [
 	
 	packageTax :=  packagePrice * 0.17.
 	packagePrice := packagePrice +  packageTax.
 ]
 
 { #category : #accessing }
-Package >> clearPackage [
+ROCPackage >> clearPackage [
 	self packagePrice: 0.
 	self clearTaxes.
 ]
 
 { #category : #accessing }
-Package >> clearTaxes [
+ROCPackage >> clearTaxes [
 
 	packageTax := 0.
 ]
 
 { #category : #accessing }
-Package >> counter [
+ROCPackage >> counter [
 
 	^ counter
 ]
 
 { #category : #accessing }
-Package >> counter: anObject [
+ROCPackage >> counter: anObject [
 
 	counter := anObject
 ]
 
 { #category : #accessing }
-Package >> m1 [
+ROCPackage >> m1 [
 
 	^ 1
 ]
 
 { #category : #accessing }
-Package >> m2 [
+ROCPackage >> m2 [
 
 	self m1.
 	self m3.
@@ -58,68 +58,68 @@ Package >> m2 [
 ]
 
 { #category : #accessing }
-Package >> m3 [
+ROCPackage >> m3 [
 
 	self m1.
 
 ]
 
 { #category : #accessing }
-Package >> packageContent [
+ROCPackage >> packageContent [
 
 	^ packageContent
 ]
 
 { #category : #accessing }
-Package >> packageContent: anObject [
+ROCPackage >> packageContent: anObject [
 
 	packageContent := anObject
 ]
 
 { #category : #accessing }
-Package >> packagePrice [
+ROCPackage >> packagePrice [
 
 	^ packagePrice
 ]
 
 { #category : #accessing }
-Package >> packagePrice: anObject [
+ROCPackage >> packagePrice: anObject [
 
 	packagePrice := anObject
 ]
 
 { #category : #accessing }
-Package >> packageTax [
+ROCPackage >> packageTax [
 
 	^ packageTax
 ]
 
 { #category : #accessing }
-Package >> packageTax: anObject [
+ROCPackage >> packageTax: anObject [
 
 	packageTax := anObject
 ]
 
 { #category : #accessing }
-Package >> packageWeight [
+ROCPackage >> packageWeight [
 
 	^ packageWeight
 ]
 
 { #category : #accessing }
-Package >> packageWeight: anObject [
+ROCPackage >> packageWeight: anObject [
 
 	packageWeight := anObject
 ]
 
 { #category : #accessing }
-Package >> setPackagePrice: aPrice andTax: aTax [
+ROCPackage >> setPackagePrice: aPrice andTax: aTax [
 
 	packagePrice := aPrice.
 	packageTax := aTax.
 ]
 
 { #category : #'api - accessing' }
-Package >> weight [
+ROCPackage >> weight [
 	totalWeight := super weight + self packageWeight.
 ]

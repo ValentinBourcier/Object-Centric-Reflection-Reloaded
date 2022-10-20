@@ -27,7 +27,7 @@ Internal Representation and Key Implementation Points.
     Implementation Points
 "
 Class {
-	#name : #TestClass,
+	#name : #ROCTestClass,
 	#superclass : #Object,
 	#instVars : [
 		'result',
@@ -40,13 +40,13 @@ Class {
 }
 
 { #category : #operation }
-TestClass >> add: aValue [
+ROCTestClass >> add: aValue [
 
 	var1 := aValue
 ]
 
 { #category : #operation }
-TestClass >> assigningValues [
+ROCTestClass >> assigningValues [
 
 	self var1SimpleAsssignment.
 	var1 := self returningValue.
@@ -55,44 +55,44 @@ TestClass >> assigningValues [
 ]
 
 { #category : #operation }
-TestClass >> assignment1 [
+ROCTestClass >> assignment1 [
 	var2:= 3.
 	var1:= 2.
 	^ var1 + var2
 ]
 
 { #category : #operation }
-TestClass >> assignment2 [
+ROCTestClass >> assignment2 [
 	var2:= 2.
 	^ 3 - self var2.
 ]
 
 { #category : #accessing }
-TestClass >> collection [
+ROCTestClass >> collection [
 
 	^ collection
 ]
 
 { #category : #accessing }
-TestClass >> collection: anObject [
+ROCTestClass >> collection: anObject [
 
 	collection := anObject
 ]
 
 { #category : #accessing }
-TestClass >> counter [
+ROCTestClass >> counter [
 
 	^ counter
 ]
 
 { #category : #accessing }
-TestClass >> counter: anObject [
+ROCTestClass >> counter: anObject [
 
 	counter := anObject
 ]
 
 { #category : #accessing }
-TestClass >> messageSendOtherObjects [
+ROCTestClass >> messageSendOtherObjects [
 
 	self add: 1.
 	collection add: 2.
@@ -101,7 +101,7 @@ TestClass >> messageSendOtherObjects [
 ]
 
 { #category : #operation }
-TestClass >> methodsWithAssignments [
+ROCTestClass >> methodsWithAssignments [
 	var1:= self assignment1.
 	var2:= self assignment2.
  	result:= 2.
@@ -110,20 +110,20 @@ TestClass >> methodsWithAssignments [
 ]
 
 { #category : #operation }
-TestClass >> onlyAssignment [
+ROCTestClass >> onlyAssignment [
 
 	var2 := 2.
 	var1 := 9
 ]
 
 { #category : #operation }
-TestClass >> onlyAssignmentResult [
+ROCTestClass >> onlyAssignmentResult [
 
 	result := var1 + var2
 ]
 
 { #category : #operation }
-TestClass >> predefinedAddition [
+ROCTestClass >> predefinedAddition [
 
 	var1 := 4.
 	var2 := 6.
@@ -132,7 +132,7 @@ TestClass >> predefinedAddition [
 ]
 
 { #category : #operation }
-TestClass >> reassignmentVariable [
+ROCTestClass >> reassignmentVariable [
 
 	result := 7.
 	result := 10.
@@ -140,31 +140,31 @@ TestClass >> reassignmentVariable [
 ]
 
 { #category : #accessing }
-TestClass >> result [
+ROCTestClass >> result [
 
 	^ result
 ]
 
 { #category : #accessing }
-TestClass >> result: anObject [
+ROCTestClass >> result: anObject [
 
 	result := anObject
 ]
 
 { #category : #operation }
-TestClass >> resultAssignment [
+ROCTestClass >> resultAssignment [
 
 	result := var1
 ]
 
 { #category : #operation }
-TestClass >> returningValue [
+ROCTestClass >> returningValue [
 
 	^ 2
 ]
 
 { #category : #operation }
-TestClass >> selfAssignment [
+ROCTestClass >> selfAssignment [
 
 	var2 := var1 + 2.
 	var1 := var1 + 1.
@@ -172,7 +172,7 @@ TestClass >> selfAssignment [
 ]
 
 { #category : #operation }
-TestClass >> sendingMethods [
+ROCTestClass >> sendingMethods [
 
 	result := var1.
 	self var1SimpleAsssignment.
@@ -180,48 +180,48 @@ TestClass >> sendingMethods [
 ]
 
 { #category : #accessing }
-TestClass >> var1 [
+ROCTestClass >> var1 [
 
 	^ var1
 ]
 
 { #category : #accessing }
-TestClass >> var1: anObject [
+ROCTestClass >> var1: anObject [
 
 	var1 := anObject
 ]
 
 { #category : #operation }
-TestClass >> var1SimpleAsssignment [
+ROCTestClass >> var1SimpleAsssignment [
 	var1 := 7
 ]
 
 { #category : #accessing }
-TestClass >> var2 [
+ROCTestClass >> var2 [
 
 	^ var2
 ]
 
 { #category : #accessing }
-TestClass >> var2: anObject [
+ROCTestClass >> var2: anObject [
 
 	var2 := anObject
 ]
 
 { #category : #operation }
-TestClass >> var2Assignment [
+ROCTestClass >> var2Assignment [
 
 	var2 := var1
 ]
 
 { #category : #operation }
-TestClass >> var2SimpleAsssignment [
+ROCTestClass >> var2SimpleAsssignment [
 
 	var2 := self var2 * 2
 ]
 
 { #category : #operation }
-TestClass >> variablesReadandAssignment [
+ROCTestClass >> variablesReadandAssignment [
 
 	result := var1 + var2.
 	self var2.
@@ -230,7 +230,7 @@ TestClass >> variablesReadandAssignment [
 ]
 
 { #category : #operation }
-TestClass >> variablesReadandAssignmentToOneVariable [
+ROCTestClass >> variablesReadandAssignmentToOneVariable [
 
 	result := var1.
 	self var2.

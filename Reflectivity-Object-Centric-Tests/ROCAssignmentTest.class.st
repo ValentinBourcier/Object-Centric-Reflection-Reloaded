@@ -1,5 +1,5 @@
 Class {
-	#name : #RFAssignmentTest,
+	#name : #ROCAssignmentTest,
 	#superclass : #TestCase,
 	#instVars : [
 		'aAssignmentTestClass',
@@ -10,9 +10,9 @@ Class {
 }
 
 { #category : #tests }
-RFAssignmentTest >> setUp [
+ROCAssignmentTest >> setUp [
 
-	aAssignmentTestClass := TestClass new.
+	aAssignmentTestClass := ROCTestClass new.
 	aAssignmentTestClass
 		var1: 1;
 		var2: 0;
@@ -21,7 +21,7 @@ RFAssignmentTest >> setUp [
 ]
 
 { #category : #tests }
-RFAssignmentTest >> testAllAssignmentAfter [
+ROCAssignmentTest >> testAllAssignmentAfter [
 
 	aAssignmentTestClass var1: 0.
 	aAssignmentTestClass afterAnyAssignmentDo: [ "aAssignmentTestClass writeSlotNamed: #a value: aAssignmentTestClass a + 1" 
@@ -33,7 +33,7 @@ RFAssignmentTest >> testAllAssignmentAfter [
 ]
 
 { #category : #tests }
-RFAssignmentTest >> testAllAssignmentBefore [
+ROCAssignmentTest >> testAllAssignmentBefore [
 
 	aAssignmentTestClass var1: 0.
 
@@ -46,7 +46,7 @@ RFAssignmentTest >> testAllAssignmentBefore [
 ]
 
 { #category : #tests }
-RFAssignmentTest >> testAllAssignmentInstead [
+ROCAssignmentTest >> testAllAssignmentInstead [
 
 	aAssignmentTestClass var1: 0.
 
@@ -59,7 +59,7 @@ RFAssignmentTest >> testAllAssignmentInstead [
 ]
 
 { #category : #tests }
-RFAssignmentTest >> testAssignmentAfter [
+ROCAssignmentTest >> testAssignmentAfter [
 
 	aAssignmentTestClass afterAssignmentTo: #var1 do: [ 
 		aAssignmentTestClass result:
@@ -69,7 +69,7 @@ RFAssignmentTest >> testAssignmentAfter [
 ]
 
 { #category : #tests }
-RFAssignmentTest >> testAssignmentBefore [
+ROCAssignmentTest >> testAssignmentBefore [
 
 	aAssignmentTestClass var1: 0.
 
@@ -82,7 +82,7 @@ RFAssignmentTest >> testAssignmentBefore [
 ]
 
 { #category : #tests }
-RFAssignmentTest >> testAssignmentInstead [
+ROCAssignmentTest >> testAssignmentInstead [
 
 	aAssignmentTestClass var1: 0.
 
@@ -95,7 +95,7 @@ RFAssignmentTest >> testAssignmentInstead [
 ]
 
 { #category : #tests }
-RFAssignmentTest >> testAssignmentInsteadAllWithAssignment [
+ROCAssignmentTest >> testAssignmentInsteadAllWithAssignment [
 
 	aAssignmentTestClass
 		insteadAssignmentTo: #var1
@@ -105,7 +105,7 @@ RFAssignmentTest >> testAssignmentInsteadAllWithAssignment [
 ]
 
 { #category : #tests }
-RFAssignmentTest >> testAssignmentInsteadWithAssignment [
+ROCAssignmentTest >> testAssignmentInsteadWithAssignment [
 
 	aAssignmentTestClass
 		var1: 0;
@@ -117,7 +117,7 @@ RFAssignmentTest >> testAssignmentInsteadWithAssignment [
 ]
 
 { #category : #tests }
-RFAssignmentTest >> testAssignmentStoringDictionary [
+ROCAssignmentTest >> testAssignmentStoringDictionary [
 
 	self assert: aAssignmentTestClass var1 equals: 1.
 	proxy := aAssignmentTestClass proxifyWithMetaObject:
@@ -155,7 +155,7 @@ RFAssignmentTest >> testAssignmentStoringDictionary [
 ]
 
 { #category : #tests }
-RFAssignmentTest >> testBeforeAllAssignmentSelfAssignment [
+ROCAssignmentTest >> testBeforeAllAssignmentSelfAssignment [
 
 	"The assignment is executed after doing the operations"
 

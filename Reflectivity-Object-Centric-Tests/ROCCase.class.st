@@ -1,5 +1,5 @@
 Class {
-	#name : #Case,
+	#name : #ROCCase,
 	#superclass : #Object,
 	#instVars : [
 		'caseWeight',
@@ -9,31 +9,31 @@ Class {
 }
 
 { #category : #accessing }
-Case >> calculateCaseWeight [
+ROCCase >> calculateCaseWeight [
 
 	caseWeight := caseMaterial * 5.
 ]
 
 { #category : #accessing }
-Case >> caseMaterial [
+ROCCase >> caseMaterial [
 
 	^ caseMaterial
 ]
 
 { #category : #accessing }
-Case >> caseMaterial: anObject [
+ROCCase >> caseMaterial: anObject [
 
 	caseMaterial := anObject
 ]
 
 { #category : #accessing }
-Case >> caseWeight: anObject [
+ROCCase >> caseWeight: anObject [
 
 	caseWeight := anObject
 ]
 
 { #category : #accessing }
-Case >> weight [
+ROCCase >> weight [
 
 	^ caseWeight.
 ]

@@ -1,28 +1,28 @@
 Class {
-	#name : #Bib,
-	#superclass : #Bob,
+	#name : #ROCMiddle,
+	#superclass : #ROCTop,
 	#category : #'Reflectivity-Object-Centric-Tests-utils'
 }
 
 { #category : #'as yet unclassified' }
-Bib >> instVarAccessInSuperCall [
+ROCMiddle >> instVarAccessInSuperCall [
 	x := 1 + super instVarAccessInSuperCall.
 	^x
 ]
 
 { #category : #'as yet unclassified' }
-Bib >> mWithSuper [
+ROCMiddle >> mWithSuper [
 	^super mWithSuper + 2
 ]
 
 { #category : #'as yet unclassified' }
-Bib >> redefineNoSuper [
+ROCMiddle >> redefineNoSuper [
 
 	^ super redefineNoSuper + 1
 ]
 
 { #category : #'as yet unclassified' }
-Bib >> superUpToMiddleHierarchy [
+ROCMiddle >> superUpToMiddleHierarchy [
 	"I do not call super"
 	^ 1
 ]

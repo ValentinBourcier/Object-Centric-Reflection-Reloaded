@@ -1,6 +1,6 @@
 Class {
-	#name : #Box,
-	#superclass : #Case,
+	#name : #ROCBox,
+	#superclass : #ROCCase,
 	#instVars : [
 		'height',
 		'width',
@@ -11,61 +11,61 @@ Class {
 }
 
 { #category : #accessing }
-Box >> boxWeight [
+ROCBox >> boxWeight [
 
 	^ boxWeight
 ]
 
 { #category : #accessing }
-Box >> boxWeight: anObject [
+ROCBox >> boxWeight: anObject [
 
 	boxWeight := anObject
 ]
 
 { #category : #accessing }
-Box >> calculateBoxWeight [
+ROCBox >> calculateBoxWeight [
 
 	boxWeight := width * height * depth * 0.001
 ]
 
 { #category : #accessing }
-Box >> depth [
+ROCBox >> depth [
 
 	^ depth
 ]
 
 { #category : #accessing }
-Box >> depth: anObject [
+ROCBox >> depth: anObject [
 
 	depth := anObject
 ]
 
 { #category : #accessing }
-Box >> height [
+ROCBox >> height [
 
 	^ height
 ]
 
 { #category : #accessing }
-Box >> height: anObject [
+ROCBox >> height: anObject [
 
 	height := anObject
 ]
 
 { #category : #'api - accessing' }
-Box >> weight [ 
+ROCBox >> weight [ 
 
 	super weight + boxWeight
 ]
 
 { #category : #accessing }
-Box >> width [
+ROCBox >> width [
 
 	^ width
 ]
 
 { #category : #accessing }
-Box >> width: anObject [
+ROCBox >> width: anObject [
 
 	width := anObject
 ]

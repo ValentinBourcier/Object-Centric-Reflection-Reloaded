@@ -1,5 +1,5 @@
 Class {
-	#name : #RFMessageSendTest,
+	#name : #ROCMessageSendTest,
 	#superclass : #TestCase,
 	#instVars : [
 		'proxy',
@@ -10,16 +10,16 @@ Class {
 }
 
 { #category : #tests }
-RFMessageSendTest >> setUp [
+ROCMessageSendTest >> setUp [
 
-	aClassTest := TestClass new.
+	aClassTest := ROCTestClass new.
 	aClassTest var1: 1.
 	aClassTest var2: 2.
 	Transcript clear
 ]
 
 { #category : #'tests - after' }
-RFMessageSendTest >> testAllMessageSendAfter [
+ROCMessageSendTest >> testAllMessageSendAfter [
 
 	aClassTest afterAnyMessageSendDo: [ 
 		aClassTest var2: aClassTest var2 + 1 ].
@@ -28,7 +28,7 @@ RFMessageSendTest >> testAllMessageSendAfter [
 ]
 
 { #category : #'tests - before' }
-RFMessageSendTest >> testAllMessageSendBefore [
+ROCMessageSendTest >> testAllMessageSendBefore [
 
 	aClassTest beforeAnyMessageSendDo: [ 
 		aClassTest var2: aClassTest var2 + 1 ].
@@ -37,7 +37,7 @@ RFMessageSendTest >> testAllMessageSendBefore [
 ]
 
 { #category : #'tests - instead' }
-RFMessageSendTest >> testAllMessageSendInstead [
+ROCMessageSendTest >> testAllMessageSendInstead [
 
 	aClassTest insteadAnyMessageSendDo: [ 
 		aClassTest var2: aClassTest var2 + 1 ].
@@ -45,8 +45,19 @@ RFMessageSendTest >> testAllMessageSendInstead [
 	self assert: aClassTest var2 equals: 4
 ]
 
+{ #category : #tests }
+ROCMessageSendTest >> testExecute [
+
+	| a proxy |
+	a := ROCBottom new.
+	proxy := a proxify.
+	Transcript clear.
+	a mWithSuper.
+	a mWithSuper
+]
+
 { #category : #'tests - after' }
-RFMessageSendTest >> testMessageSendAfter [
+ROCMessageSendTest >> testMessageSendAfter [
 
 	aClassTest
 		afterMessageSendTo: #var1SimpleAsssignment
@@ -56,7 +67,7 @@ RFMessageSendTest >> testMessageSendAfter [
 ]
 
 { #category : #'tests - after' }
-RFMessageSendTest >> testMessageSendAfterNoMethod [
+ROCMessageSendTest >> testMessageSendAfterNoMethod [
 
 	aClassTest
 		afterMessageSendTo: #var2SimpleAsssignment
@@ -66,7 +77,7 @@ RFMessageSendTest >> testMessageSendAfterNoMethod [
 ]
 
 { #category : #'tests - before' }
-RFMessageSendTest >> testMessageSendBefore [
+ROCMessageSendTest >> testMessageSendBefore [
 
 	aClassTest
 		beforeMessageSendTo: #var1SimpleAsssignment
@@ -76,7 +87,7 @@ RFMessageSendTest >> testMessageSendBefore [
 ]
 
 { #category : #'tests - before' }
-RFMessageSendTest >> testMessageSendBeforeNoMethod [
+ROCMessageSendTest >> testMessageSendBeforeNoMethod [
 
 	aClassTest
 		beforeMessageSendTo: #var2SimpleAsssignment
@@ -86,7 +97,7 @@ RFMessageSendTest >> testMessageSendBeforeNoMethod [
 ]
 
 { #category : #'tests - after' }
-RFMessageSendTest >> testMessageSendInAssignmentAfter [
+ROCMessageSendTest >> testMessageSendInAssignmentAfter [
 
 	aClassTest result: 0.
 	aClassTest afterAnyMessageSendDo: [ 
@@ -98,7 +109,7 @@ RFMessageSendTest >> testMessageSendInAssignmentAfter [
 ]
 
 { #category : #'tests - before' }
-RFMessageSendTest >> testMessageSendInAssignmentBefore [
+ROCMessageSendTest >> testMessageSendInAssignmentBefore [
 
 	aClassTest result: 0.
 	aClassTest beforeAnyMessageSendDo: [ 
@@ -110,7 +121,7 @@ RFMessageSendTest >> testMessageSendInAssignmentBefore [
 ]
 
 { #category : #'tests - instead' }
-RFMessageSendTest >> testMessageSendInAssignmentInstead [
+ROCMessageSendTest >> testMessageSendInAssignmentInstead [
 
 	aClassTest result: 0.
 	aClassTest insteadAnyMessageSendDo: [ 
@@ -122,7 +133,7 @@ RFMessageSendTest >> testMessageSendInAssignmentInstead [
 ]
 
 { #category : #'tests - instead' }
-RFMessageSendTest >> testMessageSendInstead [
+ROCMessageSendTest >> testMessageSendInstead [
 
 	aClassTest
 		insteadMessageSendTo: #var1SimpleAsssignment
@@ -132,7 +143,7 @@ RFMessageSendTest >> testMessageSendInstead [
 ]
 
 { #category : #'tests - after' }
-RFMessageSendTest >> testMessageSendOtherObjects [
+ROCMessageSendTest >> testMessageSendOtherObjects [
 
 	aClassTest collection: OrderedCollection new.
 	aClassTest result: 0.
@@ -146,7 +157,7 @@ RFMessageSendTest >> testMessageSendOtherObjects [
 ]
 
 { #category : #tests }
-RFMessageSendTest >> testMessageSendStoringDictionary [
+ROCMessageSendTest >> testMessageSendStoringDictionary [
 
 	self assert: aClassTest var1 equals: 1.
 
