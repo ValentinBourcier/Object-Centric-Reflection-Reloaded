@@ -136,17 +136,16 @@ RFProxyInstrumenter >> instrumentMethod: method selector: selector [
 		RFProxyMetaObject log: 'Instrumenting: ' , cs printString.
 		newMethod := instrumentedClass >> cs.
 		ast := newMethod ast.
-		"self redirectSelfArgsIn: ast."
-		self redirectSelfSendsIn: ast.
-		self redirectSelfReturnsIn: ast.
+		"self redirectSelfArgsIn: ast."  "link for selector instead with Nil"
+		self redirectMessagesSendIn: ast.
+		self redirectSelfReturnsIn: ast. "link for selector after with Nil"
 		self redirectVariableReadingIn: ast.
 		self redirectVariableWritingIn: ast.
-		self redirectMessagesSendIn: ast.
 
 		self compiledSelectorsMap
 			at: cs
 			ifPresent: [ :redirectionSelector | 
-				self redirectSuperSendsIn: ast toSelector: redirectionSelector ] ]
+				self redirectSuperSendsIn: ast toSelector: redirectionSelector "link for selector" ] ]
 ]
 
 { #category : #instrumentation }
@@ -221,32 +220,6 @@ RFProxyInstrumenter >> metaObject: anObject [
 ]
 
 { #category : #links }
-RFProxyInstrumenter >> newAfterLinkForMessagesSend [
-
-	| link |
-	link := MetaLink new.
-	link control: #after.
-	link metaObject: metaObject.
-	link selector: #linkAfterMessageSend:withValue:.
-	link arguments: #( selector  value ).
-	link optionCompileOnLinkInstallation: true.
-	^ link
-]
-
-{ #category : #links }
-RFProxyInstrumenter >> newBeforeLinkForMessagesSend [
-
-	| link |
-	link := MetaLink new.
-	link control: #before.
-	link metaObject: metaObject.
-	link selector: #'linkBeforeMessageSend:'.
-	link arguments: #( selector ).
-	link optionCompileOnLinkInstallation: true.
-	^ link
-]
-
-{ #category : #links }
 RFProxyInstrumenter >> newInsteadLinkForAssignments [
 
 	| link interceptor |
@@ -268,14 +241,19 @@ RFProxyInstrumenter >> newInsteadLinkForAssignments [
 { #category : #links }
 RFProxyInstrumenter >> newInsteadLinkForMessagesSend [
 
-	| link |
+	| link interceptor |
 	link := MetaLink new.
 	link control: #instead.
-	link metaObject: metaObject.
+	
+	interceptor := RFMessageSendInterceptor  new.
+	interceptor metaObject: metaObject.
+	interceptor receiver: instrumentedObject.
+	
+	link metaObject: interceptor .
 	"link selector: #linkInsteadMessageSend:withValue:withReceiver:withArgs:.
 	link arguments: #( selector value receiver arguments)."
-	link selector: #linkInsteadMessageSend:withValue:.
-	link arguments: #( selector value ).
+	link selector: #execute:.
+	link arguments: #( operation ).
 	link optionCompileOnLinkInstallation: true.
 	^ link
 ]
@@ -333,9 +311,7 @@ RFProxyInstrumenter >> redirectMessagesSendIn: ast [
 	| messageSendNode |
 	messageSendNode := ast sendNodes reject: [ :node | node isBinary ].
 	messageSendNode do: [ :node | 
-		node link: self newBeforeLinkForMessagesSend.
-		node link: self newAfterLinkForMessagesSend.
-		"node link: self newInsteadLinkForMessagesSend "]
+		node link: (self newInsteadLinkForMessagesSend) ]
 ]
 
 { #category : #instrumentation }

@@ -11,5 +11,5 @@ RFVariableReadInterceptor >> execute: aOperation [
 { #category : #override }
 RFVariableReadInterceptor >> execute: aName withValue: aValue [
 
-	^ metaObject linkInsteadVariableRead1: aName withValue: aValue
+	^ metaObject linkInsteadVariableRead: aName withValue: aValue
 ]

@@ -2,8 +2,7 @@ Class {
 	#name : #RFStrategyInterceptor,
 	#superclass : #Object,
 	#instVars : [
-		'metaObject',
-		'selector'
+		'metaObject'
 	],
 	#category : #'Reflectivity-Object-Centric'
 }
@@ -30,16 +29,4 @@ RFStrategyInterceptor >> metaObject [
 RFStrategyInterceptor >> metaObject: anObject [
 
 	metaObject := anObject
-]
-
-{ #category : #accessing }
-RFStrategyInterceptor >> selector [
-
-	^ selector
-]
-
-{ #category : #accessing }
-RFStrategyInterceptor >> selector: anObject [
-
-	selector := anObject
 ]

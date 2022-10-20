@@ -91,7 +91,9 @@ RFMessageSendTest >> testMessageSendInAssignmentAfter [
 	aClassTest result: 0.
 	aClassTest afterAnyMessageSendDo: [ 
 		aClassTest result: aClassTest result + 1 ].
-	aClassTest assigningValues.
+	self assert: aClassTest assigningValues equals: 3.
+	self assert: aClassTest var1 equals: 2.
+	self assert: aClassTest var2 equals: 4.
 	self assert: aClassTest result equals: 4
 ]
 
@@ -101,7 +103,9 @@ RFMessageSendTest >> testMessageSendInAssignmentBefore [
 	aClassTest result: 0.
 	aClassTest beforeAnyMessageSendDo: [ 
 		aClassTest result: aClassTest result + 1 ].
-	aClassTest assigningValues.
+	self assert: aClassTest assigningValues equals: 3.
+	self assert: aClassTest var1 equals: 2.
+	self assert: aClassTest var2 equals: 4.
 	self assert: aClassTest result equals: 4
 ]
 
@@ -111,7 +115,9 @@ RFMessageSendTest >> testMessageSendInAssignmentInstead [
 	aClassTest result: 0.
 	aClassTest insteadAnyMessageSendDo: [ 
 		aClassTest result: aClassTest result + 1 ].
-	aClassTest assigningValues.
+	self assert: aClassTest assigningValues equals: 3.
+	self assert: aClassTest var1 equals: 2.
+	self assert: aClassTest var2 equals: 4.
 	self assert: aClassTest result equals: 4
 ]
 

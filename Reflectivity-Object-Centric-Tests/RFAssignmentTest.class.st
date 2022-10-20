@@ -40,7 +40,6 @@ RFAssignmentTest >> testAllAssignmentBefore [
 	aAssignmentTestClass beforeAnyAssignmentDo: [ 
 		aAssignmentTestClass result: aAssignmentTestClass result + 1 ].
 	aAssignmentTestClass onlyAssignment.
-
 	self assert: aAssignmentTestClass var1 equals: 9.
 	self assert: aAssignmentTestClass var2 equals: 2.
 	self assert: aAssignmentTestClass result equals: 2
@@ -52,11 +51,11 @@ RFAssignmentTest >> testAllAssignmentInstead [
 	aAssignmentTestClass var1: 0.
 
 	aAssignmentTestClass insteadAnyAssignmentDo: [ 
-		aAssignmentTestClass var1: aAssignmentTestClass var1 + 1 ].
-	aAssignmentTestClass selfAssignment.
-	self assert: aAssignmentTestClass var1 equals: 3.
+		aAssignmentTestClass result: aAssignmentTestClass result + 1 ].
+	aAssignmentTestClass onlyAssignment.
+	self assert: aAssignmentTestClass var1 equals: 0.
 	self assert: aAssignmentTestClass var2 equals: 0.
-	self assert: aAssignmentTestClass result equals: 0
+	self assert: aAssignmentTestClass result equals: 2
 ]
 
 { #category : #tests }
@@ -72,22 +71,27 @@ RFAssignmentTest >> testAssignmentAfter [
 { #category : #tests }
 RFAssignmentTest >> testAssignmentBefore [
 
-	aAssignmentTestClass beforeAssignmentTo: #var1 do: [ 
-		aAssignmentTestClass result:
-			aAssignmentTestClass var1 + aAssignmentTestClass var2 ].
+	aAssignmentTestClass var1: 0.
+
+	aAssignmentTestClass beforeAssignmentTo: #var1 do: [
+		aAssignmentTestClass result: aAssignmentTestClass result + 1 ].
 	aAssignmentTestClass onlyAssignment.
-	self assert: aAssignmentTestClass result equals: 3
+	self assert: aAssignmentTestClass var1 equals: 9.
+	self assert: aAssignmentTestClass var2 equals: 2.
+	self assert: aAssignmentTestClass result equals: 1
 ]
 
 { #category : #tests }
 RFAssignmentTest >> testAssignmentInstead [
 
-	aAssignmentTestClass
-		insteadAssignmentTo: #var1
-		do: [ aAssignmentTestClass var1: 8 ].
+	aAssignmentTestClass var1: 0.
+
+	aAssignmentTestClass insteadAssignmentTo: #var1 do: [
+		aAssignmentTestClass result: aAssignmentTestClass result + 1 ].
 	aAssignmentTestClass onlyAssignment.
+	self assert: aAssignmentTestClass var1 equals: 0.
 	self assert: aAssignmentTestClass var2 equals: 2.
-	self assert: aAssignmentTestClass var1 equals: 8
+	self assert: aAssignmentTestClass result equals: 1
 ]
 
 { #category : #tests }
