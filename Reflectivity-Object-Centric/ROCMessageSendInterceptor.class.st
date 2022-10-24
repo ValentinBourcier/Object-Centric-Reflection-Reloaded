@@ -1,3 +1,6 @@
+"
+I am the Interceptor for messageSend, I have as arguments the reification arguments , for message send nodes
+"
 Class {
 	#name : #ROCMessageSendInterceptor,
 	#superclass : #ROCAbstractInterceptor,

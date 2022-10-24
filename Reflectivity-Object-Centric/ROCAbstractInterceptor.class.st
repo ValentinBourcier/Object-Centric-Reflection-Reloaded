@@ -1,3 +1,6 @@
+"
+I am the Abstract class of the interceptor, I have the methods execute and execute: withValue, this methods have as arguments the reification arguments, I know the ROCMetaobject and I have a reference to the anonymous subclass.
+"
 Class {
 	#name : #ROCAbstractInterceptor,
 	#superclass : #Object,
