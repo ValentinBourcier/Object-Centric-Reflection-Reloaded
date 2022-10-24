@@ -416,28 +416,53 @@ ROCMetaObject >> linkInsteadAssignment: aName withValue: aValue [
 { #category : #'declaration accessing' }
 ROCMetaObject >> linkInsteadMessageSend: anArrayOfArguments [
 
-	| timeObject insteadBlock |
-	"aSelector := anArrayOfArguments first. 
-	aValue := anArrayOfArguments last. "
-	self metaLevel ifTrue: [ ^ "aValue" anArrayOfArguments value ].
-	[ self messageSendStoring valuesStored at: "aSelector" anArrayOfArguments selector ]
+	| timeObject insteadBlock aSelector aValue|
+	aSelector := anArrayOfArguments first. 
+	aValue := anArrayOfArguments last. 
+	self metaLevel ifTrue: [ ^ aValue ].
+	[ self messageSendStoring valuesStored at: aSelector ]
 		on: KeyNotFound
 		do: [ 
 			self messageSendStoring valuesStored
-				at: "aSelector" anArrayOfArguments selector
+				at: aSelector
 				put: ROCControlStoreObject new.
-			self messageSendStoring addAllValuesStored: "aSelector" anArrayOfArguments selector ].
-	timeObject := self messageSendStoring valuesStored at: "aSelector" anArrayOfArguments selector.
+			self messageSendStoring addAllValuesStored: aSelector].
+	timeObject := self messageSendStoring valuesStored at: aSelector.
 	self metaLevel: true.
 	timeObject before ifNotEmpty: [ 
 		timeObject before do: [ :each | each value ] ].
 	timeObject instead
-		ifNil: [ insteadBlock :=  "aValue" anArrayOfArguments value  ]
+		ifNil: [ insteadBlock :=  aValue ]
 		ifNotNil: [ insteadBlock :=  timeObject instead value ].
 	timeObject after ifNotEmpty: [ 
 		timeObject after do: [ :each | each value ] ].
 	self metaLevel: false.
-	^  "aValue" anArrayOfArguments value
+	^  aValue
+]
+
+{ #category : #'declaration accessing' }
+ROCMetaObject >> linkInsteadMessageSendOperation: aOperation [
+
+	| timeObject insteadBlock |
+	self metaLevel ifTrue: [ ^  aOperation value ].
+	[ self messageSendStoring valuesStored at:  aOperation selector ]
+		on: KeyNotFound
+		do: [ 
+			self messageSendStoring valuesStored
+				at: aOperation selector
+				put: ROCControlStoreObject new.
+			self messageSendStoring addAllValuesStored: aOperation selector ].
+	timeObject := self messageSendStoring valuesStored at: aOperation selector.
+	self metaLevel: true.
+	timeObject before ifNotEmpty: [ 
+		timeObject before do: [ :each | each value ] ].
+	timeObject instead
+		ifNil: [ insteadBlock :=  aOperation value  ]
+		ifNotNil: [ insteadBlock :=  timeObject instead value ].
+	timeObject after ifNotEmpty: [ 
+		timeObject after do: [ :each | each value ] ].
+	self metaLevel: false.
+	^  aOperation value
 ]
 
 { #category : #'declaration accessing' }
