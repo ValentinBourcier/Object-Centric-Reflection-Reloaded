@@ -414,29 +414,30 @@ ROCMetaObject >> linkInsteadAssignment: aName withValue: aValue [
 ]
 
 { #category : #'declaration accessing' }
-ROCMetaObject >> linkInsteadMessageSend: aOperation [
+ROCMetaObject >> linkInsteadMessageSend: anArrayOfArguments [
 
 	| timeObject insteadBlock |
-	self metaLevel ifTrue: [ ^ aOperation value ].
-	[ self messageSendStoring valuesStored at: aOperation selector ]
+	"aSelector := anArrayOfArguments first. 
+	aValue := anArrayOfArguments last. "
+	self metaLevel ifTrue: [ ^ "aValue" anArrayOfArguments value ].
+	[ self messageSendStoring valuesStored at: "aSelector" anArrayOfArguments selector ]
 		on: KeyNotFound
 		do: [ 
 			self messageSendStoring valuesStored
-				at: aOperation selector
+				at: "aSelector" anArrayOfArguments selector
 				put: ROCControlStoreObject new.
-			self messageSendStoring addAllValuesStored: aOperation selector ].
-	timeObject := self messageSendStoring valuesStored at:
-		              aOperation selector.
+			self messageSendStoring addAllValuesStored: "aSelector" anArrayOfArguments selector ].
+	timeObject := self messageSendStoring valuesStored at: "aSelector" anArrayOfArguments selector.
 	self metaLevel: true.
 	timeObject before ifNotEmpty: [ 
 		timeObject before do: [ :each | each value ] ].
 	timeObject instead
-		ifNil: [ insteadBlock := [ aOperation value ] ]
-		ifNotNil: [ insteadBlock := [ timeObject instead value ] ].
+		ifNil: [ insteadBlock :=  "aValue" anArrayOfArguments value  ]
+		ifNotNil: [ insteadBlock :=  timeObject instead value ].
 	timeObject after ifNotEmpty: [ 
 		timeObject after do: [ :each | each value ] ].
 	self metaLevel: false.
-	^ insteadBlock value
+	^  "aValue" anArrayOfArguments value
 ]
 
 { #category : #'declaration accessing' }
@@ -572,7 +573,7 @@ ROCMetaObject >> send: selector withArgs: args to: target [
 	<debuggerCompleteToSender>
 	| arguments |
 	arguments := args asOrderedCollection.
-"	self executeReflectiveOperationsFor: target uponReceptionOf: selector."
+	"self executeReflectiveOperationsFor: target uponReceptionOf: selector."
 	self instrumenter instrumentSelector: selector withArgs: arguments.
 
 	^ MirrorPrimitives

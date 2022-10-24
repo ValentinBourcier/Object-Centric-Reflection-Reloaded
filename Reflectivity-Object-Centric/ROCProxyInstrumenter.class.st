@@ -249,15 +249,15 @@ ROCProxyInstrumenter >> newInsteadLinkForMessagesSend [
 	| link interceptor |
 	link := MetaLink new.
 	link control: #instead.
-	
-	interceptor := ROCMessageSendInterceptor  new.
+
+	interceptor := ROCMessageSendInterceptor new.
 	interceptor metaObject: metaObject.
-	
-	link metaObject: interceptor .
-	link arguments: #(selector receiver arguments).
+
+	link metaObject: interceptor.
 	link selector: #execute:.
-	link arguments: #( selector receiver arguments ).
-	link optionArgsAsArray: true.
+	link arguments: #( operation ).
+	"link arguments: #( selector receiver arguments value ).
+	link optionArgsAsArray: true."
 	link optionCompileOnLinkInstallation: true.
 	^ link
 ]
@@ -375,9 +375,10 @@ ROCProxyInstrumenter >> redirectVariableReadingIn: ast [
 	variableReadNodes := variableReadNodes reject: [ :node | 
 		                     node isSelfVariable or: [ 
 			                     node isSuperVariable or: [ 
-				                     node isThisContextVariable ] ] ].
+				                     node isThisContextVariable or: [ 
+					                     ast hasArgumentNamed: node name ] ] ] ].
 	variableReadNodes do: [ :node | 
-		node link: self newInsteadLinkForVariableRead]
+		node link: self newInsteadLinkForVariableRead ]
 ]
 
 { #category : #instrumentation }
