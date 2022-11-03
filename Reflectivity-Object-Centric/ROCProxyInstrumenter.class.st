@@ -15,7 +15,8 @@ Class {
 		'instrumentedMessages',
 		'instrumentedObject',
 		'instrumentedClass',
-		'compiledSelectorsMap'
+		'compiledSelectorsMap',
+		'linkInstaller'
 	],
 	#category : #'Reflectivity-Object-Centric-instrumentation'
 }
@@ -203,6 +204,18 @@ ROCProxyInstrumenter >> isClassReachableInHierarchy: aClass [
 		  self originalClass allSuperclasses includes: aClass ]
 ]
 
+{ #category : #accessing }
+ROCProxyInstrumenter >> linkInstaller [
+
+	^ linkInstaller ifNil: [ linkInstaller  := (ROCInsteadLinkInstaller  new)  ]
+]
+
+{ #category : #accessing }
+ROCProxyInstrumenter >> linkInstaller: anObject [
+
+	linkInstaller := anObject
+]
+
 { #category : #logging }
 ROCProxyInstrumenter >> log: array [
 
@@ -315,7 +328,8 @@ ROCProxyInstrumenter >> redirectMessagesSendIn: ast [
 	| messageSendNode |
 	messageSendNode := ast sendNodes reject: [ :node | node isBinary ].
 	messageSendNode do: [ :node | 
-		node link: (self newInsteadLinkForMessagesSend) ]
+		self linkInstaller at: node put: self newInsteadLinkForMessagesSend.
+		"node link: (self newInsteadLinkForMessagesSend)" ]
 ]
 
 { #category : #instrumentation }
@@ -364,7 +378,8 @@ ROCProxyInstrumenter >> redirectSuperSendsIn: ast toSelector: aSelector [
 	methodName := ast methodNode method name.
 	nodes := ast sendNodes select: [ :node | node receiver isSuperVariable ].
 	nodes do: [ :node | 		
-		node link: (self newLinkForSelector: aSelector) ]
+		node link: (self newLinkForSelector: aSelector)
+		 ]
 ]
 
 { #category : #instrumentation }
