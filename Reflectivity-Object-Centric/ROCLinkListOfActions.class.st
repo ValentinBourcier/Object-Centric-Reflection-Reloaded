@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'listOfActions'
 	],
-	#category : #'Reflectivity-Object-Centric-instrumentation'
+	#category : #'Reflectivity-Object-Centric-metalinks'
 }
 
 { #category : #accessing }
@@ -16,12 +16,16 @@ ROCLinkListOfActions >> add: anAction [
 { #category : #accessing }
 ROCLinkListOfActions >> execute: aArguments [
 
-	| selector receiver args value |
-	selector := aArguments first.
-	receiver := aArguments second.
-	args := aArguments third.
-	value := aArguments last.
-	self listOfActions do: [ :a | [ aArguments ] ]
+	| arguments |
+	
+	arguments := ROCActionArguments new 
+		selector: aArguments first;
+		receiver: aArguments second;
+		arguments: aArguments third;
+		value: aArguments last;
+		yourself.
+	
+	self listOfActions do: [ :a | a execute: arguments ]
 ]
 
 { #category : #accessing }

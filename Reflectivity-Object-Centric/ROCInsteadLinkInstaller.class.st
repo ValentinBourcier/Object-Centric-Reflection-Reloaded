@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'linksInstalled'
 	],
-	#category : #'Reflectivity-Object-Centric-interceptors'
+	#category : #'Reflectivity-Object-Centric-metalinks'
 }
 
 { #category : #accessing }
