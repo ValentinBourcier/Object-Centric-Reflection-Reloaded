@@ -28,92 +28,76 @@ ROCProxy class >> becomeTarget: anObject [
 	^ anObject
 ]
 
-{ #category : #proxy }
-ROCProxy class >> becomeTarget: anObject  withMetaObject: mo [
-	| proxy metaObject newMetaObject|
-	proxy := self basicNew.
-	anObject become: proxy.
-	metaObject  := ROCMetaObjectAndOriginalObject new.
-	"After the become, proxy and anObject have been swapped"	
-	newMetaObject := mo forObject: proxy proxy: anObject.
-	metaObject metaObject: newMetaObject .
-	MirrorPrimitives fixedFieldOf: anObject at: (self slotNamed: #target) index put: proxy.
-	MirrorPrimitives fixedFieldOf: anObject at: (self slotNamed: #metaObject) index put: metaObject metaObject.
-	metaObject  object: anObject.
-	"Crear un objecto con el return de aqui como accesor"
-	^ metaObject 
-]
-
-{ #category : #setting }
+{ #category : #'configuration building' }
 ROCProxy >> afterAnyAssignmentDo: aBlock [
 
-	^ metaObject afterAnyAssignmentDo: aBlock
+	^ metaObject registryHandler afterAnyAssignmentDo: aBlock
 ]
 
-{ #category : #setting }
+{ #category : #'configuration building' }
 ROCProxy >> afterAnyMessageSendDo: aBlock [
 
-	^ metaObject afterAnyMessageSendDo: aBlock
+	^ metaObject registryHandler afterAnyMessageSendDo: aBlock
 ]
 
-{ #category : #setting }
+{ #category : #'configuration building' }
 ROCProxy >> afterAnyVariableReadDo: aBlock [
 
-	^ metaObject afterAnyVariableReadDo: aBlock
+	^ metaObject registryHandler afterAnyVariableReadDo: aBlock
 ]
 
-{ #category : #setting }
+{ #category : #'configuration building' }
 ROCProxy >> afterAssignmentTo: aVariable do: aBlock [
 
-	^ metaObject afterAssignmentTo: aVariable do: aBlock
+	^ metaObject registryHandler afterAssignmentTo: aVariable do: aBlock
 ]
 
-{ #category : #setting }
+{ #category : #'configuration building' }
 ROCProxy >> afterMessageSendTo: aMethod do: aBlock [
 
-	^ metaObject afterMessageSendTo: aMethod do: aBlock
+	^ metaObject registryHandler afterMessageSendTo: aMethod do: aBlock
 ]
 
-{ #category : #setting }
+{ #category : #'configuration building' }
 ROCProxy >> afterVariableRead: aVariable do: aBlock [
 
-	^ metaObject afterVariableRead: aVariable do: aBlock
+	^ metaObject registryHandler afterVariableRead: aVariable do: aBlock
 ]
 
-{ #category : #setting }
+{ #category : #'configuration building' }
 ROCProxy >> beforeAnyAssignmentDo: aBlock [
 
-	^ metaObject beforeAnyAssignmentDo: aBlock
+	^ metaObject registryHandler beforeAnyAssignmentDo: aBlock
 ]
 
-{ #category : #setting }
+{ #category : #'configuration building' }
 ROCProxy >> beforeAnyMessageSendDo: aBlock [
 
-	^ metaObject beforeAnyMessageSendDo: aBlock
+	^ metaObject registryHandler beforeAnyMessageSendDo: aBlock
 ]
 
-{ #category : #setting }
+{ #category : #'configuration building' }
 ROCProxy >> beforeAnyVariableReadDo: aBlock [
 
-	^ metaObject beforeAnyVariableReadDo: aBlock
+	^ metaObject registryHandler beforeAnyVariableReadDo: aBlock
 ]
 
-{ #category : #setting }
+{ #category : #'configuration building' }
 ROCProxy >> beforeAssignmentTo: aVariable do: aBlock [
 
-	^ metaObject beforeAssignmentTo: aVariable do: aBlock
+	^ metaObject registryHandler beforeAssignmentTo: aVariable do: aBlock
 ]
 
-{ #category : #setting }
+{ #category : #'configuration building' }
 ROCProxy >> beforeMessageSendTo:  aMethod do: aBlock [
 
-	^ metaObject beforeMessageSendTo: aMethod do: aBlock
+	^ metaObject registryHandler beforeMessageSendTo: aMethod do: aBlock
 ]
 
-{ #category : #setting }
+{ #category : #'configuration building' }
 ROCProxy >> beforeVariableRead: aVariable do: aBlock [
 
-	^ metaObject beforeVariableRead: aVariable do: aBlock
+	^ metaObject registryHandler beforeVariableRead: aVariable do: aBlock
 ]
 
 { #category : #'reflective operations' }
@@ -128,38 +112,38 @@ ROCProxy >> doesNotUnderstand: aMessage [
 		  to: target
 ]
 
-{ #category : #setting }
+{ #category : #'configuration building' }
 ROCProxy >> insteadAnyAssignmentDo: aBlock [
 
-	^ metaObject insteadAnyAssignmentDo: aBlock
+	^ metaObject registryHandler insteadAnyAssignmentDo: aBlock
 ]
 
-{ #category : #setting }
+{ #category : #'configuration building' }
 ROCProxy >> insteadAnyMessageSendDo: aBlock [
 
-	^ metaObject insteadAnyMessageSendDo: aBlock
+	^ metaObject registryHandler insteadAnyMessageSendDo: aBlock
 ]
 
-{ #category : #setting }
+{ #category : #'configuration building' }
 ROCProxy >> insteadAnyVariableReadDo: aBlock [
 
-	^ metaObject insteadAnyVariableReadDo: aBlock
+	^ metaObject registryHandler insteadAnyVariableReadDo: aBlock
 ]
 
-{ #category : #setting }
+{ #category : #'configuration building' }
 ROCProxy >> insteadAssignmentTo: aVariable do: aBlock [
 
-	^ metaObject insteadAssignmentTo: aVariable do: aBlock
+	^ metaObject registryHandler insteadAssignmentTo: aVariable do: aBlock
 ]
 
-{ #category : #setting }
+{ #category : #'configuration building' }
 ROCProxy >> insteadMessageSendTo: aMethod do: aBlock [
 
-	^ metaObject insteadMessageSendTo: aMethod do: aBlock
+	^ metaObject registryHandler insteadMessageSendTo: aMethod do: aBlock
 ]
 
-{ #category : #setting }
+{ #category : #'configuration building' }
 ROCProxy >> insteadVariableRead: aVariable do: aBlock [
 
-	^ metaObject insteadVariableRead: aVariable do: aBlock
+	^ metaObject registryHandler insteadVariableRead: aVariable do: aBlock
 ]

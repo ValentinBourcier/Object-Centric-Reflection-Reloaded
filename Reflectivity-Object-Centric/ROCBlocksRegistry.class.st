@@ -97,7 +97,7 @@ ROCBlocksRegistry >> blocksStored: anObject [
 ROCBlocksRegistry >> propagateAllBlocksStored: aVariable [
 
 	| aTimeObject |
-	aTimeObject := blocksStored at: aVariable.
+	aTimeObject := self blocksStored at: aVariable.
 	self allBlocksBefore do: [ :each | aTimeObject addBefore: each ].
 	self allBlocksAfter do: [ :each | aTimeObject addAfter: each ].
 	self allBlocksInstead ifNotNil: [ 
