@@ -21,6 +21,7 @@ ROCMopTest >> setUp [
 	package packageWeight: 0.5.
 	package packagePrice: 20.
 	package packageTax: 10.
+	package enableMop.
 ]
 
 { #category : #initialization }
@@ -183,6 +184,7 @@ ROCMopTest >> testTwoObjectsMessageSendAfterChangingValueEachOther [
 	opackage packageWeight: 0.5.
 	opackage packagePrice: 20.
 	opackage packageTax: 10.
+	opackage enableMop.
 	opackage
 		afterMessageSendTo: #packagePrice:
 		do: [ package counter: package counter + 1 ].
@@ -211,6 +213,7 @@ ROCMopTest >> testTwoObjectsMessageSendBeforeChangingValueEachOther [
 	opackage packageWeight: 0.5.
 	opackage packagePrice: 20.
 	opackage packageTax: 10.
+	opackage enableMop.
 	opackage
 		beforeMessageSendTo: #packagePrice:
 		do: [ package counter: package counter + 1 ].
@@ -239,6 +242,7 @@ ROCMopTest >> testTwoObjectsMessageSendInstead [
 	opackage packageWeight: 0.5.
 	opackage packagePrice: 20.
 	opackage packageTax: 10.
+	opackage enableMop.
 	opackage
 		insteadMessageSendTo: #setPackagePrice:andTax:
 		do: [ package counter: package counter + 1 ].
@@ -266,6 +270,7 @@ ROCMopTest >> testTwoObjectsMessageSendInsteadChangingValueEachOther [
 	opackage packageWeight: 0.5.
 	opackage packagePrice: 20.
 	opackage packageTax: 10.
+	opackage enableMop.
 	opackage
 		insteadMessageSendTo: #packagePrice:
 		do: [ package counter: package counter + 1 ].

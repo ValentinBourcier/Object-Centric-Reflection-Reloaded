@@ -46,47 +46,47 @@ ROCMetaObject class >> log: info [
 { #category : #'declaration accessing' }
 ROCMetaObject >> afterAnyAssignmentDo: aBlock [
 
-	self assignmentsStoring valuesStored valuesDo: [ :eachValue | 
+	self assignmentsStoring blocksStored valuesDo: [ :eachValue | 
 		eachValue addAfter: aBlock ].
-	self assignmentsStoring addAllValuesAfter: aBlock.
+	self assignmentsStoring addAllBlocksAfter: aBlock.
 ]
 
 { #category : #'declaration accessing' }
 ROCMetaObject >> afterAnyMessageSendDo: aBlock [
 
-	self messageSendStoring valuesStored valuesDo: [ :eachValue | 
+	self messageSendStoring blocksStored valuesDo: [ :eachValue | 
 		eachValue addAfter: aBlock ].
-	self messageSendStoring addAllValuesAfter: aBlock.
+	self messageSendStoring addAllBlocksAfter: aBlock.
 ]
 
 { #category : #'declaration accessing' }
 ROCMetaObject >> afterAnyVariableReadDo: aBlock [
 
-	self variableReadStoring valuesStored valuesDo: [ :eachValue | 
+	self variableReadStoring blocksStored valuesDo: [ :eachValue | 
 		eachValue addAfter: aBlock ].
-	self variableReadStoring addAllValuesAfter: aBlock.
+	self variableReadStoring addAllBlocksAfter: aBlock.
 ]
 
 { #category : #'declaration accessing' }
 ROCMetaObject >> afterAssignmentTo: aVariable do: aBlock [
 
 	| variableToStore |
-	(self assignmentsStoring valuesStored includesKey: aVariable) 
+	(self assignmentsStoring blocksStored includesKey: aVariable) 
 		ifTrue: [ 
 			| aTimeObject |
-			aTimeObject := self assignmentsStoring valuesStored at: aVariable.
+			aTimeObject := self assignmentsStoring blocksStored at: aVariable.
 			aTimeObject addAfter: aBlock.
 			^ aTimeObject ].
-	self assignmentsStoring valuesStored
+	self assignmentsStoring blocksStored
 		at: aVariable
-		put: ROCControlStoreObject new.
-	variableToStore := self assignmentsStoring valuesStored at: aVariable.
-	assignmentsStoring allValuesBefore do: [ :each | 
+		put: ROCBlocksExecutionOrder new.
+	variableToStore := self assignmentsStoring blocksStored at: aVariable.
+	assignmentsStoring allBlocksBefore do: [ :each | 
 		variableToStore addBefore: each ].
-	assignmentsStoring allValuesAfter do: [ :each | 
+	assignmentsStoring allBlocksAfter do: [ :each | 
 		variableToStore addAfter: each ].
-	[ assignmentsStoring allValuesInstead ] ifNotNil: [ 
-		variableToStore instead: assignmentsStoring allValuesInstead ].
+	[ assignmentsStoring allBlocksInstead ] ifNotNil: [ 
+		variableToStore instead: assignmentsStoring allBlocksInstead ].
 	variableToStore addAfter: aBlock
 ]
 
@@ -94,21 +94,21 @@ ROCMetaObject >> afterAssignmentTo: aVariable do: aBlock [
 ROCMetaObject >> afterMessageSendTo: aMethod do: aBlock [
 
 	| messageToStore |
-	(self messageSendStoring valuesStored includesKey: aMethod) ifTrue: [ 
+	(self messageSendStoring blocksStored includesKey: aMethod) ifTrue: [ 
 		| aTimeObject |
-		aTimeObject := self messageSendStoring valuesStored at: aMethod.
+		aTimeObject := self messageSendStoring blocksStored at: aMethod.
 		aTimeObject addAfter: aBlock.
 		^ aTimeObject ].
-	self messageSendStoring valuesStored
+	self messageSendStoring blocksStored
 		at: aMethod
-		put: ROCControlStoreObject new.
-	messageToStore := self messageSendStoring valuesStored at: aMethod.
-	messageSendStoring allValuesBefore do: [ :each | 
+		put: ROCBlocksExecutionOrder new.
+	messageToStore := self messageSendStoring blocksStored at: aMethod.
+	messageSendStoring allBlocksBefore do: [ :each | 
 		messageToStore addBefore: each ].
-	messageSendStoring allValuesAfter do: [ :each | 
+	messageSendStoring allBlocksAfter do: [ :each | 
 		messageToStore addAfter: each ].
-	[ messageSendStoring allValuesInstead ] ifNotNil: [ 
-		messageToStore instead: messageSendStoring allValuesInstead ].
+	[ messageSendStoring allBlocksInstead ] ifNotNil: [ 
+		messageToStore instead: messageSendStoring allBlocksInstead ].
 	messageToStore addAfter: aBlock
 ]
 
@@ -116,29 +116,29 @@ ROCMetaObject >> afterMessageSendTo: aMethod do: aBlock [
 ROCMetaObject >> afterVariableRead: aVariable do: aBlock [
 
 	| variableToStore |
-	(self variableReadStoring valuesStored includesKey: aVariable) 
+	(self variableReadStoring blocksStored includesKey: aVariable) 
 		ifTrue: [ 
 			| aTimeObject |
-			aTimeObject := self variableReadStoring valuesStored at: aVariable.
+			aTimeObject := self variableReadStoring blocksStored at: aVariable.
 			aTimeObject addAfter: aBlock.
 			^ aTimeObject ].
-	self variableReadStoring valuesStored
+	self variableReadStoring blocksStored
 		at: aVariable
-		put: ROCControlStoreObject new.
-	variableToStore := self variableReadStoring valuesStored at: aVariable.
-	variableReadStoring allValuesBefore do: [ :each | 
+		put: ROCBlocksExecutionOrder new.
+	variableToStore := self variableReadStoring blocksStored at: aVariable.
+	variableReadStoring allBlocksBefore do: [ :each | 
 		variableToStore addBefore: each ].
-	variableReadStoring allValuesAfter do: [ :each | 
+	variableReadStoring allBlocksAfter do: [ :each | 
 		variableToStore addAfter: each ].
-	[ variableReadStoring allValuesInstead ] ifNotNil: [ 
-		variableToStore instead: variableReadStoring allValuesInstead ].
+	[ variableReadStoring allBlocksInstead ] ifNotNil: [ 
+		variableToStore instead: variableReadStoring allBlocksInstead ].
 	variableToStore addAfter: aBlock
 ]
 
 { #category : #accessing }
 ROCMetaObject >> assignmentsStoring [
 
-	^ assignmentsStoring ifNil: [ assignmentsStoring:= (ROCStore new)  ]
+	^ assignmentsStoring ifNil: [ assignmentsStoring:= (ROCBlocksRegistry new)  ]
 ]
 
 { #category : #accessing }
@@ -150,45 +150,45 @@ ROCMetaObject >> assignmentsStoring: anObject [
 { #category : #'declaration accessing' }
 ROCMetaObject >> beforeAnyAssignmentDo: aBlock [
 
-	self assignmentsStoring valuesStored valuesDo: [ :eachValue | 
+	self assignmentsStoring blocksStored valuesDo: [ :eachValue | 
 		eachValue addBefore: aBlock ].
-	self assignmentsStoring addAllValuesBefore: aBlock
+	self assignmentsStoring addAllBlocksBefore: aBlock
 ]
 
 { #category : #'declaration accessing' }
 ROCMetaObject >> beforeAnyMessageSendDo: aBlock [
 
-	self messageSendStoring  valuesStored valuesDo: [ :eachValue | 
+	self messageSendStoring  blocksStored valuesDo: [ :eachValue | 
 		eachValue addBefore: aBlock ].
-	self messageSendStoring addAllValuesBefore: aBlock
+	self messageSendStoring addAllBlocksBefore: aBlock
 ]
 
 { #category : #'declaration accessing' }
 ROCMetaObject >> beforeAnyVariableReadDo: aBlock [
 
-	self variableReadStoring  valuesStored valuesDo: [ :eachValue | 
+	self variableReadStoring  blocksStored valuesDo: [ :eachValue | 
 		eachValue addBefore: aBlock ].
-	self variableReadStoring addAllValuesBefore: aBlock
+	self variableReadStoring addAllBlocksBefore: aBlock
 ]
 
 { #category : #'declaration accessing' }
 ROCMetaObject >> beforeAssignmentTo: aVariable do: aBlock [
 
 	| variableToStore |
-	(self assignmentsStoring valuesStored includesKey: aVariable) 
+	(self assignmentsStoring blocksStored includesKey: aVariable) 
 		ifTrue: [ 
-			^ (self assignmentsStoring valuesStored at: aVariable) addBefore:
+			^ (self assignmentsStoring blocksStored at: aVariable) addBefore:
 				  aBlock ].
-	self assignmentsStoring valuesStored
+	self assignmentsStoring blocksStored
 		at: aVariable
-		put: ROCControlStoreObject new.
-	variableToStore := self assignmentsStoring valuesStored at: aVariable.
-	assignmentsStoring allValuesBefore do: [ :each | 
+		put: ROCBlocksExecutionOrder new.
+	variableToStore := self assignmentsStoring blocksStored at: aVariable.
+	assignmentsStoring allBlocksBefore do: [ :each | 
 		variableToStore addBefore: each ].
-	assignmentsStoring allValuesAfter do: [ :each | 
+	assignmentsStoring allBlocksAfter do: [ :each | 
 		variableToStore addAfter: each ].
-	[ assignmentsStoring allValuesInstead ] ifNotNil: [ 
-		variableToStore instead: assignmentsStoring allValuesInstead ].
+	[ assignmentsStoring allBlocksInstead ] ifNotNil: [ 
+		variableToStore instead: assignmentsStoring allBlocksInstead ].
 	variableToStore addBefore: aBlock
 ]
 
@@ -197,19 +197,19 @@ ROCMetaObject >> beforeMessageSendTo: aMethod do: aBlock [
 
 	| messageToStore |
 	
-	(self messageSendStoring valuesStored includesKey: aMethod) ifTrue: [ 
+	(self messageSendStoring blocksStored includesKey: aMethod) ifTrue: [ 
 		| aTimeObject |
-		aTimeObject := self messageSendStoring valuesStored at: aMethod.
+		aTimeObject := self messageSendStoring blocksStored at: aMethod.
 		aTimeObject addAfter: aBlock.
 		^ aTimeObject ].
-	self messageSendStoring valuesStored at: aMethod put: ROCControlStoreObject new.
-	messageToStore := self messageSendStoring valuesStored at: aMethod.
-	messageSendStoring allValuesBefore do: [ :each | 
+	self messageSendStoring blocksStored at: aMethod put: ROCBlocksExecutionOrder new.
+	messageToStore := self messageSendStoring blocksStored at: aMethod.
+	messageSendStoring allBlocksBefore do: [ :each | 
 		messageToStore addBefore: each ].
-	messageSendStoring allValuesAfter do: [ :each | 
+	messageSendStoring allBlocksAfter do: [ :each | 
 		messageToStore addAfter: each ].
-	[ messageSendStoring allValuesInstead ] ifNotNil: [ 
-		messageToStore instead: messageSendStoring allValuesInstead ].
+	[ messageSendStoring allBlocksInstead ] ifNotNil: [ 
+		messageToStore instead: messageSendStoring allBlocksInstead ].
 	messageToStore addBefore: aBlock
 ]
 
@@ -217,21 +217,21 @@ ROCMetaObject >> beforeMessageSendTo: aMethod do: aBlock [
 ROCMetaObject >> beforeVariableRead: aVariable do: aBlock [
 
 	| variableToStore |
-	(self variableReadStoring valuesStored includesKey: aVariable) 
+	(self variableReadStoring blocksStored includesKey: aVariable) 
 		ifTrue: [ 
-			^ (self variableReadStoring valuesStored at: aVariable) addBefore:
+			^ (self variableReadStoring blocksStored at: aVariable) addBefore:
 				  aBlock ].
-	self variableReadStoring valuesStored
+	self variableReadStoring blocksStored
 		at: aVariable
-		put: ROCControlStoreObject new.
-	variableToStore := self variableReadStoring valuesStored at:
+		put: ROCBlocksExecutionOrder new.
+	variableToStore := self variableReadStoring blocksStored at:
 		                   aVariable.
-	variableReadStoring allValuesBefore do: [ :each | 
+	variableReadStoring allBlocksBefore do: [ :each | 
 		variableToStore addBefore: each ].
-	variableReadStoring allValuesAfter do: [ :each | 
+	variableReadStoring allBlocksAfter do: [ :each | 
 		variableToStore addAfter: each ].
-	[ variableReadStoring allValuesInstead ] ifNotNil: [ 
-		variableToStore instead: variableReadStoring allValuesInstead ].
+	[ variableReadStoring allBlocksInstead ] ifNotNil: [ 
+		variableToStore instead: variableReadStoring allBlocksInstead ].
 	variableToStore addBefore: aBlock
 ]
 
@@ -262,90 +262,86 @@ ROCMetaObject >> forObject: anObject proxy: aProxy [
 	self proxy: aProxy
 ]
 
-{ #category : #deprecated }
-ROCMetaObject >> instVarAccess: anInstVarAccess [
-]
-
 { #category : #'declaration accessing' }
 ROCMetaObject >> insteadAnyAssignmentDo: aBlock [
 
-	self assignmentsStoring valuesStored valuesDo: [ :eachValue | 
+	self assignmentsStoring blocksStored valuesDo: [ :eachValue | 
 		eachValue instead: aBlock ].
-	self assignmentsStoring allValuesInstead: aBlock
+	self assignmentsStoring allBlocksInstead: aBlock
 ]
 
 { #category : #'declaration accessing' }
 ROCMetaObject >> insteadAnyMessageSendDo: aBlock [
 
-	self messageSendStoring valuesStored valuesDo: [ :eachValue | 
+	self messageSendStoring blocksStored valuesDo: [ :eachValue | 
 		eachValue instead: aBlock ].
-	self messageSendStoring allValuesInstead: aBlock
+	self messageSendStoring allBlocksInstead: aBlock
 ]
 
 { #category : #'declaration accessing' }
 ROCMetaObject >> insteadAnyVariableReadDo: aBlock [
 
-	self variableReadStoring valuesStored valuesDo: [ :eachValue | 
+	self variableReadStoring blocksStored valuesDo: [ :eachValue | 
 		eachValue instead: aBlock ].
-	self variableReadStoring allValuesInstead: aBlock
+	self variableReadStoring allBlocksInstead: aBlock
 ]
 
-{ #category : #'declaration accessing' }
+{ #category : #'instance variables' }
 ROCMetaObject >> insteadAssignmentTo: aVariable do: aBlock [
 
 	| variableToStore |
-	(self assignmentsStoring valuesStored includesKey: aVariable) ifTrue: [ 
+	(self assignmentsStoring blocksStored includesKey: aVariable) ifTrue: [ 
 		| aTimeObject |
-		aTimeObject := self assignmentsStoring valuesStored at: aVariable.
+		aTimeObject := self assignmentsStoring blocksStored at: aVariable.
 		aTimeObject instead: aBlock.
 		^ aTimeObject ].
-	variableToStore := self assignmentsStoring valuesStored
+	variableToStore := self assignmentsStoring blocksStored
 		                   at: aVariable
-		                   put: ROCControlStoreObject new.
-	variableToStore := self assignmentsStoring valuesStored at: aVariable.
-	assignmentsStoring allValuesBefore do: [ :each | 
+		                   put: ROCBlocksExecutionOrder new.
+	variableToStore := self assignmentsStoring blocksStored at: aVariable.
+	assignmentsStoring allBlocksBefore do: [ :each | 
 		variableToStore addBefore: each ].
-	assignmentsStoring allValuesAfter do: [ :each | 
+	assignmentsStoring allBlocksAfter do: [ :each | 
 		variableToStore addAfter: each ].
 	variableToStore instead: aBlock
 ]
 
-{ #category : #'declaration accessing' }
+{ #category : #'instance variables' }
 ROCMetaObject >> insteadMessageSendTo: aMethod do: aBlock [
 
 	| messageToStore |
-	(self messageSendStoring valuesStored includesKey: aMethod) ifTrue: [ 
+	(self messageSendStoring blocksStored includesKey: aMethod) ifTrue: [ 
 		| aTimeObject |
-		aTimeObject := self messageSendStoring valuesStored at: aMethod.
+		aTimeObject := self messageSendStoring blocksStored at: aMethod.
 		aTimeObject instead: aBlock.
 		^ aTimeObject ].
-	messageToStore := self messageSendStoring valuesStored
+	messageToStore := self messageSendStoring blocksStored
 		                   at: aMethod
-		                   put: ROCControlStoreObject new.
-	messageToStore := self messageSendStoring valuesStored at: aMethod.
-	messageSendStoring allValuesBefore do: [ :each | 
+		                   put: ROCBlocksExecutionOrder new.
+	messageToStore := self messageSendStoring blocksStored at: aMethod.
+	messageSendStoring allBlocksBefore do: [ :each | 
 		messageToStore addBefore: each ].
-	messageSendStoring allValuesAfter do: [ :each | 
+	messageSendStoring allBlocksAfter do: [ :each | 
 		messageToStore addAfter: each ].
 	messageToStore instead: aBlock
 ]
 
-{ #category : #'declaration accessing' }
+{ #category : #'instance variables' }
 ROCMetaObject >> insteadVariableRead: aVariable do: aBlock [
 
 	| variableToStore |
-	(self variableReadStoring valuesStored includesKey: aVariable) ifTrue: [ 
+	(self variableReadStoring blocksStored includesKey: aVariable) ifTrue: [ 
 		| aTimeObject |
-		aTimeObject := self variableReadStoring valuesStored at: aVariable.
+		aTimeObject := self variableReadStoring blocksStored at: aVariable.
 		aTimeObject instead: aBlock.
 		^ aTimeObject ].
-	variableToStore := self variableReadStoring valuesStored
+	variableToStore := self variableReadStoring blocksStored
 		                   at: aVariable
-		                   put: ROCControlStoreObject new.
-	variableToStore := self variableReadStoring valuesStored at: aVariable.
-	variableReadStoring allValuesBefore do: [ :each | 
+		                   put: ROCBlocksExecutionOrder new.
+	variableToStore := self variableReadStoring blocksStored at: aVariable.
+	variableReadStoring allBlocksBefore do: [ :each | 
 		variableToStore addBefore: each ].
-	variableReadStoring allValuesAfter do: [ :each | 
+	variableReadStoring allBlocksAfter do: [ :each | 
 		variableToStore addAfter: each ].
 	variableToStore instead: aBlock
 ]
@@ -362,19 +358,19 @@ ROCMetaObject >> instrumenter: anObject [
 	instrumenter := anObject
 ]
 
-{ #category : #'declaration accessing' }
+{ #category : #execution }
 ROCMetaObject >> linkInsteadAssignment: operation [
 
 	| timeObject insteadBlock |
 	self metaLevel ifTrue: [ ^ operation value ].
-	[ self assignmentsStoring valuesStored at: operation variable name ]
+	[ self assignmentsStoring blocksStored at: operation variable name ]
 		on: KeyNotFound
 		do: [ 
-			self assignmentsStoring valuesStored
+			self assignmentsStoring blocksStored
 				at: operation variable name
-				put: ROCControlStoreObject new.
-			self assignmentsStoring addAllValuesStored: operation variable name ].
-	timeObject := self assignmentsStoring valuesStored at:
+				put: ROCBlocksExecutionOrder new.
+			self assignmentsStoring propagateAllBlocksStored: operation variable name ].
+	timeObject := self assignmentsStoring blocksStored at:
 		              operation variable name.
 	self metaLevel: true.
 	timeObject before ifNotEmpty: [ 
@@ -388,19 +384,19 @@ ROCMetaObject >> linkInsteadAssignment: operation [
 	^ insteadBlock
 ]
 
-{ #category : #'declaration accessing' }
+{ #category : #execution }
 ROCMetaObject >> linkInsteadAssignment: aName withValue: aValue [
 
 	| timeObject insteadBlock |
 	self metaLevel ifTrue: [ ^ aValue ].
-	[ self assignmentsStoring valuesStored at: aName ]
+	[ self assignmentsStoring blocksStored at: aName ]
 		on: KeyNotFound
 		do: [ 
-			self assignmentsStoring valuesStored
+			self assignmentsStoring blocksStored
 				at: aName
-				put: ROCControlStoreObject new.
-			self assignmentsStoring addAllValuesStored: aName ].
-	timeObject := self assignmentsStoring valuesStored at: aName.
+				put: ROCBlocksExecutionOrder new.
+			self assignmentsStoring propagateAllBlocksStored: aName ].
+	timeObject := self assignmentsStoring blocksStored at: aName.
 	self metaLevel: true.
 	timeObject after ifNotEmpty: [ 
 		timeObject after do: [ :each | each value ] ].
@@ -413,21 +409,21 @@ ROCMetaObject >> linkInsteadAssignment: aName withValue: aValue [
 	^ insteadBlock
 ]
 
-{ #category : #'declaration accessing' }
+{ #category : #execution }
 ROCMetaObject >> linkInsteadMessageSend: anArrayOfArguments [
 
 	| timeObject insteadBlock aSelector aValue|
 	aSelector := anArrayOfArguments first. 
 	aValue := anArrayOfArguments last. 
 	self metaLevel ifTrue: [ ^ aValue ].
-	[ self messageSendStoring valuesStored at: aSelector ]
+	[ self messageSendStoring blocksStored at: aSelector ]
 		on: KeyNotFound
 		do: [ 
-			self messageSendStoring valuesStored
+			self messageSendStoring blocksStored
 				at: aSelector
-				put: ROCControlStoreObject new.
-			self messageSendStoring addAllValuesStored: aSelector].
-	timeObject := self messageSendStoring valuesStored at: aSelector.
+				put: ROCBlocksExecutionOrder new.
+			self messageSendStoring propagateAllBlocksStored: aSelector].
+	timeObject := self messageSendStoring blocksStored at: aSelector.
 	self metaLevel: true.
 	timeObject before ifNotEmpty: [ 
 		timeObject before do: [ :each | each value ] ].
@@ -440,19 +436,19 @@ ROCMetaObject >> linkInsteadMessageSend: anArrayOfArguments [
 	^  aValue
 ]
 
-{ #category : #'declaration accessing' }
+{ #category : #execution }
 ROCMetaObject >> linkInsteadMessageSendOperation: aOperation [
 
 	| timeObject insteadBlock |
 	self metaLevel ifTrue: [ ^  aOperation value ].
-	[ self messageSendStoring valuesStored at:  aOperation selector ]
+	[ self messageSendStoring blocksStored at:  aOperation selector ]
 		on: KeyNotFound
 		do: [ 
-			self messageSendStoring valuesStored
+			self messageSendStoring blocksStored
 				at: aOperation selector
-				put: ROCControlStoreObject new.
-			self messageSendStoring addAllValuesStored: aOperation selector ].
-	timeObject := self messageSendStoring valuesStored at: aOperation selector.
+				put: ROCBlocksExecutionOrder new.
+			self messageSendStoring propagateAllBlocksStored: aOperation selector ].
+	timeObject := self messageSendStoring blocksStored at: aOperation selector.
 	self metaLevel: true.
 	timeObject before ifNotEmpty: [ 
 		timeObject before do: [ :each | each value ] ].
@@ -465,19 +461,19 @@ ROCMetaObject >> linkInsteadMessageSendOperation: aOperation [
 	^  aOperation value
 ]
 
-{ #category : #'declaration accessing' }
+{ #category : #execution }
 ROCMetaObject >> linkInsteadVariableRead: name withValue: aValue [
 
 	| timeObject insteadBlock |
 	self metaLevel ifTrue: [ ^ aValue ].
-	[ self variableReadStoring valuesStored at: name ]
+	[ self variableReadStoring blocksStored at: name ]
 		on: KeyNotFound
 		do: [ 
-			self variableReadStoring valuesStored
+			self variableReadStoring blocksStored
 				at: name
-				put: ROCControlStoreObject new.
-			self variableReadStoring addAllValuesStored: name ].
-	timeObject := self variableReadStoring valuesStored at: name.
+				put: ROCBlocksExecutionOrder new.
+			self variableReadStoring propagateAllBlocksStored: name ].
+	timeObject := self variableReadStoring blocksStored at: name.
 	self metaLevel: true.
 	timeObject after ifNotEmpty: [ 
 		timeObject after do: [ :each | each value ] ].
@@ -495,14 +491,10 @@ ROCMetaObject >> linkInsteadVariableRead: name withValue: aValue [
 		, '   withValue:  ' , aValue printString."
 ]
 
-{ #category : #deprecated }
-ROCMetaObject >> messageReceived: aReflectiveMessageReceive [
-]
-
 { #category : #accessing }
 ROCMetaObject >> messageSendStoring [
 
-	^ messageSendStoring  ifNil: [ messageSendStoring:= (ROCStore new)  ]
+	^ messageSendStoring  ifNil: [ messageSendStoring:= (ROCBlocksRegistry new)  ]
 ]
 
 { #category : #accessing }
@@ -559,25 +551,10 @@ ROCMetaObject >> receive: aSelector withArgs: args [
 		  to: instrumenter instrumentedObject
 ]
 
-{ #category : #deprecated }
-ROCMetaObject >> receiveAssignment: aVariable withOldValue: aOldValue withValue: aValue [
-
-	<debuggerCompleteToSender>
-	self class log:
-		'METAOBJECT receive Variable: ' , aVariable printString
-		, ' with Value: ' , aValue printString , '  old Value: '
-		, aOldValue printString
-]
-
 { #category : #accessing }
 ROCMetaObject >> receiver [
 
 	^ instrumenter instrumentedObject
-]
-
-{ #category : #deprecated }
-ROCMetaObject >> reflectiveEvent: aReflectiveEvent [
-	^aReflectiveEvent reflectOn: self
 ]
 
 { #category : #deprecated }
@@ -610,7 +587,7 @@ ROCMetaObject >> send: selector withArgs: args to: target [
 { #category : #accessing }
 ROCMetaObject >> variableReadStoring [
 
-	^ variableReadStoring ifNil: [ variableReadStoring := ROCStore new ]
+	^ variableReadStoring ifNil: [ variableReadStoring := ROCBlocksRegistry new ]
 ]
 
 { #category : #accessing }

@@ -18,6 +18,7 @@ ROCVariableReadTest >> setUp [
 		var2: 0;
 		result: 0;
 		counter: 0.
+	aTestClass enableMop.
 	Transcript clear
 ]
 

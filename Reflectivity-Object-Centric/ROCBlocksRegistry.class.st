@@ -34,72 +34,72 @@ Internal Representation and Key Implementation Points.
     Implementation Points
 "
 Class {
-	#name : #ROCStore,
+	#name : #ROCBlocksRegistry,
 	#superclass : #Object,
 	#instVars : [
-		'valuesStored',
-		'allValuesAfter',
-		'allValuesInstead',
-		'allValuesBefore'
+		'allBlocksAfter',
+		'allBlocksBefore',
+		'allBlocksInstead',
+		'blocksStored'
 	],
 	#category : #'Reflectivity-Object-Centric-metaobjects'
 }
 
 { #category : #adding }
-ROCStore >> addAllValuesAfter: aBlock [
+ROCBlocksRegistry >> addAllBlocksAfter: aBlock [
 
-	self allValuesAfter add: aBlock.
+	self allBlocksAfter add: aBlock.
 ]
 
 { #category : #adding }
-ROCStore >> addAllValuesBefore: aBlock [
+ROCBlocksRegistry >> addAllBlocksBefore: aBlock [
 
-	self allValuesBefore add: aBlock.
+	self allBlocksBefore add: aBlock.
 ]
 
-{ #category : #adding }
-ROCStore >> addAllValuesStored: aVariable [
+{ #category : #accessing }
+ROCBlocksRegistry >> allBlocksAfter [
+
+	^ allBlocksAfter  ifNil: [ allBlocksAfter := LinkedList   new ]
+]
+
+{ #category : #accessing }
+ROCBlocksRegistry >> allBlocksBefore [
+
+	^ allBlocksBefore  ifNil: [ allBlocksBefore := LinkedList  new ] 
+]
+
+{ #category : #accessing }
+ROCBlocksRegistry >> allBlocksInstead [
+
+	^ allBlocksInstead
+]
+
+{ #category : #accessing }
+ROCBlocksRegistry >> allBlocksInstead: anObject [
+
+	allBlocksInstead := anObject
+]
+
+{ #category : #accessing }
+ROCBlocksRegistry >> blocksStored [
+
+	^ blocksStored ifNil: [ blocksStored := (Dictionary new)  ]
+]
+
+{ #category : #accessing }
+ROCBlocksRegistry >> blocksStored: anObject [
+
+	blocksStored := anObject
+]
+
+{ #category : #propagating }
+ROCBlocksRegistry >> propagateAllBlocksStored: aVariable [
 
 	| aTimeObject |
-	aTimeObject := valuesStored at: aVariable.
-	self allValuesBefore do: [ :each | aTimeObject addBefore: each ].
-	self allValuesAfter do: [ :each | aTimeObject addAfter: each ].
-	self allValuesInstead ifNotNil: [ 
-		aTimeObject instead: allValuesInstead ]
-]
-
-{ #category : #accessing }
-ROCStore >> allValuesAfter [
-
-	^ allValuesAfter  ifNil: [ allValuesAfter := LinkedList   new ]
-]
-
-{ #category : #accessing }
-ROCStore >> allValuesBefore [
-
-	^ allValuesBefore  ifNil: [ allValuesBefore := LinkedList  new ] 
-]
-
-{ #category : #accessing }
-ROCStore >> allValuesInstead [
-
-	^ allValuesInstead
-]
-
-{ #category : #accessing }
-ROCStore >> allValuesInstead: anObject [
-
-	allValuesInstead := anObject
-]
-
-{ #category : #accessing }
-ROCStore >> valuesStored [
-
-	^ valuesStored ifNil: [ valuesStored := (Dictionary new)  ]
-]
-
-{ #category : #accessing }
-ROCStore >> valuesStored: anObject [
-
-	valuesStored := anObject
+	aTimeObject := blocksStored at: aVariable.
+	self allBlocksBefore do: [ :each | aTimeObject addBefore: each ].
+	self allBlocksAfter do: [ :each | aTimeObject addAfter: each ].
+	self allBlocksInstead ifNotNil: [ 
+		aTimeObject instead: allBlocksInstead ]
 ]

@@ -15,6 +15,9 @@ ROCMessageSendTest >> setUp [
 	aClassTest := ROCTestClass new.
 	aClassTest var1: 1.
 	aClassTest var2: 2.
+	aClassTest collection: OrderedCollection new.
+	aClassTest result: 0.
+	aClassTest enableMop.
 	Transcript clear
 ]
 
@@ -50,7 +53,7 @@ ROCMessageSendTest >> testExecute [
 
 	| a proxy |
 	a := ROCBottom new.
-	proxy := a proxify.
+	proxy := a enableMop.
 	Transcript clear.
 	a mWithSuper.
 	a mWithSuper
@@ -99,7 +102,6 @@ ROCMessageSendTest >> testMessageSendBeforeNoMethod [
 { #category : #'tests - after' }
 ROCMessageSendTest >> testMessageSendInAssignmentAfter [
 
-	aClassTest result: 0.
 	aClassTest afterAnyMessageSendDo: [ 
 		aClassTest result: aClassTest result + 1 ].
 	self assert: aClassTest assigningValues equals: 3.
@@ -111,7 +113,6 @@ ROCMessageSendTest >> testMessageSendInAssignmentAfter [
 { #category : #'tests - before' }
 ROCMessageSendTest >> testMessageSendInAssignmentBefore [
 
-	aClassTest result: 0.
 	aClassTest beforeAnyMessageSendDo: [ 
 		aClassTest result: aClassTest result + 1 ].
 	self assert: aClassTest assigningValues equals: 3.
@@ -123,7 +124,6 @@ ROCMessageSendTest >> testMessageSendInAssignmentBefore [
 { #category : #'tests - instead' }
 ROCMessageSendTest >> testMessageSendInAssignmentInstead [
 
-	aClassTest result: 0.
 	aClassTest insteadAnyMessageSendDo: [ 
 		aClassTest result: aClassTest result + 1 ].
 	self assert: aClassTest assigningValues equals: 3.
@@ -145,8 +145,6 @@ ROCMessageSendTest >> testMessageSendInstead [
 { #category : #'tests - after' }
 ROCMessageSendTest >> testMessageSendOtherObjects [
 
-	aClassTest collection: OrderedCollection new.
-	aClassTest result: 0.
 	aClassTest
 		afterMessageSendTo: #add:
 		do: [ aClassTest result: aClassTest result + 1 ].

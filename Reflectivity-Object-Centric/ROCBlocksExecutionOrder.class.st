@@ -34,7 +34,7 @@ Internal Representation and Key Implementation Points.
     Implementation Points
 "
 Class {
-	#name : #ROCControlStoreObject,
+	#name : #ROCBlocksExecutionOrder,
 	#superclass : #Object,
 	#instVars : [
 		'before',
@@ -44,38 +44,38 @@ Class {
 	#category : #'Reflectivity-Object-Centric-metaobjects'
 }
 
-{ #category : #accessing }
-ROCControlStoreObject >> addAfter: aBlock [
+{ #category : #adding }
+ROCBlocksExecutionOrder >> addAfter: aBlock [
 
 	self after add: aBlock.
 ]
 
-{ #category : #accessing }
-ROCControlStoreObject >> addBefore: aBlock [
+{ #category : #adding }
+ROCBlocksExecutionOrder >> addBefore: aBlock [
 
 	self before  add: aBlock
 ]
 
 { #category : #accessing }
-ROCControlStoreObject >> after [
+ROCBlocksExecutionOrder >> after [
 
 	^ after ifNil: [ after := (LinkedList new)  ]
 ]
 
 { #category : #accessing }
-ROCControlStoreObject >> before [
+ROCBlocksExecutionOrder >> before [
 
 	^ before ifNil: [ before := (LinkedList new)  ]
 ]
 
 { #category : #accessing }
-ROCControlStoreObject >> instead [
+ROCBlocksExecutionOrder >> instead [
 
 	^ instead
 ]
 
 { #category : #accessing }
-ROCControlStoreObject >> instead: anObject [
+ROCBlocksExecutionOrder >> instead: anObject [
 
 	instead := anObject
 ]
