@@ -213,7 +213,7 @@ ROCProxyInstrumenter >> log: array [
 	ROCMetaObject log: log contents
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ROCProxyInstrumenter >> metaObject [
 	^ metaObject
 ]

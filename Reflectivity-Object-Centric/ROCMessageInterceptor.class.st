@@ -30,7 +30,7 @@ ROCMessageInterceptor >> executeWithArgs: args [
 	
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ROCMessageInterceptor >> metaObject [
 	^ metaObject
 ]
@@ -41,7 +41,7 @@ ROCMessageInterceptor >> metaObject: anObject [
 	metaObject := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ROCMessageInterceptor >> selector [
 	^ selector
 ]

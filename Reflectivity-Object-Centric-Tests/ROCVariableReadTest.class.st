@@ -24,7 +24,6 @@ ROCVariableReadTest >> setUp [
 
 { #category : #'tests - after' }
 ROCVariableReadTest >> testAfterAnyVariableRead [
-
 	aTestClass afterAnyVariableReadDo: [ 
 		aTestClass counter: aTestClass counter + 1 ].
 	aTestClass variablesReadandAssignment.

@@ -15,7 +15,7 @@ Class {
 	#category : #'Reflectivity-Object-Centric-interceptors'
 }
 
-{ #category : #execution }
+{ #category : #override }
 ROCVariableWriteInterceptor >> execute: aOperation [
 	"USING THIS"
 	^ metaObject linkInsteadAssignment: aOperation
