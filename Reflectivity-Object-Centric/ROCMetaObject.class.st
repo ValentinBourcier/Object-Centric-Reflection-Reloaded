@@ -106,56 +106,34 @@ ROCMetaObject >> linkInsteadAssignment: operation [
 	^ insteadBlock
 ]
 
-{ #category : #execution }
-ROCMetaObject >> linkInsteadAssignment: aName withValue: aValue [
-
-	| timeObject insteadBlock |
-	self metaLevel ifTrue: [ ^ aValue ].
-	[ self assignmentsStoring blocksStored at: aName ]
-		on: KeyNotFound
-		do: [ 
-			self assignmentsStoring blocksStored
-				at: aName
-				put: ROCBlocksExecutionOrder new.
-			self assignmentsStoring propagateAllBlocksStored: aName ].
-	timeObject := self assignmentsStoring blocksStored at: aName.
-	self metaLevel: true.
-	timeObject after ifNotEmpty: [ 
-		timeObject after do: [ :each | each value ] ].
-	insteadBlock := aValue.
-	timeObject instead ifNotNil: [ 
-		insteadBlock := timeObject instead value ].
-	timeObject before ifNotEmpty: [ 
-		timeObject before do: [ :each | each value ] ].
-	self metaLevel: false.
-	^ insteadBlock
-]
-
-{ #category : #execution }
+{ #category : #'reflective api' }
 ROCMetaObject >> linkInsteadMessageSend: anArrayOfArguments [
 
-	| timeObject insteadBlock aSelector aValue|
-	aSelector := anArrayOfArguments first. 
-	aValue := anArrayOfArguments last. 
+	| timeObject insteadBlock aSelector aValue |
+	aSelector := anArrayOfArguments first.
+	aValue := anArrayOfArguments last.
 	self metaLevel ifTrue: [ ^ aValue ].
-	[ self messageSendStoring blocksStored at: aSelector ]
+	[ 
+	self registryHandler messageSendRegistry blocksStored at: aSelector ]
 		on: KeyNotFound
 		do: [ 
-			self messageSendStoring blocksStored
+			self registryHandler messageSendRegistry blocksStored
 				at: aSelector
 				put: ROCBlocksExecutionOrder new.
-			self messageSendStoring propagateAllBlocksStored: aSelector].
-	timeObject := self messageSendStoring blocksStored at: aSelector.
+			self registryHandler messageSendRegistry propagateAllBlocksStored:
+				aSelector ].
+	timeObject := self registryHandler messageSendRegistry blocksStored 
+		              at: aSelector.
 	self metaLevel: true.
 	timeObject before ifNotEmpty: [ 
 		timeObject before do: [ :each | each value ] ].
 	timeObject instead
-		ifNil: [ insteadBlock :=  aValue ]
-		ifNotNil: [ insteadBlock :=  timeObject instead value ].
+		ifNil: [ insteadBlock := aValue ]
+		ifNotNil: [ insteadBlock := timeObject instead value ].
 	timeObject after ifNotEmpty: [ 
 		timeObject after do: [ :each | each value ] ].
 	self metaLevel: false.
-	^  aValue
+	^ aValue
 ]
 
 { #category : #execution }
