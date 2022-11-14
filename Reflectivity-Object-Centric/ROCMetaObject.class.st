@@ -55,10 +55,11 @@ ROCMetaObject >> executeReflectiveOperationsFor: target uponReceptionOf: selecto
 		 stream << selector printString ]) crTrace
 ]
 
-{ #category : #execution }
+{ #category : #'reflective api' }
 ROCMetaObject >> executeReflectiveOperationsForAssignment: anOperation [
 
 	| timeObject insteadBlock |
+	
 	self metaLevel ifTrue: [ ^ anOperation value ].
 	self
 		verifyExistenceOn: self registryHandler variableWriteRegistry
@@ -77,14 +78,12 @@ ROCMetaObject >> executeReflectiveOperationsForAssignment: anOperation [
 	^ insteadBlock
 ]
 
-{ #category : #execution }
+{ #category : #'reflective api' }
 ROCMetaObject >> executeReflectiveOperationsForMessageSendOperation: aOperation [
 
-	| timeObject operation |
-	self flag:
-		'WE ARENT DOINGTHE INSTEAD VALUE IN THE RIGHT ORDER WE ARE DOING THE VALUE AFTER THE AFTER'.
-	operation := aOperation.
-	self metaLevel ifTrue: [ ^ operation value ].
+	| timeObject insteadBlock |
+	self flag: 'WE ARE NOT RETURNING THE VALUE AT GOOD TIME'.
+	self metaLevel ifTrue: [ ^ aOperation value ].
 	self
 		verifyExistenceOn: self registryHandler messageSendRegistry
 		withKey: aOperation selector.
@@ -93,20 +92,20 @@ ROCMetaObject >> executeReflectiveOperationsForMessageSendOperation: aOperation 
 	self metaLevel: true.
 	timeObject before ifNotEmpty: [ 
 		timeObject before do: [ :each | each value ] ].
-	timeObject instead ifNotNil: [ operation := timeObject instead ].
+	timeObject instead
+		ifNil: [ insteadBlock := aOperation ]
+		ifNotNil: [ insteadBlock := timeObject instead ].
 	timeObject after ifNotEmpty: [ 
 		timeObject after do: [ :each | each value ] ].
 	self metaLevel: false.
-	^ operation value
+	^ insteadBlock value "insteadBlock"
 ]
 
-{ #category : #execution }
+{ #category : #'reflective api' }
 ROCMetaObject >> executeReflectiveOperationsForVariableRead: name withValue: aValue [
 
 	| timeObject insteadBlock |
-	self flag:
-		'WE ARE RETURNING AVALUE WHEN WE SHOULD RETURN THE INSTEADBLOCK'.
-		
+	self flag: 'WE ARE RETURNING AVALUE instead of INSTEADBLOCK'.
 	self metaLevel ifTrue: [ ^ aValue ].
 	self
 		verifyExistenceOn: self registryHandler variableReadRegistry
@@ -122,7 +121,7 @@ ROCMetaObject >> executeReflectiveOperationsForVariableRead: name withValue: aVa
 	timeObject before ifNotEmpty: [ 
 		timeObject before do: [ :each | each value ] ].
 	self metaLevel: false.
-	^ aValue
+	^ aValue "insteadBlock"
 ]
 
 { #category : #private }
