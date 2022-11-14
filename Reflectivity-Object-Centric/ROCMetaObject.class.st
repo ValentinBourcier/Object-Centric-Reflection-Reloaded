@@ -56,24 +56,20 @@ ROCMetaObject >> executeReflectiveOperationsFor: target uponReceptionOf: selecto
 ]
 
 { #category : #execution }
-ROCMetaObject >> executeReflectiveOperationsForAssignment: operation [
+ROCMetaObject >> executeReflectiveOperationsForAssignment: anOperation [
 
 	| timeObject insteadBlock |
-	self metaLevel ifTrue: [ ^ operation value ].
-	[ self registryHandler variableWriteRegistry blocksStored at: operation variable name ]
-		on: KeyNotFound
-		do: [ 
-			self registryHandler variableWriteRegistry blocksStored
-				at: operation variable name
-				put: ROCBlocksExecutionOrder new.
-			self registryHandler variableWriteRegistry propagateAllBlocksStored: operation variable name ].
-	timeObject := self registryHandler variableWriteRegistry blocksStored at:
-		              operation variable name.
+	self metaLevel ifTrue: [ ^ anOperation value ].
+	self
+		verifyExistenceOn: self registryHandler variableWriteRegistry
+		withKey: anOperation variable name.
+	timeObject := self registryHandler variableWriteRegistry blocksStored 
+		              at: anOperation variable name.
 	self metaLevel: true.
 	timeObject before ifNotEmpty: [ 
 		timeObject before do: [ :each | each value ] ].
 	timeObject instead
-		ifNil: [ insteadBlock := operation value ]
+		ifNil: [ insteadBlock := anOperation value ]
 		ifNotNil: [ insteadBlock := timeObject instead value ].
 	timeObject after ifNotEmpty: [ 
 		timeObject after do: [ :each | each value ] ].
@@ -81,75 +77,40 @@ ROCMetaObject >> executeReflectiveOperationsForAssignment: operation [
 	^ insteadBlock
 ]
 
-{ #category : #'reflective api' }
-ROCMetaObject >> executeReflectiveOperationsForMessageSend: anArrayOfArguments [
-
-	| timeObject insteadBlock aSelector aValue |
-	aSelector := anArrayOfArguments first.
-	aValue := anArrayOfArguments last.
-	self metaLevel ifTrue: [ ^ aValue ].
-	[ 
-	self registryHandler messageSendRegistry blocksStored at: aSelector ]
-		on: KeyNotFound
-		do: [ 
-			self registryHandler messageSendRegistry blocksStored
-				at: aSelector
-				put: ROCBlocksExecutionOrder new.
-			self registryHandler messageSendRegistry propagateAllBlocksStored:
-				aSelector ].
-	timeObject := self registryHandler messageSendRegistry blocksStored 
-		              at: aSelector.
-	self metaLevel: true.
-	timeObject before ifNotEmpty: [ 
-		timeObject before do: [ :each | each value ] ].
-	timeObject instead
-		ifNil: [ insteadBlock := aValue ]
-		ifNotNil: [ insteadBlock := timeObject instead value ].
-	timeObject after ifNotEmpty: [ 
-		timeObject after do: [ :each | each value ] ].
-	self metaLevel: false.
-	^ aValue
-]
-
 { #category : #execution }
 ROCMetaObject >> executeReflectiveOperationsForMessageSendOperation: aOperation [
 
 	| timeObject operation |
-
+	self flag:
+		'WE ARENT DOINGTHE INSTEAD VALUE IN THE RIGHT ORDER WE ARE DOING THE VALUE AFTER THE AFTER'.
 	operation := aOperation.
-	self metaLevel ifTrue: [ ^  operation value ].
-	[ self registryHandler messageSendRegistry  blocksStored at:  aOperation selector ]
-		on: KeyNotFound
-		do: [ 
-			self registryHandler messageSendRegistry blocksStored
-				at: aOperation selector
-				put: ROCBlocksExecutionOrder new.
-			self registryHandler messageSendRegistry propagateAllBlocksStored: aOperation selector ].
-	timeObject := self registryHandler messageSendRegistry blocksStored at: aOperation selector.
+	self metaLevel ifTrue: [ ^ operation value ].
+	self
+		verifyExistenceOn: self registryHandler messageSendRegistry
+		withKey: aOperation selector.
+	timeObject := self registryHandler messageSendRegistry blocksStored 
+		              at: aOperation selector.
 	self metaLevel: true.
 	timeObject before ifNotEmpty: [ 
 		timeObject before do: [ :each | each value ] ].
-	timeObject instead
-		ifNotNil: [ operation := timeObject instead ].
+	timeObject instead ifNotNil: [ operation := timeObject instead ].
 	timeObject after ifNotEmpty: [ 
 		timeObject after do: [ :each | each value ] ].
 	self metaLevel: false.
-	^  operation value
+	^ operation value
 ]
 
 { #category : #execution }
 ROCMetaObject >> executeReflectiveOperationsForVariableRead: name withValue: aValue [
 
 	| timeObject insteadBlock |
+	self flag:
+		'WE ARE RETURNING AVALUE WHEN WE SHOULD RETURN THE INSTEADBLOCK'.
+		
 	self metaLevel ifTrue: [ ^ aValue ].
-	[ self registryHandler variableReadRegistry blocksStored at: name ]
-		on: KeyNotFound
-		do: [ 
-			self registryHandler variableReadRegistry blocksStored
-				at: name
-				put: ROCBlocksExecutionOrder new.
-			self registryHandler variableReadRegistry 
-				propagateAllBlocksStored: name ].
+	self
+		verifyExistenceOn: self registryHandler variableReadRegistry
+		withKey: name.
 	timeObject := self registryHandler variableReadRegistry blocksStored 
 		              at: name.
 	self metaLevel: true.
@@ -157,16 +118,11 @@ ROCMetaObject >> executeReflectiveOperationsForVariableRead: name withValue: aVa
 		timeObject after do: [ :each | each value ] ].
 	timeObject instead
 		ifNil: [ insteadBlock := aValue ]
-		ifNotNil: [ timeObject instead value ].
+		ifNotNil: [ insteadBlock := timeObject instead value ].
 	timeObject before ifNotEmpty: [ 
 		timeObject before do: [ :each | each value ] ].
 	self metaLevel: false.
 	^ aValue
-
-
-	"	self class log:
-		'METAOBJECT INSTEAD VARIABLE READ  :  ' , name asString
-		, '   withValue:  ' , aValue printString."
 ]
 
 { #category : #private }
@@ -286,4 +242,14 @@ ROCMetaObject >> send: selector withArgs: args to: target [
 		  withReceiver: target
 		  perform: selector
 		  withArguments: arguments asArray
+]
+
+{ #category : #execution }
+ROCMetaObject >> verifyExistenceOn: aRegistry withKey: aKey [
+
+	[ aRegistry blocksStored at: aKey ]
+		on: KeyNotFound
+		do: [ 
+			aRegistry blocksStored at: aKey put: ROCBlocksExecutionOrder new.
+			aRegistry propagateAllBlocksStored: aKey ]
 ]

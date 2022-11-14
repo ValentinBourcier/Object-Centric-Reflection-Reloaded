@@ -8,37 +8,24 @@ Class {
 }
 
 { #category : #execution }
-ROCMessageSendInterceptor >> execute: anArrayOfArguments [
+ROCMessageSendInterceptor >> execute: anOperation [
 
 	"receive all sends filter by self if the receiver is the object who insrument if yes propagate and then call my method to do reflective part"
-
+	"	
 	| selector receiver args |
 	selector := anArrayOfArguments first.
 	receiver := anArrayOfArguments second.
 	args := anArrayOfArguments third.
-
-	receiver == self receiver ifTrue: [ 
-		metaObject instrumenter instrumentSelector: selector withArgs: args ].
-	^ metaObject executeReflectiveOperationsForMessageSend: anArrayOfArguments
-]
-
-{ #category : #override }
-ROCMessageSendInterceptor >> execute: aName withValue: aValue [
-]
-
-{ #category : #execution }
-ROCMessageSendInterceptor >> executeOperation2: anOperation [
-
-	^ metaObject executeReflectiveOperationsForMessageSendOperation:  anOperation
-]
-
-{ #category : #execution }
-ROCMessageSendInterceptor >> executeOperation: anOperation [
-
+	"
 	anOperation receiver == self receiver ifTrue: [ 
 		metaObject instrumenter
 			instrumentSelector: anOperation selector
 			withArgs: anOperation arguments ].
 
-	^ metaObject executeReflectiveOperationsForMessageSendOperation: anOperation
+	^ metaObject executeReflectiveOperationsForMessageSendOperation:
+		  anOperation
+]
+
+{ #category : #override }
+ROCMessageSendInterceptor >> execute: aName withValue: aValue [
 ]

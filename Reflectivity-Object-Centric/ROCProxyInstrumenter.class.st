@@ -254,7 +254,7 @@ ROCProxyInstrumenter >> newInsteadLinkForMessagesSend [
 	interceptor metaObject: metaObject.
 
 	link metaObject: interceptor.
-	link selector: #executeOperation:.
+	link selector: #execute:.
 	link arguments: #( operation ).
 	"link arguments: #( selector receiver arguments value ).
 	link optionArgsAsArray: true."
