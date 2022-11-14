@@ -80,8 +80,9 @@ ROCMopTest >> testAnyMessageSendInsteadCounter [
 { #category : #initialization }
 ROCMopTest >> testInsideMessageSendBeforeCounter [
 
-	package beforeMessageSendTo:  #m1 do:  [ 
-		package counter: package counter + 1 ].
+	package
+		beforeMessageSendTo: #m1
+		do: [ package counter: package counter + 1 ].
 	package m2.
 	self assert: package counter equals: 3
 ]
@@ -92,7 +93,6 @@ ROCMopTest >> testInsideMessageSendBeforeCounterSelfMessage [
 	package
 		beforeMessageSendTo: #m1
 		do: [ package counter: package counter + 1 ].
-
 	package m1.
 	self assert: package counter equals: 0
 ]

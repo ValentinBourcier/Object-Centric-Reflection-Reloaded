@@ -19,11 +19,17 @@ ROCMessageSendInterceptor >> execute: anArrayOfArguments [
 
 	receiver == self receiver ifTrue: [ 
 		metaObject instrumenter instrumentSelector: selector withArgs: args ].
-	^ metaObject linkInsteadMessageSend: anArrayOfArguments
+	^ metaObject executeReflectiveOperationsForMessageSend: anArrayOfArguments
 ]
 
 { #category : #override }
 ROCMessageSendInterceptor >> execute: aName withValue: aValue [
+]
+
+{ #category : #execution }
+ROCMessageSendInterceptor >> executeOperation2: anOperation [
+
+	^ metaObject executeReflectiveOperationsForMessageSendOperation:  anOperation
 ]
 
 { #category : #execution }
@@ -33,5 +39,6 @@ ROCMessageSendInterceptor >> executeOperation: anOperation [
 		metaObject instrumenter
 			instrumentSelector: anOperation selector
 			withArgs: anOperation arguments ].
-	^ metaObject linkInsteadMessageSendOperation:  anOperation
+
+	^ metaObject executeReflectiveOperationsForMessageSendOperation: anOperation
 ]

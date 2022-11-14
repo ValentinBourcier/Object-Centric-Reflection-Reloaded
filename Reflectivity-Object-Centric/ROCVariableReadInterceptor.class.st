@@ -20,5 +20,5 @@ ROCVariableReadInterceptor >> execute: aOperation [
 { #category : #override }
 ROCVariableReadInterceptor >> execute: aName withValue: aValue [
 
-	^ metaObject linkInsteadVariableRead: aName withValue: aValue
+	^ metaObject executeReflectiveOperationsForVariableRead: aName withValue: aValue
 ]

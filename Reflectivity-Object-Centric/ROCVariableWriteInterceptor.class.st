@@ -18,7 +18,7 @@ Class {
 { #category : #override }
 ROCVariableWriteInterceptor >> execute: aOperation [
 	"USING THIS"
-	^ metaObject linkInsteadAssignment: aOperation
+	^ metaObject executeReflectiveOperationsForAssignment: aOperation
 ]
 
 { #category : #override }

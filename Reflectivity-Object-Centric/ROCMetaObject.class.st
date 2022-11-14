@@ -55,33 +55,8 @@ ROCMetaObject >> executeReflectiveOperationsFor: target uponReceptionOf: selecto
 		 stream << selector printString ]) crTrace
 ]
 
-{ #category : #private }
-ROCMetaObject >> forObject: anObject [
-
-	self instrumenter beForObject: anObject
-]
-
-{ #category : #initialization }
-ROCMetaObject >> forObject: anObject proxy: aProxy [
-
-	self forObject: anObject.
-	self proxy: aProxy
-]
-
-{ #category : #accessing }
-ROCMetaObject >> instrumenter [
-
-	^ instrumenter ifNil: [ instrumenter := ROCProxyInstrumenter for: self ]
-]
-
-{ #category : #accessing }
-ROCMetaObject >> instrumenter: anObject [
-
-	instrumenter := anObject
-]
-
 { #category : #execution }
-ROCMetaObject >> linkInsteadAssignment: operation [
+ROCMetaObject >> executeReflectiveOperationsForAssignment: operation [
 
 	| timeObject insteadBlock |
 	self metaLevel ifTrue: [ ^ operation value ].
@@ -107,7 +82,7 @@ ROCMetaObject >> linkInsteadAssignment: operation [
 ]
 
 { #category : #'reflective api' }
-ROCMetaObject >> linkInsteadMessageSend: anArrayOfArguments [
+ROCMetaObject >> executeReflectiveOperationsForMessageSend: anArrayOfArguments [
 
 	| timeObject insteadBlock aSelector aValue |
 	aSelector := anArrayOfArguments first.
@@ -137,10 +112,12 @@ ROCMetaObject >> linkInsteadMessageSend: anArrayOfArguments [
 ]
 
 { #category : #execution }
-ROCMetaObject >> linkInsteadMessageSendOperation: aOperation [
+ROCMetaObject >> executeReflectiveOperationsForMessageSendOperation: aOperation [
 
-	| timeObject insteadBlock |
-	self metaLevel ifTrue: [ ^  aOperation value ].
+	| timeObject operation |
+
+	operation := aOperation.
+	self metaLevel ifTrue: [ ^  operation value ].
 	[ self registryHandler messageSendRegistry  blocksStored at:  aOperation selector ]
 		on: KeyNotFound
 		do: [ 
@@ -153,16 +130,15 @@ ROCMetaObject >> linkInsteadMessageSendOperation: aOperation [
 	timeObject before ifNotEmpty: [ 
 		timeObject before do: [ :each | each value ] ].
 	timeObject instead
-		ifNil: [ insteadBlock :=  aOperation value  ]
-		ifNotNil: [ insteadBlock :=  timeObject instead value ].
+		ifNotNil: [ operation := timeObject instead ].
 	timeObject after ifNotEmpty: [ 
 		timeObject after do: [ :each | each value ] ].
 	self metaLevel: false.
-	^  aOperation value
+	^  operation value
 ]
 
 { #category : #execution }
-ROCMetaObject >> linkInsteadVariableRead: name withValue: aValue [
+ROCMetaObject >> executeReflectiveOperationsForVariableRead: name withValue: aValue [
 
 	| timeObject insteadBlock |
 	self metaLevel ifTrue: [ ^ aValue ].
@@ -191,6 +167,31 @@ ROCMetaObject >> linkInsteadVariableRead: name withValue: aValue [
 	"	self class log:
 		'METAOBJECT INSTEAD VARIABLE READ  :  ' , name asString
 		, '   withValue:  ' , aValue printString."
+]
+
+{ #category : #private }
+ROCMetaObject >> forObject: anObject [
+
+	self instrumenter beForObject: anObject
+]
+
+{ #category : #initialization }
+ROCMetaObject >> forObject: anObject proxy: aProxy [
+
+	self forObject: anObject.
+	self proxy: aProxy
+]
+
+{ #category : #accessing }
+ROCMetaObject >> instrumenter [
+
+	^ instrumenter ifNil: [ instrumenter := ROCProxyInstrumenter for: self ]
+]
+
+{ #category : #accessing }
+ROCMetaObject >> instrumenter: anObject [
+
+	instrumenter := anObject
 ]
 
 { #category : #accessing }
