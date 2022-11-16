@@ -17,7 +17,7 @@ ROCMessageSendTest >> setUp [
 	aClassTest var2: 2.
 	aClassTest collection: OrderedCollection new.
 	aClassTest result: 0.
-	aClassTest enableMop.
+	aClassTest enableMOP.
 	Transcript clear
 ]
 
@@ -53,7 +53,7 @@ ROCMessageSendTest >> testExecute [
 
 	| a proxy |
 	a := ROCBottom new.
-	proxy := a enableMop.
+	proxy := a enableMOP.
 	Transcript clear.
 	a mWithSuper.
 	a mWithSuper

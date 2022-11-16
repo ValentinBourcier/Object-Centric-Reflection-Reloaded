@@ -1,5 +1,5 @@
 Class {
-	#name : #ROCMopTest,
+	#name : #ROCGenericMopTest,
 	#superclass : #TestCase,
 	#instVars : [
 		'package'
@@ -8,9 +8,10 @@ Class {
 }
 
 { #category : #initialization }
-ROCMopTest >> setUp [ 
+ROCGenericMopTest >> setUp [
+
 	super setUp.
-	package :=ROCPackage new.
+	package := ROCPackage new.
 	package counter: 0.
 	package caseMaterial: 3.
 	package calculateCaseWeight.
@@ -21,19 +22,18 @@ ROCMopTest >> setUp [
 	package packageWeight: 0.5.
 	package packagePrice: 20.
 	package packageTax: 10.
-	package enableMop.
 ]
 
-{ #category : #initialization }
-ROCMopTest >> testAnyAssignmentAfterCounter [
+{ #category : #'tests - reflective api' }
+ROCGenericMopTest >> testAnyAssignmentAfterCounter [
 
 	package afterAnyAssignmentDo: [ package counter: package counter + 1 ].
 	package calculatePackageTax.
 	self assert: package counter equals: 2
 ]
 
-{ #category : #initialization }
-ROCMopTest >> testAnyAssignmentBeforeCounter [
+{ #category : #'tests - reflective api' }
+ROCGenericMopTest >> testAnyAssignmentBeforeCounter [
 
 	package beforeAnyAssignmentDo: [ 
 		package counter: package counter + 1 ].
@@ -41,8 +41,8 @@ ROCMopTest >> testAnyAssignmentBeforeCounter [
 	self assert: package counter equals: 2
 ]
 
-{ #category : #initialization }
-ROCMopTest >> testAnyAssignmentInsteadCounter [
+{ #category : #'tests - reflective api' }
+ROCGenericMopTest >> testAnyAssignmentInsteadCounter [
 
 	package insteadAnyAssignmentDo: [ 
 		package counter: package counter + 1 ].
@@ -50,8 +50,8 @@ ROCMopTest >> testAnyAssignmentInsteadCounter [
 	self assert: package counter equals: 2 
 ]
 
-{ #category : #initialization }
-ROCMopTest >> testAnyMessageSendAfterCounter [
+{ #category : #'tests - reflective api' }
+ROCGenericMopTest >> testAnyMessageSendAfterCounter [
 
 	package afterAnyMessageSendDo: [ 
 		package counter: package counter + 1 ].
@@ -59,8 +59,8 @@ ROCMopTest >> testAnyMessageSendAfterCounter [
 	self assert: package counter equals: 2
 ]
 
-{ #category : #initialization }
-ROCMopTest >> testAnyMessageSendBeforeCounter [
+{ #category : #'tests - reflective api' }
+ROCGenericMopTest >> testAnyMessageSendBeforeCounter [
 
 	package beforeAnyMessageSendDo: [ 
 		package counter: package counter + 1 ].
@@ -68,8 +68,8 @@ ROCMopTest >> testAnyMessageSendBeforeCounter [
 	self assert: package counter equals: 2
 ]
 
-{ #category : #initialization }
-ROCMopTest >> testAnyMessageSendInsteadCounter [
+{ #category : #'tests - reflective api' }
+ROCGenericMopTest >> testAnyMessageSendInsteadCounter [
 
 	package insteadAnyMessageSendDo: [ 
 		package counter: package counter + 1 ].
@@ -77,8 +77,8 @@ ROCMopTest >> testAnyMessageSendInsteadCounter [
 	self assert: package counter equals: 2
 ]
 
-{ #category : #initialization }
-ROCMopTest >> testInsideMessageSendBeforeCounter [
+{ #category : #'tests - reflective api' }
+ROCGenericMopTest >> testInsideMessageSendBeforeCounter [
 
 	package
 		beforeMessageSendTo: #m1
@@ -87,8 +87,8 @@ ROCMopTest >> testInsideMessageSendBeforeCounter [
 	self assert: package counter equals: 3
 ]
 
-{ #category : #initialization }
-ROCMopTest >> testInsideMessageSendBeforeCounterSelfMessage [
+{ #category : #'tests - reflective api' }
+ROCGenericMopTest >> testInsideMessageSendBeforeCounterSelfMessage [
 
 	package
 		beforeMessageSendTo: #m1
@@ -97,8 +97,8 @@ ROCMopTest >> testInsideMessageSendBeforeCounterSelfMessage [
 	self assert: package counter equals: 0
 ]
 
-{ #category : #initialization }
-ROCMopTest >> testMessageSendAfterFirstInstruction [
+{ #category : #'tests - reflective api' }
+ROCGenericMopTest >> testMessageSendAfterFirstInstruction [
 
 	package
 		afterMessageSendTo: #setPackagePrice:andTax:
@@ -110,8 +110,56 @@ ROCMopTest >> testMessageSendAfterFirstInstruction [
 	self assert: package packageTax equals: 7.
 ]
 
-{ #category : #initialization }
-ROCMopTest >> testSpecificAssignmentAfterCounter [
+{ #category : #'tests - mop architecture' }
+ROCGenericMopTest >> testMopCreation [
+
+	| object mop |
+	object := Object new.
+	mop := object mop.
+	self assert: mop object identicalTo: object 
+]
+
+{ #category : #'tests - mop architecture' }
+ROCGenericMopTest >> testMopInstrumentation [
+
+	| object mop |
+	object := Object new.
+	mop := object mop.
+
+	mop proxifyObject.
+
+	"self assert: mop metaObject notNil"
+]
+
+{ #category : #'tests - mop architecture' }
+ROCGenericMopTest >> testMopRegistryAccess [
+
+	| object mop |
+	object := Object new.
+	mop := ROCGenericMOP mopAt: object.
+
+	self assert: mop identicalTo: (ROCGenericMOP mopRegistry at: object).
+self assert: mop identicalTo: object mop.	
+]
+
+{ #category : #'tests - mop architecture' }
+ROCGenericMopTest >> testMopWeakRegistry [
+
+	| object mop |
+	object := Object new.
+	mop := ROCGenericMOP mopAt: object.
+
+	self assert: mop identicalTo: (ROCGenericMOP mopRegistry at: object).
+
+	object := nil.
+
+	self
+		should: [ ROCGenericMOP mopRegistry at: object ]
+		raise: KeyNotFound
+]
+
+{ #category : #'tests - reflective api' }
+ROCGenericMopTest >> testSpecificAssignmentAfterCounter [
 
 	package
 		afterAssignmentTo: #packagePrice
@@ -122,8 +170,8 @@ ROCMopTest >> testSpecificAssignmentAfterCounter [
 	self assert: package packageTax equals: 0
 ]
 
-{ #category : #initialization }
-ROCMopTest >> testSpecificAssignmentBeforeCounter [
+{ #category : #'tests - reflective api' }
+ROCGenericMopTest >> testSpecificAssignmentBeforeCounter [
 
 	package
 		beforeAssignmentTo: #packagePrice
@@ -132,8 +180,8 @@ ROCMopTest >> testSpecificAssignmentBeforeCounter [
 	self assert: package counter equals: 1
 ]
 
-{ #category : #initialization }
-ROCMopTest >> testSpecificAssignmentInsteadCounter [
+{ #category : #'tests - reflective api' }
+ROCGenericMopTest >> testSpecificAssignmentInsteadCounter [
 
 	package
 		insteadAssignmentTo: #packagePrice
@@ -142,8 +190,8 @@ ROCMopTest >> testSpecificAssignmentInsteadCounter [
 	self assert: package counter equals: 1
 ]
 
-{ #category : #initialization }
-ROCMopTest >> testSpecificMessageSendAfterCounter [
+{ #category : #'tests - reflective api' }
+ROCGenericMopTest >> testSpecificMessageSendAfterCounter [
 
 	package afterMessageSendTo:  #clearTaxes do:  [ 
 		package counter: package counter + 1 ].
@@ -151,8 +199,8 @@ ROCMopTest >> testSpecificMessageSendAfterCounter [
 	self assert: package counter equals: 1
 ]
 
-{ #category : #initialization }
-ROCMopTest >> testSpecificMessageSendBeforeCounter [
+{ #category : #'tests - reflective api' }
+ROCGenericMopTest >> testSpecificMessageSendBeforeCounter [
 
 	package beforeMessageSendTo:  #clearTaxes do:  [ 
 		package counter: package counter + 1 ].
@@ -160,8 +208,8 @@ ROCMopTest >> testSpecificMessageSendBeforeCounter [
 	self assert: package counter equals: 1
 ]
 
-{ #category : #initialization }
-ROCMopTest >> testSpecificMessageSendInsteadCounter [
+{ #category : #'tests - reflective api' }
+ROCGenericMopTest >> testSpecificMessageSendInsteadCounter [
 
 	package insteadMessageSendTo: #clearTaxes do:  [ 
 		package counter: package counter + 1 ].
@@ -169,8 +217,8 @@ ROCMopTest >> testSpecificMessageSendInsteadCounter [
 	self assert: package counter equals: 1
 ]
 
-{ #category : #initialization }
-ROCMopTest >> testTwoObjectsMessageSendAfterChangingValueEachOther [
+{ #category : #'tests - reflective api' }
+ROCGenericMopTest >> testTwoObjectsMessageSendAfterChangingValueEachOther [
 
 	| opackage |
 	opackage := ROCPackage new.
@@ -184,7 +232,7 @@ ROCMopTest >> testTwoObjectsMessageSendAfterChangingValueEachOther [
 	opackage packageWeight: 0.5.
 	opackage packagePrice: 20.
 	opackage packageTax: 10.
-	opackage enableMop.
+	opackage enableMOP.
 	opackage
 		afterMessageSendTo: #packagePrice:
 		do: [ package counter: package counter + 1 ].
@@ -198,8 +246,8 @@ ROCMopTest >> testTwoObjectsMessageSendAfterChangingValueEachOther [
 
 ]
 
-{ #category : #initialization }
-ROCMopTest >> testTwoObjectsMessageSendBeforeChangingValueEachOther [
+{ #category : #'tests - reflective api' }
+ROCGenericMopTest >> testTwoObjectsMessageSendBeforeChangingValueEachOther [
 
 	| opackage |
 	opackage := ROCPackage new.
@@ -213,7 +261,7 @@ ROCMopTest >> testTwoObjectsMessageSendBeforeChangingValueEachOther [
 	opackage packageWeight: 0.5.
 	opackage packagePrice: 20.
 	opackage packageTax: 10.
-	opackage enableMop.
+	opackage enableMOP.
 	opackage
 		beforeMessageSendTo: #packagePrice:
 		do: [ package counter: package counter + 1 ].
@@ -227,8 +275,8 @@ ROCMopTest >> testTwoObjectsMessageSendBeforeChangingValueEachOther [
 
 ]
 
-{ #category : #initialization }
-ROCMopTest >> testTwoObjectsMessageSendInstead [
+{ #category : #'tests - reflective api' }
+ROCGenericMopTest >> testTwoObjectsMessageSendInstead [
 
 	| opackage |
 	opackage := ROCPackage new.
@@ -242,7 +290,7 @@ ROCMopTest >> testTwoObjectsMessageSendInstead [
 	opackage packageWeight: 0.5.
 	opackage packagePrice: 20.
 	opackage packageTax: 10.
-	opackage enableMop.
+	opackage enableMOP.
 	opackage
 		insteadMessageSendTo: #setPackagePrice:andTax:
 		do: [ package counter: package counter + 1 ].
@@ -255,8 +303,8 @@ ROCMopTest >> testTwoObjectsMessageSendInstead [
 	self assert: opackage packageTax equals: 7
 ]
 
-{ #category : #initialization }
-ROCMopTest >> testTwoObjectsMessageSendInsteadChangingValueEachOther [
+{ #category : #'tests - reflective api' }
+ROCGenericMopTest >> testTwoObjectsMessageSendInsteadChangingValueEachOther [
 
 	| opackage |
 	opackage := ROCPackage new.
@@ -270,7 +318,7 @@ ROCMopTest >> testTwoObjectsMessageSendInsteadChangingValueEachOther [
 	opackage packageWeight: 0.5.
 	opackage packagePrice: 20.
 	opackage packageTax: 10.
-	opackage enableMop.
+	opackage enableMOP.
 	opackage
 		insteadMessageSendTo: #packagePrice:
 		do: [ package counter: package counter + 1 ].

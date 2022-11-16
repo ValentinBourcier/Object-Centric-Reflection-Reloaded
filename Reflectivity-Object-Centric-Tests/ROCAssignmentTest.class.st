@@ -17,7 +17,7 @@ ROCAssignmentTest >> setUp [
 		var1: 0;
 		var2: 1;
 		result: 0.
-	aAssignmentTestClass enableMop.
+	aAssignmentTestClass enableMOP.
 	Transcript clear
 ]
 

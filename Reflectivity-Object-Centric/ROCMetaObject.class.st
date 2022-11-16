@@ -14,7 +14,8 @@ Class {
 		'proxy',
 		'instrumenter',
 		'metaLevel',
-		'registryHandler'
+		'registryHandler',
+		'instrumentedObjectMop'
 	],
 	#classInstVars : [
 		'str'
@@ -139,6 +140,18 @@ ROCMetaObject >> forObject: anObject proxy: aProxy [
 ]
 
 { #category : #accessing }
+ROCMetaObject >> instrumentedObjectMop [
+
+	^instrumentedObjectMop
+]
+
+{ #category : #accessing }
+ROCMetaObject >> instrumentedObjectMop: anObject [
+
+	instrumentedObjectMop := anObject
+]
+
+{ #category : #accessing }
 ROCMetaObject >> instrumenter [
 
 	^ instrumenter ifNil: [ instrumenter := ROCProxyInstrumenter for: self ]
@@ -180,6 +193,7 @@ ROCMetaObject >> receive: aSelector [
 	self class log: 'receive: ' , aSelector printString.
 	aSelector = #class ifTrue: [ 
 		self flag: 'Temporary hack in waiting a nicer solution'.
+		self flag: 'We should filter the reflective API'.
 		^ instrumenter instrumentedClass superclass ].
 	aSelector ifNil: [ ^ self proxy ].
 	^ self
