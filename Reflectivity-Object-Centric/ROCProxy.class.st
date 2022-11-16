@@ -20,7 +20,7 @@ ROCProxy >> doesNotUnderstand: aMessage [
 	<debuggerCompleteToSender>
 	'Proxy receiving: ' crTrace.
 	aMessage trace.
-	self flag: 'We need to remove the target it is useless'.
+	"self flag: 'We need to remove the target it is useless'."
 	^ metaObject
 		  send: aMessage selector
 		  withArgs: aMessage arguments
