@@ -24,5 +24,5 @@ ROCVariableWriteInterceptor >> execute: aOperation [
 { #category : #override }
 ROCVariableWriteInterceptor >> execute: aName withValue: aValue [
 	"NOT USING, VALUES HAVENT A GOOD VALUE"
-	^ metaObject linkInsteadAssignment: aName withValue: aValue
+	^ metaObject executeReflectiveOperationsForAssignment: aName withValue: aValue
 ]

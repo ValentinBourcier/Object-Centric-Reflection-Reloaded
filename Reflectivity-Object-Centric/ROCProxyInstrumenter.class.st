@@ -238,7 +238,7 @@ ROCProxyInstrumenter >> newInsteadLinkForAssignments [
 	link selector: #execute:.
 	link arguments: #( operation ).
 	"link selector: #execute:withValue:.
-	link arguments: #( name newValue )."
+	link arguments: #( name value )."
 	link optionCompileOnLinkInstallation: true.
 	^ link
 ]
@@ -265,19 +265,19 @@ ROCProxyInstrumenter >> newInsteadLinkForMessagesSend [
 { #category : #links }
 ROCProxyInstrumenter >> newInsteadLinkForVariableRead [
 
-	| link  interceptor|
+	| link interceptor |
 	link := MetaLink new.
 	link control: #instead.
-	
+
 	interceptor := ROCVariableReadInterceptor new.
 	interceptor metaObject: metaObject.
 
-	link metaObject: interceptor  .
-	"link selector: #execute.
-	link arguments: #( operation)."
+	link metaObject: interceptor.
+	"link selector: #execute:.
+	link arguments: #( operation )."
 	link selector: #execute:withValue:.
 	link arguments: #( name value).
-	link optionCompileOnLinkInstallation: true.	
+	link optionCompileOnLinkInstallation: true.
 	^ link
 ]
 
