@@ -17,14 +17,13 @@ ROCAssignmentTest >> setUp [
 		var1: 0;
 		var2: 1;
 		result: 0.
-	aAssignmentTestClass enableMOP.
-	Transcript clear
+
 ]
 
 { #category : #tests }
 ROCAssignmentTest >> testAllAssignmentAfter [
 
-	aAssignmentTestClass afterAnyAssignmentDo: [ "aAssignmentTestClass writeSlotNamed: #a value: aAssignmentTestClass a + 1" 
+	aAssignmentTestClass mop afterAnyAssignmentDo: [ "aAssignmentTestClass writeSlotNamed: #a value: aAssignmentTestClass a + 1" 
 		aAssignmentTestClass var1: aAssignmentTestClass var1 + 1 ].
 	aAssignmentTestClass selfAssignment.
 	self assert: aAssignmentTestClass var1 equals: 4.
@@ -35,7 +34,7 @@ ROCAssignmentTest >> testAllAssignmentAfter [
 { #category : #tests }
 ROCAssignmentTest >> testAllAssignmentBefore [
 
-	aAssignmentTestClass beforeAnyAssignmentDo: [ 
+	aAssignmentTestClass mop beforeAnyAssignmentDo: [ 
 		aAssignmentTestClass result: aAssignmentTestClass result + 1 ].
 	aAssignmentTestClass onlyAssignment.
 	self assert: aAssignmentTestClass var1 equals: 9.
@@ -46,7 +45,7 @@ ROCAssignmentTest >> testAllAssignmentBefore [
 { #category : #tests }
 ROCAssignmentTest >> testAllAssignmentInstead [
 
-	aAssignmentTestClass insteadAnyAssignmentDo: [ 
+	aAssignmentTestClass mop insteadAnyAssignmentDo: [ 
 		aAssignmentTestClass result: aAssignmentTestClass result + 1 ].
 	aAssignmentTestClass onlyAssignment.
 	self assert: aAssignmentTestClass var1 equals: 0.
@@ -57,7 +56,7 @@ ROCAssignmentTest >> testAllAssignmentInstead [
 { #category : #tests }
 ROCAssignmentTest >> testAssignmentAfter [
 
-	aAssignmentTestClass afterAssignmentTo: #var1 do: [ 
+	aAssignmentTestClass mop afterAssignmentTo: #var1 do: [ 
 		aAssignmentTestClass result:
 			aAssignmentTestClass var1 + aAssignmentTestClass var2 ].
 	aAssignmentTestClass onlyAssignment.
@@ -67,8 +66,9 @@ ROCAssignmentTest >> testAssignmentAfter [
 { #category : #tests }
 ROCAssignmentTest >> testAssignmentBefore [
 
-	aAssignmentTestClass beforeAssignmentTo: #var1 do: [
-		aAssignmentTestClass result: aAssignmentTestClass result + 1 ].
+	aAssignmentTestClass mop 
+		beforeAssignmentTo: #var1
+		do: [ aAssignmentTestClass result: aAssignmentTestClass result + 1 ].
 	aAssignmentTestClass onlyAssignment.
 	self assert: aAssignmentTestClass var1 equals: 9.
 	self assert: aAssignmentTestClass var2 equals: 2.
@@ -78,8 +78,9 @@ ROCAssignmentTest >> testAssignmentBefore [
 { #category : #tests }
 ROCAssignmentTest >> testAssignmentInstead [
 
-	aAssignmentTestClass insteadAssignmentTo: #var1 do: [
-		aAssignmentTestClass result: aAssignmentTestClass result + 1 ].
+	aAssignmentTestClass mop 
+		insteadAssignmentTo: #var1
+		do: [ aAssignmentTestClass result: aAssignmentTestClass result + 1 ].
 	aAssignmentTestClass onlyAssignment.
 	self assert: aAssignmentTestClass var1 equals: 0.
 	self assert: aAssignmentTestClass var2 equals: 2.
@@ -89,7 +90,7 @@ ROCAssignmentTest >> testAssignmentInstead [
 { #category : #tests }
 ROCAssignmentTest >> testAssignmentInsteadAllWithAssignment [
 
-	aAssignmentTestClass
+	aAssignmentTestClass mop 
 		insteadAssignmentTo: #var1
 		do: [ aAssignmentTestClass var1: aAssignmentTestClass var1 + 2 ].
 	aAssignmentTestClass onlyAssignment.
@@ -99,7 +100,7 @@ ROCAssignmentTest >> testAssignmentInsteadAllWithAssignment [
 { #category : #tests }
 ROCAssignmentTest >> testAssignmentInsteadWithAssignment [
 
-	aAssignmentTestClass insteadAnyAssignmentDo: [ 
+	aAssignmentTestClass mop insteadAnyAssignmentDo: [ 
 		aAssignmentTestClass var1: aAssignmentTestClass var1 + 5 ].
 	aAssignmentTestClass selfAssignment.
 	self assert: aAssignmentTestClass var1 equals: 15
@@ -109,7 +110,8 @@ ROCAssignmentTest >> testAssignmentInsteadWithAssignment [
 ROCAssignmentTest >> testBeforeAllAssignmentSelfAssignment [
 
 	"The assignment is executed after doing the operations"
-	aAssignmentTestClass beforeAnyAssignmentDo: [ 
+
+	aAssignmentTestClass mop beforeAnyAssignmentDo: [ 
 		aAssignmentTestClass var1: aAssignmentTestClass var1 + 1 ].
 	aAssignmentTestClass selfAssignment.
 	self assert: aAssignmentTestClass var1 equals: 3.
