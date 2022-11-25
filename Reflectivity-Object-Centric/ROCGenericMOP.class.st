@@ -173,7 +173,7 @@ ROCGenericMOP >> proxifyObject [
 
 	"After the become, proxy and anObject have been swapped"
 	metaObject := ROCMetaObject forObject: proxy proxy: object.
-	"metaObject instrumentedObjectMop: self.
+	metaObject instrumentedObjectMop: self.
 	MirrorPrimitives
 		fixedFieldOf: object
 		at: (ROCProxy slotNamed: #target) index
@@ -181,5 +181,5 @@ ROCGenericMOP >> proxifyObject [
 	MirrorPrimitives
 		fixedFieldOf: object
 		at: (ROCProxy slotNamed: #metaObject) index
-		put: metaObject"
+		put: metaObject
 ]

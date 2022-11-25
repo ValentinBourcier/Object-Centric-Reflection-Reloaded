@@ -128,7 +128,7 @@ ROCGenericMopTest >> testMopInstrumentation [
 
 	mop proxifyObject.
 
-	"self assert: mop metaObject notNil"
+	self assert: mop metaObject notNil
 ]
 
 { #category : #'tests - mop architecture' }
