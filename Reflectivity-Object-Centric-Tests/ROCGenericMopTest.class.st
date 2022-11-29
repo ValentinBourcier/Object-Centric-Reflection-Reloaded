@@ -134,7 +134,10 @@ ROCGenericMopTest >> testMopInstrumentation [
 
 	mop proxifyObject.
 
-	self assert: mop metaObject notNil
+	self assert: mop metaObject notNil.
+	self assert: mop metaObject proxy identicalTo: object.
+		
+	self assert: mop identicalTo: object mop.
 ]
 
 { #category : #'tests - mop architecture' }
@@ -144,7 +147,7 @@ ROCGenericMopTest >> testMopRegistryAccess [
 	object := Object new.
 	mop := ROCGenericMOP mopAt: object.
 
-	self assert: mop identicalTo: (ROCGenericMOP mopRegistry at: object).
+	self assert: mop identicalTo: (ROCGenericMOP mopRegistry at: object hash).
 self assert: mop identicalTo: object mop.	
 ]
 
@@ -155,12 +158,12 @@ ROCGenericMopTest >> testMopWeakRegistry [
 	object := Object new.
 	mop := ROCGenericMOP mopAt: object.
 
-	self assert: mop identicalTo: (ROCGenericMOP mopRegistry at: object).
+	self assert: mop identicalTo: (ROCGenericMOP mopRegistry at: object hash).
 
 	object := nil.
 
 	self
-		should: [ ROCGenericMOP mopRegistry at: object ]
+		should: [ ROCGenericMOP mopRegistry at: object hash]
 		raise: KeyNotFound
 ]
 

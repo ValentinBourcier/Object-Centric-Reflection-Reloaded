@@ -22,7 +22,7 @@ Class {
 { #category : #'instance creation' }
 ROCGenericMOP class >> mopAt: anObject [ 
 
-	^ self mopRegistry at: anObject ifAbsentPut: [ self new onObject: anObject ] 
+	^ self mopRegistry at: anObject hash ifAbsentPut: [ self new onObject: anObject ] 
 ]
 
 { #category : #accessing }
