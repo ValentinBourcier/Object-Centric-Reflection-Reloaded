@@ -137,7 +137,7 @@ ROCMessageSendTest >> testMessageSendOtherObjects [
 		afterMessageSendTo: #add:
 		do: [ aClassTest result: aClassTest result + 1 ].
 	aClassTest messageSendOtherObjects.
-	self assert: aClassTest var1 equals: 3.
+	self assert: aClassTest var1 equals: 5.
 	self assert: aClassTest collection size equals: 2.
 	self assert: aClassTest result equals: 4
 ]

@@ -82,10 +82,11 @@ ROCMetaObject >> executeReflectiveOperationsForAssignment: anOperation [
 ROCMetaObject >> executeReflectiveOperationsForMessageSendOperation: aOperation [
 
 	| timeObject operation |
-	self flag:
-		'WE ARENT DOINGTHE INSTEAD VALUE IN THE RIGHT ORDER WE ARE DOING THE VALUE AFTER THE AFTER'.
-	operation := aOperation.
-	self metaLevel ifTrue: [ ^ operation value ].
+	'###' crTrace.
+	aOperation selector crTrace.
+	self metaLevel ifTrue: [ 
+		'metalevel: returning' crTrace.
+		^ aOperation value ].
 	self
 		verifyExistenceOn: self registryHandler messageSendRegistry
 		withKey: aOperation selector.
@@ -94,11 +95,18 @@ ROCMetaObject >> executeReflectiveOperationsForMessageSendOperation: aOperation 
 	self metaLevel: true.
 	timeObject before ifNotEmpty: [ 
 		timeObject before do: [ :each | each value ] ].
-	timeObject instead ifNotNil: [ operation := timeObject instead ].
+	operation := timeObject instead
+		             ifNil: [ 
+			             self metaLevel: false.
+			             aOperation value.
+			           ]
+		             ifNotNil: [ timeObject instead value ].
+	  self metaLevel: true .
 	timeObject after ifNotEmpty: [ 
 		timeObject after do: [ :each | each value ] ].
 	self metaLevel: false.
-	^ operation value
+	'###' crTrace.
+	^ operation
 ]
 
 { #category : #execution }
@@ -107,7 +115,7 @@ ROCMetaObject >> executeReflectiveOperationsForVariableRead: name withValue: aVa
 	| timeObject insteadBlock |
 	self flag:
 		'WE ARE RETURNING AVALUE WHEN WE SHOULD RETURN THE INSTEADBLOCK'.
-		
+
 	self metaLevel ifTrue: [ ^ aValue ].
 	self
 		verifyExistenceOn: self registryHandler variableReadRegistry
@@ -115,13 +123,14 @@ ROCMetaObject >> executeReflectiveOperationsForVariableRead: name withValue: aVa
 	timeObject := self registryHandler variableReadRegistry blocksStored 
 		              at: name.
 	self metaLevel: true.
-	timeObject after ifNotEmpty: [ 
-		timeObject after do: [ :each | each value ] ].
+	timeObject before ifNotEmpty: [ 
+		timeObject before do: [ :each | each value ] ].
 	timeObject instead
 		ifNil: [ insteadBlock := aValue ]
 		ifNotNil: [ insteadBlock := timeObject instead value ].
-	timeObject before ifNotEmpty: [ 
-		timeObject before do: [ :each | each value ] ].
+	timeObject after ifNotEmpty: [ 
+		timeObject after do: [ :each | each value ] ].
+
 	self metaLevel: false.
 	^ aValue
 ]
