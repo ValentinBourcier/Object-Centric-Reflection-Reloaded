@@ -14,7 +14,8 @@ Class {
 		'proxy',
 		'instrumenter',
 		'metaLevel',
-		'registryHandler'
+		'registryHandler',
+		'instrumentedObjectMop'
 	],
 	#classInstVars : [
 		'str'
@@ -82,10 +83,11 @@ ROCMetaObject >> executeReflectiveOperationsForAssignment: anOperation [
 ROCMetaObject >> executeReflectiveOperationsForMessageSendOperation: aOperation [
 
 	| timeObject operation |
-	self flag:
-		'WE ARENT DOINGTHE INSTEAD VALUE IN THE RIGHT ORDER WE ARE DOING THE VALUE AFTER THE AFTER'.
-	"operation := aOperation."
-	self metaLevel ifTrue: [ ^ aOperation value "operation value" ].
+	'###' crTrace.
+	aOperation selector crTrace.
+	self metaLevel ifTrue: [ 
+		'metalevel: returning' crTrace.
+		^ aOperation value ].
 	self
 		verifyExistenceOn: self registryHandler messageSendRegistry
 		withKey: aOperation selector.
@@ -94,40 +96,18 @@ ROCMetaObject >> executeReflectiveOperationsForMessageSendOperation: aOperation 
 	self metaLevel: true.
 	timeObject before ifNotEmpty: [ 
 		timeObject before do: [ :each | each value ] ].
-	"timeObject instead ifNotNil: [ operation := timeObject instead ]."
-	timeObject instead
-		ifNil: [ operation := aOperation value ]
-		ifNotNil: [ operation := timeObject instead value ].
+	operation := timeObject instead
+		             ifNil: [ 
+			             self metaLevel: false.
+			             aOperation value.
+			           ]
+		             ifNotNil: [ timeObject instead value ].
+	  self metaLevel: true .
 	timeObject after ifNotEmpty: [ 
 		timeObject after do: [ :each | each value ] ].
 	self metaLevel: false.
-	^ operation "value"
-]
-
-{ #category : #execution }
-ROCMetaObject >> executeReflectiveOperationsForMessageSendOperationWork: aOperation [
-
-	| timeObject operation |
-	self flag:
-		'WE ARENT DOINGTHE INSTEAD VALUE IN THE RIGHT ORDER WE ARE DOING THE VALUE AFTER THE AFTER'.
-	operation := aOperation.
-	self metaLevel ifTrue: [ ^ "aOperation value" operation value ].
-	self
-		verifyExistenceOn: self registryHandler messageSendRegistry
-		withKey: aOperation selector.
-	timeObject := self registryHandler messageSendRegistry blocksStored 
-		              at: aOperation selector.
-	self metaLevel: true.
-	timeObject before ifNotEmpty: [ 
-		timeObject before do: [ :each | each value ] ].
-	timeObject instead ifNotNil: [ operation := timeObject instead ].
-	"timeObject instead
-		ifNil: [ operation := aOperation value ]
-		ifNotNil: [ operation := timeObject instead value ]."
-	timeObject after ifNotEmpty: [ 
-		timeObject after do: [ :each | each value ] ].
-	self metaLevel: false.
-	^ operation value
+	'###' crTrace.
+	^ operation
 ]
 
 { #category : #execution }
@@ -166,6 +146,18 @@ ROCMetaObject >> forObject: anObject proxy: aProxy [
 
 	self forObject: anObject.
 	self proxy: aProxy
+]
+
+{ #category : #accessing }
+ROCMetaObject >> instrumentedObjectMop [
+
+	^instrumentedObjectMop
+]
+
+{ #category : #accessing }
+ROCMetaObject >> instrumentedObjectMop: anObject [
+
+	instrumentedObjectMop := anObject
 ]
 
 { #category : #accessing }
@@ -210,6 +202,7 @@ ROCMetaObject >> receive: aSelector [
 	self class log: 'receive: ' , aSelector printString.
 	aSelector = #class ifTrue: [ 
 		self flag: 'Temporary hack in waiting a nicer solution'.
+		self flag: 'We should filter the reflective API'.
 		^ instrumenter instrumentedClass superclass ].
 	aSelector ifNil: [ ^ self proxy ].
 	^ self

@@ -42,7 +42,7 @@ Class {
 { #category : #operation }
 ROCTestClass >> add: aValue [
 
-	var1 := aValue
+	var1 := var1 + aValue
 ]
 
 { #category : #operation }
