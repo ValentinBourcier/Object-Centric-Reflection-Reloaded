@@ -15,10 +15,13 @@ Class {
 
 { #category : #execution }
 ROCVariableReadInterceptor >> execute: aOperation [
+	"NOT USING THIS"
+	^ metaObject executeReflectiveOperationsForVariableRead: aOperation
 ]
 
 { #category : #override }
 ROCVariableReadInterceptor >> execute: aName withValue: aValue [
 
+	"USING THIS"
 	^ metaObject executeReflectiveOperationsForVariableRead: aName withValue: aValue
 ]

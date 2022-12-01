@@ -56,10 +56,11 @@ ROCMetaObject >> executeReflectiveOperationsFor: target uponReceptionOf: selecto
 		 stream << selector printString ]) crTrace
 ]
 
-{ #category : #execution }
+{ #category : #'reflective api' }
 ROCMetaObject >> executeReflectiveOperationsForAssignment: anOperation [
 
 	| timeObject insteadBlock |
+	
 	self metaLevel ifTrue: [ ^ anOperation value ].
 	self
 		verifyExistenceOn: self registryHandler variableWriteRegistry
@@ -130,7 +131,6 @@ ROCMetaObject >> executeReflectiveOperationsForVariableRead: name withValue: aVa
 		ifNotNil: [ insteadBlock := timeObject instead value ].
 	timeObject after ifNotEmpty: [ 
 		timeObject after do: [ :each | each value ] ].
-
 	self metaLevel: false.
 	^ aValue
 ]
