@@ -94,7 +94,7 @@ ROCMessageSendTest >> testMessageSendInAssignmentAfter [
 		aClassTest result: aClassTest result + 1 ].
 	self assert: aClassTest assigningValues equals: 3.
 	self assert: aClassTest var1 equals: 2.
-	self assert: aClassTest var2 equals: 4.
+	self assert: aClassTest var2 equals: 10.
 	self assert: aClassTest result equals: 4
 ]
 
@@ -105,7 +105,7 @@ ROCMessageSendTest >> testMessageSendInAssignmentBefore [
 		aClassTest result: aClassTest result + 1 ].
 	self assert: aClassTest assigningValues equals: 3.
 	self assert: aClassTest var1 equals: 2.
-	self assert: aClassTest var2 equals: 4.
+	self assert: aClassTest var2 equals: 10.
 	self assert: aClassTest result equals: 4
 ]
 
