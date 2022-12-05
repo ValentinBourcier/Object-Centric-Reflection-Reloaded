@@ -1,5 +1,5 @@
 "
-I am the Interceptor for Variable Write, I have as arguments the reification arguments , for Assignments nodes
+I am the Interceptor for Variable Write, I have as arguments the reification arguments , for Assignments nodes. There is an example below:
 
 Object>> m1: arg1
 

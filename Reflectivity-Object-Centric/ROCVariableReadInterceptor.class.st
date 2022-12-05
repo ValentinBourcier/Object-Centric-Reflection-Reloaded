@@ -1,5 +1,5 @@
 "
-I am the Interceptor for Variable read, I have as arguments the reification arguments , for Variable read nodes
+I am the Interceptor for Variable read, I have as arguments the reification arguments , for Variable read nodes. There is an example below:
 
 Object>> m1: arg1
 

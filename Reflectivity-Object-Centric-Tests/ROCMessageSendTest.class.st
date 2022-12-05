@@ -51,7 +51,7 @@ ROCMessageSendTest >> testAllMessageSendInstead [
 ROCMessageSendTest >> testMessageSendAfter [
 
 	aClassTest mop 
-		afterMessageSendTo: #var1SimpleAsssignment
+		afterMessageSend: #var1SimpleAsssignment
 		do: [ aClassTest var2: aClassTest var2 + 1 ].
 	aClassTest sendingMethods.
 	self assert: aClassTest var2 equals: 4
@@ -61,7 +61,7 @@ ROCMessageSendTest >> testMessageSendAfter [
 ROCMessageSendTest >> testMessageSendAfterNoMethod [
 
 	aClassTest mop 
-		afterMessageSendTo: #var2SimpleAsssignment
+		afterMessageSend: #var2SimpleAsssignment
 		do: [ aClassTest var2: aClassTest var2 + 1 ].
 	aClassTest sendingMethods.
 	self assert: aClassTest var2 equals: 2
@@ -71,7 +71,7 @@ ROCMessageSendTest >> testMessageSendAfterNoMethod [
 ROCMessageSendTest >> testMessageSendBefore [
 
 	aClassTest mop 
-		beforeMessageSendTo: #var1SimpleAsssignment
+		beforeMessageSend: #var1SimpleAsssignment
 		do: [ aClassTest var2: aClassTest var2 + 1 ].
 	aClassTest sendingMethods.
 	self assert: aClassTest var2 equals: 4
@@ -81,7 +81,7 @@ ROCMessageSendTest >> testMessageSendBefore [
 ROCMessageSendTest >> testMessageSendBeforeNoMethod [
 
 	aClassTest mop 
-		beforeMessageSendTo: #var2SimpleAsssignment
+		beforeMessageSend: #var2SimpleAsssignment
 		do: [ aClassTest var2: aClassTest var2 + 1 ].
 	aClassTest sendingMethods.
 	self assert: aClassTest var2 equals: 2
@@ -112,19 +112,30 @@ ROCMessageSendTest >> testMessageSendInAssignmentBefore [
 { #category : #'tests - instead' }
 ROCMessageSendTest >> testMessageSendInAssignmentInstead [
 
+
 	aClassTest mop insteadAnyMessageSendDo: [ 
-		aClassTest result: aClassTest result + 1 ].
-	self assert: aClassTest assigningValues equals: 3.
-	self assert: aClassTest var1 equals: 2.
-	self assert: aClassTest var2 equals: 4.
+		aClassTest result: aClassTest result + 1. 0].
+	self assert: aClassTest assigningValues equals: 1.
+	self assert: aClassTest var1 equals: 0.
+	self assert: aClassTest var2 equals: 8.
 	self assert: aClassTest result equals: 4
+]
+
+{ #category : #'tests - instead' }
+ROCMessageSendTest >> testMessageSendInAssignmentInstead2 [
+
+	aClassTest mop insteadMessageSend: #var1: do:  [ 
+		aClassTest result: aClassTest result + 1 ].
+	aClassTest assignment2.
+	self assert: aClassTest result equals:1.
+	self assert: aClassTest var1 equals: 1.
 ]
 
 { #category : #'tests - instead' }
 ROCMessageSendTest >> testMessageSendInstead [
 
 	aClassTest mop 
-		insteadMessageSendTo: #var1SimpleAsssignment
+		insteadMessageSend: #var1SimpleAsssignment
 		do: [ aClassTest var2: aClassTest var2 + 1 ].
 	aClassTest sendingMethods.
 	self assert: aClassTest var2 equals: 4
@@ -134,7 +145,7 @@ ROCMessageSendTest >> testMessageSendInstead [
 ROCMessageSendTest >> testMessageSendOtherObjects [
 
 	aClassTest mop 
-		afterMessageSendTo: #add:
+		afterMessageSend: #add:
 		do: [ aClassTest result: aClassTest result + 1 ].
 	aClassTest messageSendOtherObjects.
 	self assert: aClassTest var1 equals: 5.

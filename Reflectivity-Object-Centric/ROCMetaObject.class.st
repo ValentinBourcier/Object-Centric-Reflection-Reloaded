@@ -1,11 +1,14 @@
 "
 I intercept all message passing sent to my proxy.
 
-If the message is received through an interceptor (RFMessageInterceptor), I first instrument the code of the method corresponding to the message selector, then I send that message to the proxy.
+If the message is received through the meessage send interceptor (ROCMessageSendInterceptor), I first propagate the self references and then I execute the reflective techniques corresponding to the message selector then I send that message to the proxy.
 
-If the message is received through the proxy (either directly or because I sent it to the proxy), I first execute reflective actions then I forward the message to the real object.
+If the message is received through the Variable read or write interceptor (ROCVariableReadInterceptor, ROCVariableWriteInterceptor), I execute the reflective techniques corresponding to the variabe name then I send that message to the proxy.
 
-To instrument methods, I use an instance of RFProxyInstrumenter.
+
+If the message is received through the proxy (either directly or because I sent it to the proxy), Instrument the message and then I forward the message to the real object.
+
+To instrument methods, I use an instance of ROCProxyInstrumenter.
 "
 Class {
 	#name : #ROCMetaObject,
@@ -59,8 +62,7 @@ ROCMetaObject >> executeReflectiveOperationsFor: target uponReceptionOf: selecto
 { #category : #'reflective api' }
 ROCMetaObject >> executeReflectiveOperationsForAssignment: anOperation [
 
-	| timeObject insteadBlock |
-	
+	| timeObject operation |
 	self metaLevel ifTrue: [ ^ anOperation value ].
 	self
 		verifyExistenceOn: self registryHandler variableWriteRegistry
@@ -70,23 +72,24 @@ ROCMetaObject >> executeReflectiveOperationsForAssignment: anOperation [
 	self metaLevel: true.
 	timeObject before ifNotEmpty: [ 
 		timeObject before do: [ :each | each value ] ].
-	timeObject instead
-		ifNil: [ insteadBlock := anOperation value ]
-		ifNotNil: [ insteadBlock := timeObject instead value ].
+	operation := timeObject instead
+		             ifNil: [ 
+			             self metaLevel: false.
+			             anOperation value ]
+		             ifNotNil: [ timeObject instead value ].
+	self metaLevel: true.
 	timeObject after ifNotEmpty: [ 
 		timeObject after do: [ :each | each value ] ].
 	self metaLevel: false.
-	^ insteadBlock
+	^ operation
 ]
 
 { #category : #execution }
 ROCMetaObject >> executeReflectiveOperationsForMessageSendOperation: aOperation [
 
 	| timeObject operation |
-	'###' crTrace.
 	aOperation selector crTrace.
 	self metaLevel ifTrue: [ 
-		'metalevel: returning' crTrace.
 		^ aOperation value ].
 	self
 		verifyExistenceOn: self registryHandler messageSendRegistry
@@ -106,17 +109,14 @@ ROCMetaObject >> executeReflectiveOperationsForMessageSendOperation: aOperation 
 	timeObject after ifNotEmpty: [ 
 		timeObject after do: [ :each | each value ] ].
 	self metaLevel: false.
-	'###' crTrace.
 	^ operation
+	"^ aOperation value."
 ]
 
 { #category : #execution }
 ROCMetaObject >> executeReflectiveOperationsForVariableRead: name withValue: aValue [
 
-	| timeObject insteadBlock |
-	self flag:
-		'WE ARE RETURNING AVALUE WHEN WE SHOULD RETURN THE INSTEADBLOCK'.
-
+	| timeObject operation |
 	self metaLevel ifTrue: [ ^ aValue ].
 	self
 		verifyExistenceOn: self registryHandler variableReadRegistry
@@ -126,13 +126,16 @@ ROCMetaObject >> executeReflectiveOperationsForVariableRead: name withValue: aVa
 	self metaLevel: true.
 	timeObject before ifNotEmpty: [ 
 		timeObject before do: [ :each | each value ] ].
-	timeObject instead
-		ifNil: [ insteadBlock := aValue ]
-		ifNotNil: [ insteadBlock := timeObject instead value ].
+	operation := timeObject instead
+		             ifNil: [ 
+			             self metaLevel: false.
+			             aValue ]
+		             ifNotNil: [ timeObject instead value ].
+	self metaLevel: true.
 	timeObject after ifNotEmpty: [ 
 		timeObject after do: [ :each | each value ] ].
 	self metaLevel: false.
-	^ aValue
+	^ operation
 ]
 
 { #category : #private }

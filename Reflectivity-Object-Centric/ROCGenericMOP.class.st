@@ -3,6 +3,7 @@ I am a generic meta-object protocol.
 
 I provide a reflective API for standard objects operations:
 - assignments
+- variable read
 - message sends
 - message reception
 "
@@ -61,9 +62,9 @@ ROCGenericMOP >> afterAssignmentTo: aVariable do: aBlock [
 ]
 
 { #category : #'reflective operations' }
-ROCGenericMOP >> afterMessageSendTo: aMethod do: aBlock [
+ROCGenericMOP >> afterMessageSend: aMethod do: aBlock [
 
-	^ self metaObject registryHandler afterMessageSendTo: aMethod do: aBlock
+	^ self metaObject registryHandler afterMessageSend: aMethod do: aBlock
 ]
 
 { #category : #'reflective operations' }
@@ -97,9 +98,9 @@ ROCGenericMOP >> beforeAssignmentTo: aVariable do: aBlock [
 ]
 
 { #category : #'reflective operations' }
-ROCGenericMOP >> beforeMessageSendTo:  aMethod do: aBlock [
+ROCGenericMOP >> beforeMessageSend:  aMethod do: aBlock [
 
-	^ self metaObject registryHandler beforeMessageSendTo: aMethod do: aBlock
+	^ self metaObject registryHandler beforeMessageSend: aMethod do: aBlock
 ]
 
 { #category : #'reflective operations' }
@@ -133,9 +134,9 @@ ROCGenericMOP >> insteadAssignmentTo: aVariable do: aBlock [
 ]
 
 { #category : #'reflective operations' }
-ROCGenericMOP >> insteadMessageSendTo: aMethod do: aBlock [
+ROCGenericMOP >> insteadMessageSend: aMethod do: aBlock [
 
-	^ self metaObject registryHandler insteadMessageSendTo: aMethod do: aBlock
+	^ self metaObject registryHandler insteadMessageSend: aMethod do: aBlock
 ]
 
 { #category : #'reflective operations' }

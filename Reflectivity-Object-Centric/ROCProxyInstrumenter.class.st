@@ -163,7 +163,6 @@ ROCProxyInstrumenter >> instrumentSelector: selector withArgs: args [
 		method primitive = 188 ifTrue: [ 			
 			method := args second.
 			ROCMetaObject log: 'Primitive ' , method printString.
-			self halt.
 			self instrumentMethod: method selector: method selector.
 			args removeLast.
 			args addLast: (instrumentedClass lookupSelector: method selector)  ].

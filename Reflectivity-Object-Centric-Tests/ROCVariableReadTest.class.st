@@ -112,8 +112,7 @@ ROCVariableReadTest >> testBeforeVariableRead2Var [
 ROCVariableReadTest >> testInsteadAnyVariableRead [
 
 	aTestClass mop insteadAnyVariableReadDo: [ 
-		aTestClass counter: aTestClass counter + 1
-		"aTestClass counter" ].
+		aTestClass counter: aTestClass counter + 1. 0 ].
 
 	aTestClass variablesReadandAssignment.
 	self assert: aTestClass var1 equals: 0.
@@ -146,11 +145,15 @@ ROCVariableReadTest >> testInsteadVariableRead [
 { #category : #'tests - instead' }
 ROCVariableReadTest >> testInsteadVariableRead2Var [
 
+	aTestClass var2: 8.
 	aTestClass mop insteadVariableRead: #var1 do: [ 
-		aTestClass counter: aTestClass counter + 1
+		aTestClass counter: aTestClass counter + 1.
+		2
 		"aTestClass counter" ].
 	aTestClass variablesReadandAssignment.
 	self assert: aTestClass var1 equals: 0.
+	self assert: aTestClass var2 equals: 8.
+	self assert: aTestClass result equals: 10.
 	self assert: aTestClass counter equals: 1
 ]
 

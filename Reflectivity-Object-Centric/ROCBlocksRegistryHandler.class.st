@@ -1,3 +1,10 @@
+"
+I'm the handler of the blocks to be executed. I put the blocks in the right instanceVariable that depends on the API that I receive. I have 3 instance Variables for registring the blocks of the object-centric operations:
+
+	* variableReadRegistry
+	* variableWriteRegistry
+	* messageSendRegistry
+"
 Class {
 	#name : #ROCBlocksRegistryHandler,
 	#superclass : #Object,
@@ -45,7 +52,7 @@ ROCBlocksRegistryHandler >> afterAssignmentTo: aVariable do: aBlock [
 ]
 
 { #category : #'registrations handling' }
-ROCBlocksRegistryHandler >> afterMessageSendTo: aMethod do: aBlock [
+ROCBlocksRegistryHandler >> afterMessageSend: aMethod do: aBlock [
 
 	self
 		afterSpecificRegistry: self messageSendRegistry
@@ -115,7 +122,7 @@ ROCBlocksRegistryHandler >> beforeAssignmentTo: aVariable do: aBlock [
 ]
 
 { #category : #'registrations handling' }
-ROCBlocksRegistryHandler >> beforeMessageSendTo: aMethod do: aBlock [
+ROCBlocksRegistryHandler >> beforeMessageSend: aMethod do: aBlock [
 
 	self
 		beforeSpecificRegistry: self messageSendRegistry 
@@ -185,7 +192,7 @@ ROCBlocksRegistryHandler >> insteadAssignmentTo: aVariable do: aBlock [
 ]
 
 { #category : #'registrations handling' }
-ROCBlocksRegistryHandler >> insteadMessageSendTo: aMethod do: aBlock [
+ROCBlocksRegistryHandler >> insteadMessageSend: aMethod do: aBlock [
 
 	self
 		insteadSpecificRegistry: self messageSendRegistry 

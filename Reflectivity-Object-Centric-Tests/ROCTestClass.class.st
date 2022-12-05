@@ -50,7 +50,7 @@ ROCTestClass >> assigningValues [
 
 	self var1SimpleAsssignment.
 	var1 := self returningValue.
-	var2 := self returningValue + 2.
+	var2 := self returningValue + 8.
 	^ self returningValue + 1
 ]
 
@@ -64,6 +64,7 @@ ROCTestClass >> assignment1 [
 { #category : #operation }
 ROCTestClass >> assignment2 [
 	var2:= 2.
+	self var1: 0.
 	^ 3 - self var2.
 ]
 

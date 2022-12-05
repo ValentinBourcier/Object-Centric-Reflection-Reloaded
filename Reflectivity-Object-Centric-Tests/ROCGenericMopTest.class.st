@@ -87,7 +87,7 @@ ROCGenericMopTest >> testAnyMessageSendInsteadCounter [
 ROCGenericMopTest >> testInsideMessageSendBeforeCounter [
 
 	package
-		mop beforeMessageSendTo: #m1
+		mop beforeMessageSend: #m1
 		do: [ package counter: package counter + 1 ].
 	package m2.
 	self assert: package counter equals: 3
@@ -97,7 +97,7 @@ ROCGenericMopTest >> testInsideMessageSendBeforeCounter [
 ROCGenericMopTest >> testInsideMessageSendBeforeCounterSelfMessage [
 
 	package
-		mop beforeMessageSendTo: #m1
+		mop beforeMessageSend: #m1
 		do: [ package counter: package counter + 1 ].
 	package m1.
 	self assert: package counter equals: 0
@@ -107,7 +107,7 @@ ROCGenericMopTest >> testInsideMessageSendBeforeCounterSelfMessage [
 ROCGenericMopTest >> testMessageSendAfterFirstInstruction [
 
 	package mop
-		afterMessageSendTo: #setPackagePrice:andTax:
+		afterMessageSend: #setPackagePrice:andTax:
 		do: [ package counter: package counter + 1 ].
 
 	package setPackagePrice: 5 andTax: 7.
@@ -203,7 +203,7 @@ ROCGenericMopTest >> testSpecificAssignmentInsteadCounter [
 ROCGenericMopTest >> testSpecificMessageSendAfterCounter [
 
 	package mop 
-		afterMessageSendTo: #clearTaxes
+		afterMessageSend: #clearTaxes
 		do: [ package counter: package counter + 1 ].
 	package clearPackage.
 	self assert: package counter equals: 1
@@ -213,7 +213,7 @@ ROCGenericMopTest >> testSpecificMessageSendAfterCounter [
 ROCGenericMopTest >> testSpecificMessageSendBeforeCounter [
 
 	package mop 
-		beforeMessageSendTo: #clearTaxes
+		beforeMessageSend: #clearTaxes
 		do: [ package counter: package counter + 1 ].
 	package clearPackage.
 	self assert: package counter equals: 1
@@ -223,7 +223,7 @@ ROCGenericMopTest >> testSpecificMessageSendBeforeCounter [
 ROCGenericMopTest >> testSpecificMessageSendInsteadCounter [
 
 	package mop 
-		insteadMessageSendTo: #clearTaxes
+		insteadMessageSend: #clearTaxes
 		do: [ package counter: package counter + 1 ].
 	package clearPackage.
 	self assert: package counter equals: 1
@@ -245,7 +245,7 @@ ROCGenericMopTest >> testTwoObjectsMessageSendAfterChangingValueEachOther [
 	opackage packagePrice: 20.
 	opackage packageTax: 10.
 	opackage mop 
-		afterMessageSendTo: #packagePrice:
+		afterMessageSend: #packagePrice:
 		do: [ package counter: package counter + 1 ].
 	opackage clearPackage.
 	self assert: opackage counter equals: 0.
@@ -272,7 +272,7 @@ ROCGenericMopTest >> testTwoObjectsMessageSendBeforeChangingValueEachOther [
 	opackage packagePrice: 20.
 	opackage packageTax: 10.
 	opackage mop 
-		beforeMessageSendTo: #packagePrice:
+		beforeMessageSend: #packagePrice:
 		do: [ package counter: package counter + 1 ].
 	opackage clearPackage.
 	self assert: opackage counter equals: 0.
@@ -299,7 +299,7 @@ ROCGenericMopTest >> testTwoObjectsMessageSendInstead [
 	opackage packagePrice: 20.
 	opackage packageTax: 10.
 	opackage mop 
-		insteadMessageSendTo: #setPackagePrice:andTax:
+		insteadMessageSend: #setPackagePrice:andTax:
 		do: [ package counter: package counter + 1 ].
 	opackage setPackagePrice: 5 andTax: 7.
 	self assert: opackage counter equals: 0.
@@ -326,7 +326,7 @@ ROCGenericMopTest >> testTwoObjectsMessageSendInsteadChangingValueEachOther [
 	opackage packagePrice: 20.
 	opackage packageTax: 10.
 	opackage mop 
-		insteadMessageSendTo: #packagePrice:
+		insteadMessageSend: #packagePrice:
 		do: [ package counter: package counter + 1 ].
 	opackage clearPackage.
 	self assert: opackage counter equals: 0.
