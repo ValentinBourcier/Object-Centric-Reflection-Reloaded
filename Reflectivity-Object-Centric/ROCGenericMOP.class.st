@@ -6,6 +6,32 @@ I provide a reflective API for standard objects operations:
 - variable read
 - message sends
 - message reception
+
+In different time execution:
+- before
+- instead
+- after
+
+
+A thing that is important to consider is that for the time execution instead we have to be sure that the block to be executed instead one operation of above has a returning value that fit with the context. Here is an example:
+
+aClass >> addTwoValues
+
+	^ var1 + var2
+	
+aClass insteadAnyVariableReadDo: [ aClasss counter: aClass counter + 1 ].
+aClass addTwoValues.
+
+
+In that case we are going to face a problem because when we do the block instead variable read, the result doesnt know how to do the message ""+"" this is why inside the block we have to return a value that fit it with the context like:
+
+
+aClass >> addTwoValues
+
+	^ var1 + var2
+	
+aClass insteadAnyVariableReadDo: [ aClasss counter: aClass counter + 1. 0 ].
+aClass addTwoValues.
 "
 Class {
 	#name : #ROCGenericMOP,
