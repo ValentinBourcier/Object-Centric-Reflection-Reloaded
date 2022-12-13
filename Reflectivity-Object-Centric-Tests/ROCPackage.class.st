@@ -1,6 +1,6 @@
 Class {
 	#name : #ROCPackage,
-	#superclass : #ROCBox,
+	#superclass : #ROCBoxs,
 	#instVars : [
 		'packageWeight',
 		'totalWeight',
